@@ -123,6 +123,11 @@ Grouped by what they are:
 - `.vscode/settings.json` — an orphaned `scssFormatter.singleQuote` setting (no matching recommended extension) removed;
   a `cSpell.words` allowlist added after the spell-checker flagged the project's own name and real contributor names as
   unknown words.
+- `.hintrc` — added to silence a false positive from the Webhint VS Code extension's `typescript-config/is-valid` hint,
+  which flagged `packages/types/tsconfig.json`'s inherited `lib: ["ES2023"]` (from the real, unmodified
+  `@directus/tsconfig@4.0.0` package) as invalid. It isn't: TypeScript 5.9.3 (installed) has supported `ES2023` as a
+  `lib` value since 5.2 — the hint's bundled schema is just stale. Scoped to that one hint only
+  (`"extends": ["development"]` keeps every other default hint active).
 - `.github/copilot-instructions.md` — removed entirely (not this project's target IDE tooling); `AGENTS.md` is the
   single source of AI-assistant guidance now.
 - All 18 workflows migrated off pnpm (`pnpm exec` → `yarn exec`, `pnpm run` → `yarn run`, `pnpm --recursive publish` →
