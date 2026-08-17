@@ -1,0 +1,40 @@
+{
+	"name": "@directus/system-data",
+	"version": "4.6.0",
+	"description": "Definitions and types for Directus system collections",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/system-data"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "NODE_ENV=production tsdown",
+		"dev": "NODE_ENV=development tsdown",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@vitest/coverage-v8": "4.1.10",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"unplugin-yaml": "3.0.7",
+		"vitest": "4.1.10"
+	}
+}

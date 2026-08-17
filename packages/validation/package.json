@@ -1,0 +1,42 @@
+{
+	"name": "@directus/validation",
+	"version": "3.0.2",
+	"type": "module",
+	"sideEffects": false,
+	"scripts": {
+		"build": "tsdown src/index.ts --dts",
+		"dev": "tsdown src/index.ts --dts --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"description": "Utils to help with validation",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/validation"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@directus/types": "workspace:*",
+		"@vitest/coverage-v8": "4.1.10",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10"
+	},
+	"dependencies": {
+		"@directus/errors": "workspace:*",
+		"@directus/utils": "workspace:*",
+		"joi": "18.0.1"
+	}
+}

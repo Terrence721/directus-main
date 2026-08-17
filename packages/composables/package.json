@@ -1,0 +1,54 @@
+{
+	"name": "@directus/composables",
+	"version": "11.6.0",
+	"description": "Shared Vue composables for Directus use",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/composables"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown src/index.ts --dts",
+		"dev": "tsdown src/index.ts --dts --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"dependencies": {
+		"@directus/constants": "workspace:*",
+		"@directus/utils": "workspace:*",
+		"@vueuse/core": "14.0.0",
+		"axios": "1.18.1",
+		"lodash-es": "4.18.1",
+		"nanoid": "5.1.6"
+	},
+	"devDependencies": {
+		"@directus/sdk": "workspace:*",
+		"@directus/tsconfig": "4.0.0",
+		"@directus/types": "workspace:*",
+		"@types/lodash-es": "4.17.12",
+		"@vitest/coverage-v8": "4.1.10",
+		"@vue/test-utils": "2.4.6",
+		"jsdom": "29.1.1",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10",
+		"vue": "3.5.24"
+	},
+	"peerDependencies": {
+		"vue": "3.5.24"
+	}
+}

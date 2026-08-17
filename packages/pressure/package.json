@@ -1,0 +1,40 @@
+{
+	"name": "@directus/pressure",
+	"version": "4.0.2",
+	"description": "Pressure based rate limiter",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/pressure"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown src/index.ts --dts",
+		"dev": "tsdown src/index.ts --dts --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"dependencies": {
+		"@directus/utils": "workspace:*"
+	},
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@types/express": "4.17.21",
+		"@vitest/coverage-v8": "4.1.10",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10"
+	}
+}

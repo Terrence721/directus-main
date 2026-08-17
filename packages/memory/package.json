@@ -1,0 +1,45 @@
+{
+	"name": "@directus/memory",
+	"version": "4.0.2",
+	"description": "Memory / Redis abstraction for Directus",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/memory"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown src/index.ts --dts",
+		"dev": "tsdown src/index.ts --dts --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"dependencies": {
+		"@directus/errors": "workspace:*",
+		"@directus/utils": "workspace:*",
+		"@sesamecare-oss/redlock": "1.4.0",
+		"ioredis": "5.8.2",
+		"lru-cache": "11.2.2",
+		"rate-limiter-flexible": "7.2.0"
+	},
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@types/node": "22.13.14",
+		"@vitest/coverage-v8": "4.1.10",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10"
+	}
+}

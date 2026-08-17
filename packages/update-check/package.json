@@ -1,0 +1,49 @@
+{
+	"name": "@directus/update-check",
+	"version": "14.0.0",
+	"description": "Check if an update for Directus is available",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/update-check"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "yarn bundle && yarn typecheck",
+		"bundle": "tsdown src/index.ts --dts",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"axios": "1.18.1",
+		"axios-cache-interceptor": "1.11.1",
+		"boxen": "8.0.1",
+		"chalk": "5.6.2",
+		"find-cache-directory": "6.0.0",
+		"semver": "7.7.3"
+	},
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@npm/types": "2.1.0",
+		"@types/node": "22.13.14",
+		"@types/semver": "7.7.1",
+		"@vitest/coverage-v8": "4.1.10",
+		"strip-ansi": "7.1.2",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10"
+	}
+}
