@@ -5,7 +5,7 @@
 
 This document describes the architecture directus-main is being built toward — verified against the real source app (Directus's own monorepo, snapshotted locally at `F:\directus-main\directus-main`) and against what has actually landed in this repo, not a generic description of what a headless-CMS platform "usually" looks like. See [todo.md](todo.md) for exactly how much of this exists right now.
 
-**Current status, stated plainly:** every workspace package's `package.json` (43 of them) has been copied over and migrated from pnpm to Yarn — dependency versions resolved, scripts rewritten. Root config, Docker/deployment infrastructure, and all `.github/` CI are fully migrated. But only **one** package, `directus/` (the thin CLI wrapper, 6 files), has its actual source tree copied. `sdk/`, `api/`, `app/`, all 32 `packages/*`, and all 4 `tests/*` projects exist on disk as manifests only — `yarn install` succeeds and resolves the full dependency graph, but there's no application code to run yet. Everything below describing the full system is the target this repo is being built toward one file at a time, not a claim that it already runs end-to-end.
+**Current status, stated plainly:** every workspace package's `package.json` (43 of them) has been copied over and migrated from pnpm to Yarn — dependency versions resolved, scripts rewritten. Root config, Docker/deployment infrastructure, and all `.github/` CI are fully migrated. `directus/` (the thin CLI wrapper, 6 files) has a **complete** source tree, and `types/` is **partially started** (30 of ~54 planned files — `src/index.ts` already exports from 24 modules that don't exist yet, so it doesn't type-check as a whole; see `todo.md`). `sdk/`, `api/`, `app/`, the other 31 `packages/*`, and all 4 `tests/*` projects exist on disk as manifests only — `yarn install` succeeds and resolves the full dependency graph, but there's no application code to run yet. Everything below describing the full system is the target this repo is being built toward one file at a time, not a claim that it already runs end-to-end.
 
 ## 1. What this is
 
@@ -23,7 +23,7 @@ Directus's own architecture is the starting point here, not something being rede
 
 ## 3. Repository structure
 
-Target layout, verified against the source app (✅ = full source copied and reviewed, 📋 = `package.json` migrated but source tree not yet copied):
+Target layout, verified against the source app (✅ = full source copied and reviewed, 🚧 = source tree partially started, 📋 = `package.json` migrated but source tree not yet copied):
 
 ```text
 directus-main/
@@ -59,7 +59,7 @@ directus-main/
 │   ├── stores/                  📋
 │   ├── system-data/             📋
 │   ├── themes/                  📋
-│   ├── types/                   📋
+│   ├── types/                   🚧  30 of ~54 planned files — see todo.md
 │   ├── update-check/            📋
 │   ├── utils/                   📋
 │   ├── validation/              📋
@@ -70,7 +70,7 @@ directus-main/
 │   ├── mock-license-server/     📋
 │   └── sandbox/                 📋
 ├── scripts/
-│   └── deploy-production.mjs    ✅  custom replacement for `pnpm deploy` — see Section 5
+│   └── deploy-production.mjs    ✅  custom replacement for `pnpm deploy` — see Section 6
 ├── .github/                     ✅  18 workflows, prepare action, CodeQL config, templates
 ├── Dockerfile, Dockerfile.dhi   ✅  standard + hardened/distroless variants
 ├── docker-compose.yml           ✅  local dev database/service stack
@@ -104,7 +104,7 @@ directus-main/
 ## 6. Docker and deployment
 
 - **`Dockerfile`** (standard, Alpine-based two-stage build) and **`Dockerfile.dhi`** (hardened/distroless variant, recompiles `argon2` from source, ships `pm2` as files since the runtime has no shell to install it) — both updated for Corepack/Yarn.
-- **`scripts/deploy-production.mjs`** replaces pnpm's `deploy --legacy --prod` command, which has no direct Yarn equivalent. It runs `yarn workspaces focus directus --production` (pruning root `node_modules` down to just what `directus` needs) then assembles `./dist` by copying the `directus/` package plus the pruned `node_modules` together. **This is destructive to the root install** — the script carries an explicit warning not to run it on a persistent dev checkout, only in a disposable build stage (a real behavioral difference from pnpm's non-destructive, separately-built deploy output).
+- **`scripts/deploy-production.mjs`** replaces pnpm's `deploy --legacy --prod` command, which has no direct Yarn equivalent. It runs `yarn workspaces focus directus --production` inside a disposable `git worktree` checked out from `HEAD` (not the live working tree), then assembles `./dist` by copying the worktree's `directus/` package plus its pruned `node_modules` together, removing the worktree again in a `finally` block. **Non-destructive, matching pnpm's original behavior** — an earlier version ran `focus` directly against the repo's own root `node_modules`, requiring a manual `yarn install` afterward on any persistent dev checkout; corrected once it became clear `focus` doesn't need the live tree, just a checkout at the right commit. Verified end-to-end: `dist/` built with a working `node_modules` (724 entries) and a correct `package.json`.
 - **A real Docker build-cache regression, accepted deliberately**: pnpm's `pnpm fetch` can populate its package store from *just* the lockfile, letting Docker cache the dependency-fetch layer before the full source tree is copied in. Yarn workspaces need every workspace's `package.json` present to resolve at all, so that optimization has no equivalent without fragile wildcard `COPY --parents` tricks — both Dockerfiles now do a single `COPY . .` followed by `yarn install`, meaning any source change invalidates the install layer too. Documented, not silently dropped.
 
 ## 7. CI
