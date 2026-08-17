@@ -30,15 +30,15 @@
 		"@directus/constants": "workspace:*",
 		"@directus/storage": "workspace:*",
 		"@directus/utils": "workspace:*",
-		"@google-cloud/storage": "7.18.0"
+		"@google-cloud/storage": "catalog:"
 	},
 	"devDependencies": {
-		"@directus/tsconfig": "4.0.0",
+		"@directus/tsconfig": "catalog:",
 		"@directus/types": "workspace:*",
-		"@ngneat/falso": "8.0.2",
-		"@vitest/coverage-v8": "4.1.10",
-		"tsdown": "0.15.11",
-		"typescript": "5.9.3",
-		"vitest": "4.1.10"
+		"@ngneat/falso": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
 	}
 }

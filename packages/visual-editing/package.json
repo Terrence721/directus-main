@@ -67,15 +67,15 @@
 		"test": "vitest --typecheck --watch=false"
 	},
 	"dependencies": {
-		"@reach/observe-rect": "1.2.0"
+		"@reach/observe-rect": "catalog:"
 	},
 	"devDependencies": {
-		"@directus/tsconfig": "4.0.0",
+		"@directus/tsconfig": "catalog:",
 		"@directus/types": "workspace:*",
 		"@directus/utils": "workspace:*",
-		"happy-dom": "20.10.6",
-		"tsdown": "0.15.11",
-		"typescript": "5.9.3",
-		"vitest": "4.1.10"
+		"happy-dom": "catalog:",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
 	}
 }

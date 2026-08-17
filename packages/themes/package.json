@@ -29,27 +29,27 @@
 	},
 	"dependencies": {
 		"@directus/utils": "workspace:*",
-		"decamelize": "6.0.1",
-		"flat": "6.0.1",
-		"lodash-es": "4.18.1",
-		"zod": "4.1.12"
+		"decamelize": "catalog:",
+		"flat": "catalog:",
+		"lodash-es": "catalog:",
+		"zod": "catalog:"
 	},
 	"devDependencies": {
-		"@directus/tsconfig": "4.0.0",
+		"@directus/tsconfig": "catalog:",
 		"@directus/types": "workspace:*",
-		"@types/lodash-es": "4.17.12",
-		"@unhead/vue": "1.11.20",
-		"pinia": "2.3.1",
-		"tsdown": "0.15.11",
-		"typescript": "5.9.3",
-		"unplugin-vue": "7.2.0",
-		"vitest": "4.1.10",
-		"vue": "3.5.24",
-		"vue-tsc": "3.1.8"
+		"@types/lodash-es": "catalog:",
+		"@unhead/vue": "catalog:",
+		"pinia": "catalog:",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
+		"unplugin-vue": "catalog:",
+		"vitest": "catalog:",
+		"vue": "catalog:",
+		"vue-tsc": "catalog:"
 	},
 	"peerDependencies": {
-		"@unhead/vue": "1.11.20",
-		"pinia": "2.3.1",
-		"vue": "3.5.24"
+		"@unhead/vue": "*",
+		"pinia": "*",
+		"vue": "*"
 	}
 }

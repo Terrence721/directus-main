@@ -27,15 +27,15 @@
 		"test:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
-		"ms": "2.1.3"
+		"ms": "catalog:"
 	},
 	"devDependencies": {
-		"@directus/tsconfig": "4.0.0",
+		"@directus/tsconfig": "catalog:",
 		"@directus/types": "workspace:*",
-		"@types/ms": "2.1.0",
-		"@vitest/coverage-v8": "4.1.10",
-		"tsdown": "0.15.11",
-		"typescript": "5.9.3",
-		"vitest": "4.1.10"
+		"@types/ms": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
 	}
 }

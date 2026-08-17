@@ -29,17 +29,17 @@
 	"dependencies": {
 		"@directus/errors": "workspace:*",
 		"@directus/utils": "workspace:*",
-		"@sesamecare-oss/redlock": "1.4.0",
-		"ioredis": "5.8.2",
-		"lru-cache": "11.2.2",
-		"rate-limiter-flexible": "7.2.0"
+		"@sesamecare-oss/redlock": "catalog:",
+		"ioredis": "catalog:",
+		"lru-cache": "catalog:",
+		"rate-limiter-flexible": "catalog:"
 	},
 	"devDependencies": {
-		"@directus/tsconfig": "4.0.0",
-		"@types/node": "22.13.14",
-		"@vitest/coverage-v8": "4.1.10",
-		"tsdown": "0.15.11",
-		"typescript": "5.9.3",
-		"vitest": "4.1.10"
+		"@directus/tsconfig": "catalog:",
+		"@types/node": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
 	}
 }

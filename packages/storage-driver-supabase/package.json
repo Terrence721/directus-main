@@ -30,17 +30,17 @@
 		"@directus/constants": "workspace:*",
 		"@directus/storage": "workspace:*",
 		"@directus/utils": "workspace:*",
-		"@supabase/storage-js": "2.81.0",
-		"tus-js-client": "4.3.1",
-		"undici": "7.28.0"
+		"@supabase/storage-js": "catalog:",
+		"tus-js-client": "catalog:",
+		"undici": "catalog:"
 	},
 	"devDependencies": {
-		"@directus/tsconfig": "4.0.0",
+		"@directus/tsconfig": "catalog:",
 		"@directus/types": "workspace:*",
-		"@ngneat/falso": "8.0.2",
-		"@vitest/coverage-v8": "4.1.10",
-		"tsdown": "0.15.11",
-		"typescript": "5.9.3",
-		"vitest": "4.1.10"
+		"@ngneat/falso": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
 	}
 }

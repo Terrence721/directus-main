@@ -18,19 +18,19 @@
 	"private": true,
 	"packageManager": "yarn@4.18.0",
 	"dependencies": {
-		"@directus/license": "0.4.0",
-		"@directus/tsconfig": "4.0.0",
+		"@directus/license": "catalog:",
+		"@directus/tsconfig": "catalog:",
 		"@directus/types": "workspace:*",
-		"@fastify/type-provider-typebox": "6.1.0",
-		"@types/lodash-es": "4.17.12",
-		"@types/node": "22.13.14",
-		"fastify": "5.8.5",
-		"jose": "6.2.3",
-		"lodash-es": "4.18.1",
-		"tsdown": "0.15.11",
-		"tsx": "4.22.4",
-		"typebox": "1.1.37",
-		"typescript": "5.9.3"
+		"@fastify/type-provider-typebox": "catalog:",
+		"@types/lodash-es": "catalog:",
+		"@types/node": "catalog:",
+		"fastify": "catalog:",
+		"jose": "catalog:",
+		"lodash-es": "catalog:",
+		"tsdown": "catalog:",
+		"tsx": "catalog:",
+		"typebox": "catalog:",
+		"typescript": "catalog:"
 	},
 	"engines": {
 		"node": ">=22"

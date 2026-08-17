@@ -30,25 +30,25 @@
 	"dependencies": {
 		"@directus/constants": "workspace:*",
 		"@directus/utils": "workspace:*",
-		"@vueuse/core": "14.0.0",
-		"axios": "1.18.1",
-		"lodash-es": "4.18.1",
-		"nanoid": "5.1.6"
+		"@vueuse/core": "catalog:",
+		"axios": "catalog:",
+		"lodash-es": "catalog:",
+		"nanoid": "catalog:"
 	},
 	"devDependencies": {
 		"@directus/sdk": "workspace:*",
-		"@directus/tsconfig": "4.0.0",
+		"@directus/tsconfig": "catalog:",
 		"@directus/types": "workspace:*",
-		"@types/lodash-es": "4.17.12",
-		"@vitest/coverage-v8": "4.1.10",
-		"@vue/test-utils": "2.4.6",
-		"jsdom": "29.1.1",
-		"tsdown": "0.15.11",
-		"typescript": "5.9.3",
-		"vitest": "4.1.10",
-		"vue": "3.5.24"
+		"@types/lodash-es": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"@vue/test-utils": "catalog:",
+		"jsdom": "catalog:",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:",
+		"vue": "catalog:"
 	},
 	"peerDependencies": {
-		"vue": "3.5.24"
+		"vue": "*"
 	}
 }
