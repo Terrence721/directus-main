@@ -41,14 +41,20 @@ jobs:
       - name: Prepare
         uses: ./.github/actions/prepare
 
+      # tests/blackbox/docker-compose.yml doesn't exist yet either (manifest-only
+      # migration, see todo.md "Still to do") - re-enable once its source tree lands.
       - name: Start services
+        if: false
         env:
           REDIS_IMAGE: ${{ matrix.redis-image }}
         run:
           docker compose -f tests/blackbox/docker-compose.yml up auth-saml redis minio minio-mc openldap -d --quiet-pull
           --wait
 
+      # tests/blackbox has no real test files/config yet (manifest-only migration,
+      # see todo.md "Still to do") - re-enable once its source tree lands.
       - name: Run tests
+        if: false
         run: TEST_DB=sqlite3 yarn run test:blackbox --project common
 
   db:
@@ -76,12 +82,14 @@ jobs:
       - name: Prepare
         uses: ./.github/actions/prepare
 
+      # tests/blackbox/docker-compose.yml doesn't exist yet either (manifest-only
+      # migration, see todo.md "Still to do") - re-enable once its source tree lands.
       - name: Start database
-        if: matrix.vendor != 'sqlite3'
+        if: false
         run: docker compose -f tests/blackbox/docker-compose.yml up ${{ matrix.vendor }} -d --quiet-pull --wait
 
       - name: MSSQL Set Compatibility Level
-        if: matrix.vendor == 'mssql'
+        if: false
         run: |
           for i in {1..30}
           do
@@ -96,10 +104,16 @@ jobs:
             -l 30
           echo "MSSQL compatibility level set successfully"
 
+      # tests/blackbox/docker-compose.yml doesn't exist yet either (manifest-only
+      # migration, see todo.md "Still to do") - re-enable once its source tree lands.
       - name: Start services
+        if: false
         env:
           REDIS_IMAGE: ${{ matrix.redis-image }}
         run: docker compose -f tests/blackbox/docker-compose.yml up redis minio minio-mc -d --quiet-pull --wait
 
+      # tests/blackbox has no real test files/config yet (manifest-only migration,
+      # see todo.md "Still to do") - re-enable once its source tree lands.
       - name: Run tests
+        if: false
         run: TEST_DB=${{ matrix.vendor }} yarn run test:blackbox --project db

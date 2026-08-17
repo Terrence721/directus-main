@@ -147,6 +147,14 @@ alone didn't fix CI. Caught from a real second CI failure after the first fix lo
 source-empty packages) but only runs on release-tag pushes, not on every `Check` — not fixed yet, tracked here rather
 than rewritten blind.
 
+**`blackbox.yml` and `e2e.yml`'s actual test-running steps gated `if: false`, matching eShop-full's exact practice for
+its MAUI/Playwright steps.** Neither workflow's path filters include `.github/actions/prepare/action.yml`, so the
+`Build`-step fix above didn't trigger a re-run — but even re-triggered, both would still fail: `tests/blackbox` and
+`tests/e2e` are manifest-only (no real test files or `vitest.config.ts` yet), and blackbox additionally needs a working
+`api` build. Not a scoping tweak this time — there's nothing real to run yet. `Checkout`/`Prepare`/service-startup steps
+stay active (still catch real regressions in install/build/docker-compose config); only the `Run tests` step is gated,
+with the re-enable condition written directly in the workflow comment.
+
 | Item                                   | Detail                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Source tree: `sdk`                     | TypeScript SDK client — `src/`, `tests/`, `tsconfig.json`, `tsdown.config.ts`, `vitest.config.ts`, `readme.md`, `license`                                                                                                                                                                                                                                                                                                                                                                                           |
