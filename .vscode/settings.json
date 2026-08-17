@@ -1,0 +1,8 @@
+{
+	"cSpell.words": ["directus", "Rijk", "Zanten"],
+	"stylelint.validate": ["css", "scss", "vue"],
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": "never",
+		"source.fixAll.eslint": "explicit"
+	}
+}
