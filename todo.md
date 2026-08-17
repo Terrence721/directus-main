@@ -89,6 +89,8 @@ Migration order is **manifests first, then real source**: every workspace alread
 
 **CI build/test scoped to what actually exists, same practice as eShop-full's trimmed `.slnx`/`.slnf`.** Root `build`/`test`/`test:coverage` scripts use `yarn workspaces foreach --include directus` — `directus` is the only workspace with real source right now (and has no `build`/`test` scripts of its own, so this is currently a clean no-op rather than attempting all 42 workspaces and failing on the 41 that are still just manifests with an inherited `tsdown src/index.ts` build script pointing at a `src/` that doesn't exist yet). The `--include` list grows by name as each package's real source lands — not a permanent scoping decision, a rolling one.
 
+**The same scoping was initially missed in `.github/actions/prepare/action.yml`'s own `Build` step** — it calls `yarn workspaces foreach -A -t -j 2 run build` directly, not the root `yarn build` script, so fixing the root script alone didn't fix CI. Caught from a real second CI failure after the first fix looked complete. Now scoped the same way (`--include directus`), verified locally with the exact CI command. **`release.yml`'s `yarn workspaces foreach --all --no-private npm publish` has the same shape of gap** (would try to publish all 41 source-empty packages) but only runs on release-tag pushes, not on every `Check` — not fixed yet, tracked here rather than rewritten blind.
+
 | Item | Detail |
 |---|---|
 | Source tree: `sdk` | TypeScript SDK client — `src/`, `tests/`, `tsconfig.json`, `tsdown.config.ts`, `vitest.config.ts`, `readme.md`, `license` |

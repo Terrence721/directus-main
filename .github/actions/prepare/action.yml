@@ -38,4 +38,4 @@ runs:
       shell: bash
       env:
         NODE_OPTIONS: --max_old_space_size=6144
-      run: yarn workspaces foreach -A -t -j 2 run build
+      run: yarn workspaces foreach -A -t -j 2 --include directus run build
