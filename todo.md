@@ -21,7 +21,7 @@ A living list of what's done and what's left on this build. This is an independe
 | `directus` CLI package | Full source (6 files): `cli.js`, version helpers, license, readme |
 | **All 43 workspace `package.json` manifests** | Migrated from pnpm's `catalog:` protocol to pinned Yarn-compatible versions — see "Package manifest migration" below |
 
-**Still to do:** full source trees for 41 of 42 workspace packages (everything except `directus/`), the `isolated-vm` native build failure, and a handful of tracked follow-ups — see the "Still to do" section below.
+**Still to do:** full source trees for 41 of 42 workspace packages (everything except `directus/`) and a handful of tracked follow-ups — see the "Still to do" section below.
 
 ## ✅ Done
 
@@ -75,6 +75,14 @@ All 43 `package.json` files across the workspace, each individually inspected an
 
 Commits: `eaf7cf3` (scaffolding/policy), `43696bf` (editor/lint), `0f88527` (Claude integration), `9febd69` (Yarn root config), `2c7aad6` (Docker/deploy), `91c2c5c` (CI/GitHub config), `d1d1e7f` (`directus` package), `ac0f0a1` (core runtime manifests), `10954b3` (extension system manifests), `426cb71` (storage driver manifests), `a64de46` (core utility manifests), `3e32174` (remaining tooling manifests), `8d8b181` (test project manifests).
 
+### Real bug found and fixed: `isolated-vm` incompatible with Node 26
+
+**Not an environment/toolchain problem — a genuine version incompatibility, caught by actually running CI, not assumed.** `isolated-vm@5.0.3` (the version inherited from the source repo's catalog) failed to compile identically on two different platforms: this Windows dev machine and the GitHub Actions Ubuntu runner (`gh run view --log-failed` pulled the real compiler output, not just the summary). The first hypothesis — a missing native build toolchain — was wrong, and disproven by the same log: every *other* native module in the ~2,150-package graph (`sqlite3`, `esbuild`, `@parcel/watcher`, etc.) built cleanly in the same install.
+
+The real cause, visible in the actual g++ errors: `isolated-vm@5.0.3`'s C++ source (`class_handle.h`, `serializer_nortti.cc`) calls V8 APIs that Node 26's bundled V8 has since removed or changed the signature of — `v8::Template::SetAccessor` (removed), `v8::Object::GetIsolate()`/`GetPrototype()` (removed, `GetPrototypeV2()` is the replacement), `SetAlignedPointerInInternalField`/`GetAlignedPointerFromInternalField` (now require an extra `EmbedderDataTypeTag` argument), and a `v8::Maybe<T>`/`cppgc` header restructuring that broke several `Local<Object>`→`Local<Value>` conversions the addon relied on implicitly.
+
+Fix: bumped `isolated-vm` to `7.0.1` (latest, `engines.node: ">=24.0.0"`) in `api/package.json`. Verified, not assumed — re-ran `yarn install` locally and confirmed it now builds successfully with no errors.
+
 ## 🚧 Still to do
 
 Migration order is **manifests first, then real source**: every workspace already has a working `package.json` (done, above), so `yarn install` resolves the full dependency graph today even though most packages are source-empty. Adding real source to each one is purely additive from here — nothing about the root config needs to change as they land.
@@ -86,7 +94,6 @@ Migration order is **manifests first, then real source**: every workspace alread
 | Source tree: `app` | Vue 3 dashboard |
 | Source tree: 32 `packages/*` | Including `packages/release-notes-generator`'s `src/utils/process-packages.ts` rewrite — **specifically flagged**: still imports `@pnpm/workspace.find-packages`/`@pnpm/workspace.pkgs-graph` in the actual source even though the `package.json` dependency is already gone. Planned replacement: read each workspace's `package.json` directly (`yarn workspaces list --json` + `fs.readFileSync`) and build the internal dependency graph from `workspace:*` references — no package-manager-specific API needed |
 | Source tree: `tests/*` | `blackbox` (+ 2 extension fixtures), `e2e`, `mock-license-server`, `sandbox` |
-| `isolated-vm` native build failure | Failed to compile during `yarn install`'s Link step (exit code 1) on this Windows dev machine — needs a working native build toolchain (MSVC + Python for node-gyp) investigated. Everything else in the dependency graph installs cleanly; this is the one hard failure |
 | `vitest` 3.2.7→4.1.10 compatibility | Bumped to latest across all 32 consuming packages, but no `vitest.config.ts` has been copied yet — real config compatibility with the 4.x line is unconfirmed |
-| CI not yet exercised | No push/PR has triggered the 18 workflows against the live repo yet. Several depend on secrets (`CLAUDE_CODE_OAUTH_TOKEN`, `RELEASE_PAT`, `DOCKERHUB_USERNAME`/`PASSWORD`, `SLACK_WEBHOOK_CMS_FREEZE`) not yet configured on `Terrence721/directus-main` |
+| CI secrets not yet configured | `Check` now installs cleanly (see the `isolated-vm` fix above), but workflows depending on secrets (`CLAUDE_CODE_OAUTH_TOKEN`, `RELEASE_PAT`, `DOCKERHUB_USERNAME`/`PASSWORD`, `SLACK_WEBHOOK_CMS_FREEZE`) not yet configured on `Terrence721/directus-main` — e.g. `Sync Readme to Docker Hub` — will keep failing until those are set |
 | Docker build not yet tested end-to-end | Needs the real source trees, the `isolated-vm` fix, and a real run of `scripts/deploy-production.mjs` to confirm the assembled `dist/` actually boots |
