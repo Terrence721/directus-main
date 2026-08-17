@@ -46,15 +46,6 @@ Directus includes a built-in AI Assistant and a native MCP server. AI works with
 
 ---
 
-## ❤️ Contributing
-
-Read our [Contributing Guide](https://github.com/Terrence721/directus-main/blob/main/contributing.md) before submitting pull
-requests.
-
-Report security vulnerabilities per our [Security Policy](https://github.com/Terrence721/directus-main/security/policy).
-
----
-
 ## 📄 License
 
 Licensed under the Monospace Sustainable Core License (MSCL) 1.0 — see [`license`](license) for the full text.
