@@ -18,10 +18,7 @@
 > Leave unchecked where not applicable
 
 - [ ] Tests added/updated
-- [ ] Documentation PR created in [directus/docs](https://github.com/directus/docs) <!-- LINK -->
-- [ ] OpenAPI updated
-  - [ ] Local specs package (`@directus/specs`)
-  - [ ] PR created in [directus/openapi](https://github.com/directus/openapi) <!-- LINK -->
+- [ ] OpenAPI updated (local specs package, `@directus/specs`)
 - [ ] SDK (`@directus/sdk`) updated to reflect the changes
 - [ ] Types (`@directus/types`) updated to reflect the changes
 - [ ] GraphQL schema updated to reflect the changes

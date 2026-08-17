@@ -1,8 +1,7 @@
 # Reporting Security Vulnerabilities
 
-**If you believe you have discovered a security issue within a Directus product or service, please open a new private
-security vulnerability report through https://github.com/Terrence721/directus-main/security/advisories/new. Alternatively, reach
-out to us directly over email: [security@directus.io](mailto:security@directus.io).** We will then open a
+**If you believe you have discovered a security issue in this project, please open a new private
+security vulnerability report through https://github.com/Terrence721/directus-main/security/advisories/new.** We will then open a
 [GitHub Security Advisory](https://github.com/Terrence721/directus-main/security/advisories) for tracking the fix on your
 behalf.
 

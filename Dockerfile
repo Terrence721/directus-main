@@ -15,7 +15,6 @@ COPY package.json .
 RUN npm install -g corepack && corepack enable && corepack prepare
 
 # Build as 'node' user to match production image user
-# (see https://github.com/directus/directus/issues/23822)
 RUN chown node:node .
 USER node
 
