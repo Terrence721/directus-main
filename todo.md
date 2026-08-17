@@ -87,6 +87,8 @@ Fix: bumped `isolated-vm` to `7.0.1` (latest, `engines.node: ">=24.0.0"`) in `ap
 
 Migration order is **manifests first, then real source**: every workspace already has a working `package.json` (done, above), so `yarn install` resolves the full dependency graph today even though most packages are source-empty. Adding real source to each one is purely additive from here — nothing about the root config needs to change as they land.
 
+**CI build/test scoped to what actually exists, same practice as eShop-full's trimmed `.slnx`/`.slnf`.** Root `build`/`test`/`test:coverage` scripts use `yarn workspaces foreach --include directus` — `directus` is the only workspace with real source right now (and has no `build`/`test` scripts of its own, so this is currently a clean no-op rather than attempting all 42 workspaces and failing on the 41 that are still just manifests with an inherited `tsdown src/index.ts` build script pointing at a `src/` that doesn't exist yet). The `--include` list grows by name as each package's real source lands — not a permanent scoping decision, a rolling one.
+
 | Item | Detail |
 |---|---|
 | Source tree: `sdk` | TypeScript SDK client — `src/`, `tests/`, `tsconfig.json`, `tsdown.config.ts`, `vitest.config.ts`, `readme.md`, `license` |
