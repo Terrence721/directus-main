@@ -1,0 +1,43 @@
+{
+	"name": "@directus/extensions-registry",
+	"version": "4.0.2",
+	"description": "Abstraction for exploring Directus extensions on a package registry",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/extensions-registry"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown src/index.ts --dts",
+		"dev": "tsdown src/index.ts --dts --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"dependencies": {
+		"@directus/constants": "workspace:*",
+		"@directus/errors": "workspace:*",
+		"ky": "1.14.0",
+		"zod": "4.1.12"
+	},
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@directus/types": "workspace:*",
+		"@vitest/coverage-v8": "4.1.10",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10"
+	}
+}

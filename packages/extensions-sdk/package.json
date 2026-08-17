@@ -1,0 +1,74 @@
+{
+	"name": "@directus/extensions-sdk",
+	"version": "18.0.2",
+	"description": "A toolkit to develop extensions to extend Directus",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/extensions-sdk"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./cli": "./dist/cli/index.js",
+		"./package.json": "./package.json"
+	},
+	"main": "dist/index.js",
+	"bin": {
+		"directus-extension": "cli.js"
+	},
+	"files": [
+		"dist",
+		"templates"
+	],
+	"scripts": {
+		"build": "tsc --project tsconfig.prod.json",
+		"dev": "tsc --watch",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"dependencies": {
+		"@directus/composables": "workspace:*",
+		"@directus/constants": "workspace:*",
+		"@directus/extensions": "workspace:*",
+		"@directus/themes": "workspace:*",
+		"@directus/types": "workspace:*",
+		"@directus/utils": "workspace:*",
+		"@rollup/plugin-commonjs": "28.0.9",
+		"@rollup/plugin-json": "6.1.0",
+		"@rollup/plugin-node-resolve": "16.0.3",
+		"@rollup/plugin-replace": "6.0.3",
+		"@rollup/plugin-terser": "1.0.0",
+		"@rollup/plugin-virtual": "3.0.2",
+		"@vitejs/plugin-vue": "6.0.1",
+		"chalk": "5.6.2",
+		"commander": "14.0.2",
+		"esbuild": "0.28.1",
+		"execa": "9.6.0",
+		"fs-extra": "11.3.2",
+		"inquirer": "12.11.0",
+		"ora": "8.2.0",
+		"rollup": "4.59.0",
+		"rollup-plugin-esbuild": "6.2.1",
+		"rollup-plugin-styler": "2.0.0",
+		"semver": "7.7.3",
+		"vite": "8.1.2",
+		"vue": "3.5.24"
+	},
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@types/fs-extra": "11.0.4",
+		"@types/inquirer": "9.0.9",
+		"@types/semver": "7.7.1",
+		"@vitest/coverage-v8": "4.1.10",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10"
+	},
+	"engines": {
+		"node": ">=20.19.0"
+	}
+}

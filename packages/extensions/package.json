@@ -1,0 +1,77 @@
+{
+	"name": "@directus/extensions",
+	"version": "4.0.2",
+	"description": "Utilities and types for Directus extensions",
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Terrence721/directus-main.git",
+		"directory": "packages/extensions"
+	},
+	"funding": "https://github.com/Terrence721/directus-main?sponsor=1",
+	"license": "MIT",
+	"author": "Terrence Daniels <terrence_daniels_35@yahoo.com>",
+	"type": "module",
+	"exports": {
+		".": "./dist/index.js",
+		"./node": "./dist/node.js",
+		"./package.json": "./package.json",
+		"./api.d.ts": "./api.d.ts"
+	},
+	"main": "dist/index.js",
+	"files": [
+		"dist",
+		"api.d.ts"
+	],
+	"scripts": {
+		"build": "yarn build:node && yarn build:shared",
+		"build:node": "tsdown src/node.ts --tsconfig src/node/tsconfig.json --out-dir dist --dts",
+		"build:shared": "tsdown src/index.ts --tsconfig src/tsconfig.json --out-dir dist --dts",
+		"dev": "concurrently \"yarn build:node --watch\" \"yarn build:shared --watch\"",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"dependencies": {
+		"@directus/constants": "workspace:*",
+		"@directus/types": "workspace:*",
+		"@directus/utils": "workspace:*",
+		"fs-extra": "11.3.2",
+		"lodash-es": "4.18.1",
+		"zod": "4.1.12"
+	},
+	"devDependencies": {
+		"@directus/tsconfig": "4.0.0",
+		"@types/fs-extra": "11.0.4",
+		"@types/lodash-es": "4.17.12",
+		"@types/node": "22.13.14",
+		"@vitest/coverage-v8": "4.1.10",
+		"concurrently": "^9.0.0",
+		"knex": "3.1.0",
+		"pino": "9.7.0",
+		"tsdown": "0.15.11",
+		"typescript": "5.9.3",
+		"vitest": "4.1.10",
+		"vue": "3.5.24",
+		"vue-router": "4.6.3"
+	},
+	"peerDependencies": {
+		"knex": "3.1.0",
+		"pino": "9.7.0",
+		"vue": "3.5.24",
+		"vue-router": "4.6.3"
+	},
+	"peerDependenciesMeta": {
+		"knex": {
+			"optional": true
+		},
+		"pino": {
+			"optional": true
+		},
+		"vue": {
+			"optional": true
+		},
+		"vue-router": {
+			"optional": true
+		}
+	}
+}
