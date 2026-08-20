@@ -98,7 +98,7 @@ directus-main/
 │   └── sandbox/                 📋
 ├── scripts/
 │   └── deploy-production.mjs    ✅  custom replacement for `pnpm deploy` — see Section 6
-├── .github/                     ✅  18 workflows, prepare action, CodeQL config, templates
+├── .github/                     ✅  17 workflows, prepare action, CodeQL config, templates
 ├── Dockerfile, Dockerfile.dhi   ✅  standard + hardened/distroless variants
 ├── docker-compose.yml           ✅  local dev database/service stack
 ├── package.json, .yarnrc.yml, yarn.lock  ✅  Yarn workspace root config
@@ -182,7 +182,7 @@ land.
 
 ## 7. CI
 
-- 18 workflows under `.github/workflows/` — lint/format/test (`check.yml`), blackbox and e2e test suites, CodeQL,
+- 17 workflows under `.github/workflows/` — lint/format/test (`check.yml`), blackbox and e2e test suites, CodeQL,
   changeset enforcement, release automation (`release.yml`, `prepare-release.yml`), and repo maintenance (stale-issue/PR
   closers, milestone assignment).
 - **`.github/actions/prepare`** — the shared setup composite action every workflow calls into: installs Node via
