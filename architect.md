@@ -76,7 +76,7 @@ directus-main/
 │   ├── memory/                  📋
 │   ├── pressure/                📋
 │   ├── release-notes-generator/ 📋  — see Section 5, "pnpm-internals dependency" note
-│   ├── schema/                  🚧  2 of 16 files — see todo.md
+│   ├── schema/                  🚧  3 of 16 files — see todo.md
 │   ├── schema-builder/          📋
 │   ├── specs/                   📋
 │   ├── storage/                 📋
