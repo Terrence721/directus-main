@@ -1,0 +1,407 @@
+<title>Known Gaps — The Honest List</title>
+<style>
+	:root {
+		--ink: #1b1f1e;
+		--ink-soft: #4b544f;
+		--paper: #e9ece9;
+		--surface: #ffffff;
+		--line: #b7bfba;
+		--blocked: #a13d2b;
+		--blocked-bg: #f3e2dd;
+		--waiting: #8b6d1f;
+		--waiting-bg: #f1ecd8;
+		--info: #2b5d6e;
+		--info-bg: #dde9ec;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', 'Liberation Mono', monospace;
+		--sans: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--ink: #eceeec;
+		--ink-soft: #a9b2ac;
+		--paper: #141716;
+		--surface: #1c2120;
+		--line: #3a423e;
+		--blocked: #dd7a4a;
+		--blocked-bg: #2c1e17;
+		--waiting: #d9b463;
+		--waiting-bg: #2c2519;
+		--info: #7fc4d6;
+		--info-bg: #17262b;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--ink: #eceeec;
+			--ink-soft: #a9b2ac;
+			--paper: #141716;
+			--surface: #1c2120;
+			--line: #3a423e;
+			--blocked: #dd7a4a;
+			--blocked-bg: #2c1e17;
+			--waiting: #d9b463;
+			--waiting-bg: #2c2519;
+			--info: #7fc4d6;
+			--info-bg: #17262b;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 72ch;
+		margin: 0 0 2.2rem;
+	}
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--ink);
+	}
+
+	.legend {
+		display: flex;
+		gap: 1.4rem;
+		flex-wrap: wrap;
+		margin: 0 0 2rem;
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+	}
+	.legend span {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.dot {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		display: inline-block;
+	}
+	.dot--blocked {
+		background: var(--blocked);
+	}
+	.dot--waiting {
+		background: var(--waiting);
+	}
+	.dot--info {
+		background: var(--info);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 2rem 0 1rem;
+	}
+	h2:first-of-type {
+		margin-top: 0;
+	}
+
+	.item {
+		border: 1px solid var(--line);
+		background: var(--surface);
+		border-radius: 10px;
+		padding: 1rem 1.2rem 1.1rem;
+		margin-bottom: 0.8rem;
+	}
+	.item-head {
+		display: flex;
+		align-items: baseline;
+		gap: 0.7rem;
+		margin-bottom: 0.5rem;
+		flex-wrap: wrap;
+	}
+	.item-tag {
+		font-family: var(--mono);
+		font-size: 0.64rem;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		padding: 0.2rem 0.55rem;
+		border-radius: 4px;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+	.item--blocked .item-tag {
+		color: var(--blocked);
+		background: var(--blocked-bg);
+	}
+	.item--waiting .item-tag {
+		color: var(--waiting);
+		background: var(--waiting-bg);
+	}
+	.item--info .item-tag {
+		color: var(--info);
+		background: var(--info-bg);
+	}
+	.item--resolved .item-tag {
+		color: var(--info);
+		background: var(--info-bg);
+	}
+	.item-title {
+		font-size: 0.92rem;
+		font-weight: 600;
+		margin: 0;
+		font-family: var(--mono);
+	}
+	.item p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.6;
+		color: var(--ink-soft);
+		max-width: 74ch;
+	}
+	.item code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.item a {
+		color: var(--ink);
+	}
+
+	.callout {
+		border: 1px solid var(--line);
+		background: var(--surface);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin: 1.4rem 0 0.5rem;
+	}
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--ink-soft);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+	.callout a {
+		color: var(--ink);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--line);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — known gaps</p>
+	<h1>The honest list — tracked here and in todo.md, not buried in chat history.</h1>
+	<p class="dek">
+		Every item below is a real, current gap — not a hedge. Some are blocked on real source landing elsewhere, some are
+		waiting on this repo's own decisions, and some are just facts worth stating plainly rather than letting a reader
+		assume more works than actually does. See
+		<a href="yarn-migration.html">Yarn Migration</a>
+		for the five gaps already found and fixed, and one still open, in the manifest layer itself.
+	</p>
+
+	<div class="legend">
+		<span>
+			<span class="dot dot--blocked"></span>
+			blocked on real source elsewhere
+		</span>
+		<span>
+			<span class="dot dot--waiting"></span>
+			waiting on a decision here
+		</span>
+		<span>
+			<span class="dot dot--info"></span>
+			stated plainly, not urgent
+		</span>
+	</div>
+
+	<h2>The big one</h2>
+	<div class="item item--info">
+		<div class="item-head">
+			<span class="item-tag">Scale</span>
+			<p class="item-title">40 of 42 workspace packages have no real source yet</p>
+		</div>
+		<p>
+			This is the main body of remaining work, not a footnote — see
+			<a href="system-architecture.html">System Architecture</a>
+			for the layer breakdown and
+			<a href="package-manifests.html">Package Manifests</a>
+			for every package's real role. Even the 2 packages with real source have caveats:
+			<code>directus</code>
+			's complete source tree can't actually run yet (imports 2 manifest-only packages), and
+			<code>packages/types</code>
+			doesn't type-check as a whole until its remaining 12 files land.
+		</p>
+	</div>
+
+	<h2>CI &amp; testing</h2>
+	<div class="item item--blocked">
+		<div class="item-head">
+			<span class="item-tag">Blocked on source</span>
+			<p class="item-title">vitest 3.2.7→4.1.10 compatibility unverified</p>
+		</div>
+		<p>
+			Bumped to latest across all 32 consuming packages by deliberate choice, but no package's
+			<code>vitest.config.ts</code>
+			has been copied over yet — real config compatibility with the breaking 4.x line is genuinely unconfirmed, not just
+			assumed fine. The VS Code Vitest extension is disabled workspace-wide for the same reason: it threw
+			<code>Error: The extension could not load any config</code>
+			on every launch, confirmed via a full repo search finding zero config files anywhere. Re-enable both once the
+			first package lands one.
+		</p>
+	</div>
+	<div class="item item--blocked">
+		<div class="item-head">
+			<span class="item-tag">Blocked on source</span>
+			<p class="item-title">blackbox.yml / e2e.yml — Run tests steps gated if: false</p>
+		</div>
+		<p>
+			<code>tests/blackbox</code>
+			and
+			<code>tests/e2e</code>
+			are manifest-only — nothing real to run yet.
+			<code>Checkout</code>
+			/
+			<code>Prepare</code>
+			/service-startup steps stay active (still catch real regressions in install/build/docker-compose config); only
+			<code>Run tests</code>
+			is gated, with the re-enable condition written directly in each workflow's own comment. Tracked as
+			<a href="https://github.com/Terrence721/directus-main/issues/30">Issue #30</a>
+			so it doesn't get forgotten once the source lands.
+		</p>
+	</div>
+	<div class="item item--waiting">
+		<div class="item-head">
+			<span class="item-tag">Waiting on setup</span>
+			<p class="item-title">CI secrets not yet configured</p>
+		</div>
+		<p>
+			<code>Check</code>
+			installs cleanly (see the
+			<code>isolated-vm</code>
+			fix in
+			<a href="yarn-migration.html">Yarn Migration</a>
+			), but workflows depending on secrets (
+			<code>CLAUDE_CODE_OAUTH_TOKEN</code>
+			,
+			<code>RELEASE_PAT</code>
+			,
+			<code>DOCKERHUB_USERNAME</code>
+			/
+			<code>PASSWORD</code>
+			,
+			<code>SLACK_WEBHOOK_CMS_FREEZE</code>
+			) aren't configured on this repo yet — e.g.
+			<code>Sync Readme to Docker Hub</code>
+			will keep failing until those are set. A one-time setup task, not a code gap.
+		</p>
+	</div>
+
+	<h2>Docker</h2>
+	<div class="item item--blocked">
+		<div class="item-head">
+			<span class="item-tag">Blocked on source</span>
+			<p class="item-title">Neither Dockerfile has been build-tested end-to-end</p>
+		</div>
+		<p>
+			Needs the real source trees, the
+			<code>isolated-vm</code>
+			fix (already in), and a real run of
+			<code>scripts/deploy-production.mjs</code>
+			to confirm the assembled
+			<code>dist/</code>
+			actually boots. The script itself was already verified in isolation — see
+			<a href="yarn-migration.html">Yarn Migration</a>
+			's deploy-script correction — but a full container boot hasn't been tried yet.
+		</p>
+	</div>
+
+	<h2>Real bugs found and fixed</h2>
+	<div class="item item--resolved">
+		<div class="item-head">
+			<span class="item-tag">Resolved</span>
+			<p class="item-title">isolated-vm@5.0.3 incompatible with Node 26</p>
+		</div>
+		<p>
+			Failed to compile identically on Windows and the GitHub Actions Ubuntu runner — real compiler output showed the
+			native addon calling V8 APIs Node 26's bundled V8 has since removed or changed. Not a missing-toolchain problem —
+			every other native module in the dependency graph built cleanly. Fixed by bumping to
+			<code>7.0.1</code>
+			, verified with a real
+			<code>yarn install</code>
+			. Full detail on
+			<a href="yarn-migration.html">Yarn Migration</a>
+			.
+		</p>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">i</span>
+		<p>
+			Every item on this page links back to either
+			<code>todo.md</code>
+			's "Still to do" table or a real GitHub issue — nothing here is asserted without something to check it against.
+			See
+			<a href="https://github.com/Terrence721/directus-main/blob/main/todo.md">todo.md</a>
+			for the live, evidence-linked version.
+		</p>
+	</div>
+
+	<footer>
+		directus-main · 40 of 42 packages still source-empty · 3 CI/test gaps · 1 Docker gap · 1 bug already fixed
+	</footer>
+</div>

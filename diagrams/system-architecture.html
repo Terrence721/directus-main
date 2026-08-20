@@ -1,0 +1,460 @@
+<title>System Architecture — Forty-Three Manifests, Two Packages Real</title>
+<style>
+	:root {
+		--ink: #182225;
+		--ink-soft: #52626a;
+		--paper: #e9edee;
+		--surface: #ffffff;
+		--line: #b9c4c7;
+		--done: #0b7d5f;
+		--done-bg: #dcf0e7;
+		--progress: #9c6b12;
+		--progress-bg: #f5ead2;
+		--planned: #5b6a70;
+		--planned-bg: #eaeeee;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', 'Liberation Mono', monospace;
+		--sans: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--ink: #e6ecec;
+		--ink-soft: #93a3a9;
+		--paper: #10161a;
+		--surface: #171e22;
+		--line: #303c41;
+		--done: #4fd6a8;
+		--done-bg: #142822;
+		--progress: #e0b45c;
+		--progress-bg: #2c2415;
+		--planned: #93a3a9;
+		--planned-bg: #1c2427;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--ink: #e6ecec;
+			--ink-soft: #93a3a9;
+			--paper: #10161a;
+			--surface: #171e22;
+			--line: #303c41;
+			--done: #4fd6a8;
+			--done-bg: #142822;
+			--progress: #e0b45c;
+			--progress-bg: #2c2415;
+			--planned: #93a3a9;
+			--planned-bg: #1c2427;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 72ch;
+		margin: 0 0 2.2rem;
+	}
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--ink);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 1rem;
+	}
+
+	/* layer diagram */
+	.layers {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		margin-bottom: 2.2rem;
+	}
+	.layer {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
+		border: 1px solid var(--line);
+		border-radius: 10px;
+		background: var(--surface);
+		padding: 0.85rem 1.1rem;
+		flex-wrap: wrap;
+	}
+	.layer-label {
+		font-family: var(--mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		flex: 0 0 148px;
+	}
+	.layer-nodes {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.node {
+		font-family: var(--mono);
+		font-size: 0.78rem;
+		border-radius: 6px;
+		padding: 0.35rem 0.7rem;
+		border: 1px solid var(--line);
+		white-space: nowrap;
+	}
+	.node--done {
+		border-color: var(--done);
+		color: var(--done);
+		background: var(--done-bg);
+		font-weight: 600;
+	}
+	.node--progress {
+		border-color: var(--progress);
+		color: var(--progress);
+		background: var(--progress-bg);
+		font-weight: 600;
+	}
+	.node--planned {
+		border-color: var(--line);
+		color: var(--ink-soft);
+	}
+	.layer-arrow {
+		text-align: center;
+		color: var(--ink-soft);
+		font-size: 0.72rem;
+		font-family: var(--mono);
+	}
+
+	.legend {
+		display: flex;
+		gap: 1.4rem;
+		flex-wrap: wrap;
+		margin: 0.4rem 0 2.2rem;
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+	}
+	.legend span {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.dot {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		display: inline-block;
+	}
+	.dot--done {
+		background: var(--done);
+	}
+	.dot--progress {
+		background: var(--progress);
+	}
+	.dot--planned {
+		background: var(--line);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1rem;
+		margin-bottom: 1.6rem;
+	}
+	@media (max-width: 820px) {
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 560px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.card {
+		border: 1px solid var(--line);
+		border-radius: 10px;
+		background: var(--surface);
+		padding: 1.1rem 1.2rem 1.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+	.card-tag {
+		font-family: var(--mono);
+		font-size: 0.66rem;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		padding: 0.2rem 0.5rem;
+		border-radius: 4px;
+		font-weight: 600;
+		width: fit-content;
+	}
+	.card--done .card-tag {
+		color: var(--done);
+		background: var(--done-bg);
+	}
+	.card--progress .card-tag {
+		color: var(--progress);
+		background: var(--progress-bg);
+	}
+	.card--planned .card-tag {
+		color: var(--ink-soft);
+		background: var(--planned-bg);
+	}
+	.card-title {
+		font-size: 0.95rem;
+		font-weight: 600;
+		margin: 0;
+		font-family: var(--mono);
+	}
+	.card ul {
+		margin: 0;
+		padding-left: 1.1rem;
+		font-size: 0.82rem;
+		line-height: 1.6;
+		color: var(--ink-soft);
+	}
+	.card ul li::marker {
+		color: var(--line);
+	}
+	.card-link {
+		font-size: 0.78rem;
+		margin-top: auto;
+	}
+	.card-link a {
+		color: var(--ink);
+	}
+
+	.callout {
+		border: 1px solid var(--planned);
+		background: var(--planned-bg);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin-bottom: 2rem;
+	}
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--ink);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+	.callout a {
+		color: var(--ink);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--line);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+
+	@media (max-width: 720px) {
+		.layer {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		.layer-label {
+			flex: none;
+		}
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — system architecture</p>
+	<h1>Forty-three manifests done, two packages of forty-two carrying real source — foundation first.</h1>
+	<p class="dek">
+		Every workspace's
+		<code>package.json</code>
+		is migrated and resolves today — the layers below are the target shape, not a claim it already runs end-to-end.
+		<code>packages/*</code>
+		(32 of them) is the dependency floor everything else builds on, which is why real source landed there first, not in
+		<code>api</code>
+		or
+		<code>app</code>
+		. See
+		<a href="yarn-migration.html">Yarn Migration</a>
+		for how the manifest layer itself got here, and
+		<a href="package-manifests.html">Package Manifests</a>
+		for every package's real one-line role.
+	</p>
+
+	<h2>Layers</h2>
+	<div class="layers">
+		<div class="layer">
+			<span class="layer-label">Runtimes</span>
+			<div class="layer-nodes">
+				<span class="node node--planned">api (Express/Knex)</span>
+				<span class="node node--planned">app (Vue 3)</span>
+				<span class="node node--planned">sdk (integrator client)</span>
+			</div>
+		</div>
+		<div class="layer-arrow">↓ depend on the foundation below via workspace:*</div>
+		<div class="layer">
+			<span class="layer-label">CLI</span>
+			<div class="layer-nodes">
+				<span class="node node--progress">directus (source done, not runnable)</span>
+			</div>
+		</div>
+		<div class="layer-arrow">↓ imports @directus/api + @directus/update-check, both manifest-only</div>
+		<div class="layer">
+			<span class="layer-label">Foundation (32)</span>
+			<div class="layer-nodes">
+				<span class="node node--progress">types (42 of ~54 files)</span>
+				<span class="node node--planned">31 other packages/*</span>
+			</div>
+		</div>
+		<div class="layer-arrow">↓ every layer above builds on this one</div>
+		<div class="layer">
+			<span class="layer-label">Tests (6 manifests)</span>
+			<div class="layer-nodes">
+				<span class="node node--planned">blackbox (+2 fixtures)</span>
+				<span class="node node--planned">e2e</span>
+				<span class="node node--planned">mock-license-server</span>
+				<span class="node node--planned">sandbox</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="legend">
+		<span>
+			<span class="dot dot--done"></span>
+			done
+		</span>
+		<span>
+			<span class="dot dot--progress"></span>
+			in progress
+		</span>
+		<span>
+			<span class="dot dot--planned"></span>
+			manifest only, no source yet
+		</span>
+	</div>
+
+	<h2>What's real today</h2>
+	<div class="grid">
+		<div class="card card--progress">
+			<span class="card-tag">Source done, not runnable</span>
+			<p class="card-title">directus</p>
+			<ul>
+				<li>
+					6 files:
+					<code>cli.js</code>
+					, version helpers, license, readme
+				</li>
+				<li>Imports 2 manifest-only packages — fails on first run today</li>
+			</ul>
+			<div class="card-link"><a href="package-manifests.html">→ Package Manifests</a></div>
+		</div>
+
+		<div class="card card--progress">
+			<span class="card-tag">In progress</span>
+			<p class="card-title">packages/types</p>
+			<ul>
+				<li>42 of ~54 planned files, one commit each</li>
+				<li>Every file diffed byte-for-byte against upstream before landing</li>
+			</ul>
+			<div class="card-link"><a href="package-manifests.html">→ Package Manifests</a></div>
+		</div>
+
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">Everything else</p>
+			<ul>
+				<li>
+					40 other
+					<code>packages/*</code>
+					,
+					<code>sdk</code>
+					,
+					<code>api</code>
+					,
+					<code>app</code>
+					, all 4
+					<code>tests/*</code>
+				</li>
+				<li>
+					<code>yarn install</code>
+					resolves them; no source on disk yet
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">i</span>
+		<p>
+			Migration order is manifests-first, source-additive: nothing about the root config changes as more packages land
+			real source, which is why
+			<code>packages/types</code>
+			could start without waiting on anything else. See
+			<a href="package-manifests.html">Package Manifests</a>
+			for every one of the 42 workspace packages grouped by role, and
+			<a href="yarn-migration.html">Yarn Migration</a>
+			for the five real gaps found getting the manifest layer this far.
+		</p>
+	</div>
+
+	<footer>directus-main · Node.js 26 / Yarn 4.18.0 · 43/43 manifests · 2 of 42 packages have real source</footer>
+</div>

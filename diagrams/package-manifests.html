@@ -1,0 +1,628 @@
+<title>Package Manifests — Forty-Two Packages, One Migration Order</title>
+<style>
+	:root {
+		--ink: #182225;
+		--ink-soft: #52626a;
+		--paper: #e9edee;
+		--surface: #ffffff;
+		--line: #b9c4c7;
+		--done: #0b7d5f;
+		--done-bg: #dcf0e7;
+		--progress: #9c6b12;
+		--progress-bg: #f5ead2;
+		--planned: #5b6a70;
+		--planned-bg: #eaeeee;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', 'Liberation Mono', monospace;
+		--sans: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--ink: #e6ecec;
+		--ink-soft: #93a3a9;
+		--paper: #10161a;
+		--surface: #171e22;
+		--line: #303c41;
+		--done: #4fd6a8;
+		--done-bg: #142822;
+		--progress: #e0b45c;
+		--progress-bg: #2c2415;
+		--planned: #93a3a9;
+		--planned-bg: #1c2427;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--ink: #e6ecec;
+			--ink-soft: #93a3a9;
+			--paper: #10161a;
+			--surface: #171e22;
+			--line: #303c41;
+			--done: #4fd6a8;
+			--done-bg: #142822;
+			--progress: #e0b45c;
+			--progress-bg: #2c2415;
+			--planned: #93a3a9;
+			--planned-bg: #1c2427;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 72ch;
+		margin: 0 0 1.6rem;
+	}
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--ink);
+	}
+
+	.legend {
+		display: flex;
+		gap: 1.4rem;
+		flex-wrap: wrap;
+		margin: 0 0 2rem;
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+	}
+	.legend span {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+	.dot {
+		width: 9px;
+		height: 9px;
+		border-radius: 50%;
+		display: inline-block;
+	}
+	.dot--done {
+		background: var(--done);
+	}
+	.dot--progress {
+		background: var(--progress);
+	}
+	.dot--planned {
+		background: var(--line);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 2rem 0 1rem;
+	}
+	h2:first-of-type {
+		margin-top: 0;
+	}
+	h2 .count {
+		color: var(--line);
+		font-weight: 400;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.9rem;
+		margin-bottom: 0.4rem;
+	}
+	@media (max-width: 820px) {
+		.grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 560px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.card {
+		border: 1px solid var(--line);
+		border-radius: 10px;
+		background: var(--surface);
+		padding: 1rem 1.1rem 1.1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.card-tag {
+		font-family: var(--mono);
+		font-size: 0.62rem;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		padding: 0.18rem 0.5rem;
+		border-radius: 4px;
+		font-weight: 700;
+		width: fit-content;
+	}
+	.card--done .card-tag {
+		color: var(--done);
+		background: var(--done-bg);
+	}
+	.card--progress .card-tag {
+		color: var(--progress);
+		background: var(--progress-bg);
+	}
+	.card--planned .card-tag {
+		color: var(--ink-soft);
+		background: var(--planned-bg);
+	}
+	.card-title {
+		font-size: 0.9rem;
+		font-weight: 600;
+		margin: 0;
+		font-family: var(--mono);
+	}
+	.card-desc {
+		font-size: 0.8rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		margin: 0;
+	}
+
+	.callout {
+		border: 1px solid var(--line);
+		background: var(--surface);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin: 2rem 0 0.5rem;
+	}
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--ink-soft);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+	.callout a {
+		color: var(--ink);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--line);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — package manifests</p>
+	<h1>Forty-two workspace packages, one migration order: foundation, then runtimes, then everything they depend on.</h1>
+	<p class="dek">
+		Every package below has a migrated
+		<code>package.json</code>
+		today —
+		<code>yarn install</code>
+		resolves all 42 plus the root, 43 manifests total. Grouped here by real role, not upstream's directory order. See
+		<a href="system-architecture.html">System Architecture</a>
+		for the same information as a dependency-layer diagram, and
+		<code>todo.md</code>
+		's "Still to do" table for the live flat list.
+	</p>
+
+	<div class="legend">
+		<span>
+			<span class="dot dot--done"></span>
+			done
+		</span>
+		<span>
+			<span class="dot dot--progress"></span>
+			in progress
+		</span>
+		<span>
+			<span class="dot dot--planned"></span>
+			manifest only
+		</span>
+	</div>
+
+	<h2>
+		CLI
+		<span class="count">— 1</span>
+	</h2>
+	<div class="grid">
+		<div class="card card--progress">
+			<span class="card-tag">Source done, not runnable</span>
+			<p class="card-title">directus</p>
+			<p class="card-desc">
+				The published
+				<code>bin</code>
+				wrapper —
+				<code>cli.js</code>
+				, version helpers. Imports
+				<code>@directus/api</code>
+				+
+				<code>@directus/update-check</code>
+				, both still manifest-only.
+			</p>
+		</div>
+	</div>
+
+	<h2>
+		Core runtime
+		<span class="count">— 3</span>
+	</h2>
+	<div class="grid">
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">api</p>
+			<p class="card-desc">Express/Knex backend — the largest single source tree still to come.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">app</p>
+			<p class="card-desc">The Vue 3 Studio — the visual management interface.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">sdk</p>
+			<p class="card-desc">
+				TypeScript client for third-party integrators — a different audience than
+				<code>app</code>
+				.
+			</p>
+		</div>
+	</div>
+
+	<h2>
+		Extension system
+		<span class="count">— 4</span>
+	</h2>
+	<div class="grid">
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">extensions</p>
+			<p class="card-desc">Runtime extension loading — hooks, endpoints, interfaces, modules, panels.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">extensions-registry</p>
+			<p class="card-desc">Marketplace registry client for discovering published extensions.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">extensions-sdk</p>
+			<p class="card-desc">Build tooling and types for authoring third-party extensions.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">create-directus-extension</p>
+			<p class="card-desc">
+				Scaffolding CLI —
+				<code>npm create directus-extension</code>
+				.
+			</p>
+		</div>
+	</div>
+
+	<h2>
+		Storage drivers
+		<span class="count">— 7</span>
+	</h2>
+	<div class="grid">
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">storage</p>
+			<p class="card-desc">The shared driver interface every backend below implements.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">storage-driver-local</p>
+			<p class="card-desc">Filesystem-backed storage — the default, no external service required.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">storage-driver-s3</p>
+			<p class="card-desc">AWS S3 (and S3-compatible) object storage.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">storage-driver-azure</p>
+			<p class="card-desc">Azure Blob Storage.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">storage-driver-gcs</p>
+			<p class="card-desc">Google Cloud Storage.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">storage-driver-cloudinary</p>
+			<p class="card-desc">Cloudinary — media-focused storage with built-in transforms.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">storage-driver-supabase</p>
+			<p class="card-desc">Supabase Storage.</p>
+		</div>
+	</div>
+
+	<h2>
+		Shared foundation
+		<span class="count">— 19</span>
+	</h2>
+	<div class="grid">
+		<div class="card card--progress">
+			<span class="card-tag">In progress</span>
+			<p class="card-title">types</p>
+			<p class="card-desc">Shared TypeScript types — 42 of ~54 planned files. Depended on by nearly everything else.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">constants</p>
+			<p class="card-desc">
+				Shared string/enum constants — e.g.
+				<code>PERMISSION_ACTIONS</code>
+				, already referenced by
+				<code>types</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">schema</p>
+			<p class="card-desc">
+				Runtime schema introspection shared by
+				<code>api</code>
+				and
+				<code>types</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">schema-builder</p>
+			<p class="card-desc">Programmatic schema construction for testing and tooling.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">errors</p>
+			<p class="card-desc">
+				Shared error types —
+				<code>DirectusError</code>
+				, already referenced by
+				<code>types</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">utils</p>
+			<p class="card-desc">
+				Shared utility functions used across
+				<code>api</code>
+				,
+				<code>app</code>
+				, and extensions.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">validation</p>
+			<p class="card-desc">Shared validation/filter-rule evaluation logic.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">env</p>
+			<p class="card-desc">
+				Environment-variable parsing and typing shared by
+				<code>api</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">memory</p>
+			<p class="card-desc">
+				In-memory cache/store abstraction used by
+				<code>api</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">pressure</p>
+			<p class="card-desc">
+				Process load/back-pressure monitoring for
+				<code>api</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">system-data</p>
+			<p class="card-desc">Directus's own system-collection field/schema definitions.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">specs</p>
+			<p class="card-desc">OpenAPI spec generation for the REST API surface.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">format-title</p>
+			<p class="card-desc">
+				Field/collection name humanization (
+				<code>snake_case</code>
+				→ "Snake Case").
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">stores</p>
+			<p class="card-desc">
+				Shared Pinia store definitions for
+				<code>app</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">composables</p>
+			<p class="card-desc">
+				Shared Vue composables for
+				<code>app</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">themes</p>
+			<p class="card-desc">Light/dark Studio theme definitions.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">visual-editing</p>
+			<p class="card-desc">In-context "click to edit" bridge for front-end frameworks.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">ai</p>
+			<p class="card-desc">Shared AI Assistant/MCP-adjacent types and helpers.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">update-check</p>
+			<p class="card-desc">
+				Checks npm for newer Directus releases —
+				<code>directus/cli.js</code>
+				already imports it, but this package itself has no source yet, which is why that import fails today.
+			</p>
+		</div>
+	</div>
+
+	<h2>
+		Remaining tooling
+		<span class="count">— 2</span>
+	</h2>
+	<div class="grid">
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">create-directus-project</p>
+			<p class="card-desc">
+				Scaffolding CLI —
+				<code>npm create directus-project</code>
+				.
+			</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">release-notes-generator</p>
+			<p class="card-desc">
+				Internal release-note tooling. Manifest is clean, but its real source still imports removed pnpm-only packages —
+				see
+				<a href="yarn-migration.html">Yarn Migration</a>
+				's open gap.
+			</p>
+		</div>
+	</div>
+
+	<h2>
+		Tests
+		<span class="count">— 6 manifests, 4 projects</span>
+	</h2>
+	<div class="grid">
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">blackbox</p>
+			<p class="card-desc">Black-box API tests against a running instance, plus 2 extension-fixture manifests.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">e2e</p>
+			<p class="card-desc">Playwright end-to-end Studio tests.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">mock-license-server</p>
+			<p class="card-desc">Local stand-in for the real Directus license-check service, for offline testing.</p>
+		</div>
+		<div class="card card--planned">
+			<span class="card-tag">Manifest only</span>
+			<p class="card-title">sandbox</p>
+			<p class="card-desc">Scratch workspace for manual verification during development.</p>
+		</div>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">i</span>
+		<p>
+			Root
+			<code>build</code>
+			/
+			<code>test</code>
+			scripts are scoped to
+			<code>--include directus</code>
+			today — the only workspace with real source and a working build — and that scope grows by name as each package
+			above lands source, not all at once. See
+			<a href="yarn-migration.html">Yarn Migration</a>
+			for how the manifest layer itself got built, and this repo's own
+			<code>todo.md</code>
+			for the live, evidence-linked version of everything on this page.
+		</p>
+	</div>
+
+	<footer>
+		directus-main · 43 manifests (42 packages + root) · 2 in progress (0 fully runnable yet) · 40 manifest-only
+	</footer>
+</div>

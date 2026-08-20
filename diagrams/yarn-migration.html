@@ -1,0 +1,547 @@
+<title>Yarn Migration — Five Real Gaps, One Still Open</title>
+<style>
+	:root {
+		--ink: #1a1f22;
+		--ink-soft: #545f63;
+		--paper: #e8ecec;
+		--surface: #ffffff;
+		--line: #b9c3c5;
+		--catalog: #2b5d6e;
+		--catalog-bg: #dde9ec;
+		--deploy: #6e4f2b;
+		--deploy-bg: #ede4d8;
+		--tooling: #5c4a8a;
+		--tooling-bg: #e6e0f2;
+		--bug: #a13d2b;
+		--bug-bg: #f3e2dd;
+		--open: #8b6d1f;
+		--open-bg: #f1ecd8;
+		--mono: ui-monospace, 'SF Mono', 'Cascadia Mono', 'Consolas', 'Liberation Mono', monospace;
+		--sans: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--ink: #e9edee;
+		--ink-soft: #a3adaf;
+		--paper: #14181a;
+		--surface: #1c2124;
+		--line: #363f42;
+		--catalog: #7fc4d6;
+		--catalog-bg: #17262b;
+		--deploy: #d4a878;
+		--deploy-bg: #2c2419;
+		--tooling: #b3a3e0;
+		--tooling-bg: #241f36;
+		--bug: #dd7a4a;
+		--bug-bg: #2c1e17;
+		--open: #d9b463;
+		--open-bg: #2c2519;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--ink: #e9edee;
+			--ink-soft: #a3adaf;
+			--paper: #14181a;
+			--surface: #1c2124;
+			--line: #363f42;
+			--catalog: #7fc4d6;
+			--catalog-bg: #17262b;
+			--deploy: #d4a878;
+			--deploy-bg: #2c2419;
+			--tooling: #b3a3e0;
+			--tooling-bg: #241f36;
+			--bug: #dd7a4a;
+			--bug-bg: #2c1e17;
+			--open: #d9b463;
+			--open-bg: #2c2519;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+		text-wrap: balance;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 72ch;
+		margin: 0 0 2.2rem;
+	}
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--ink);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 2.2rem 0 1rem;
+	}
+	h2:first-of-type {
+		margin-top: 0;
+	}
+
+	/* pipeline */
+	.pipeline {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.4rem 0.3rem;
+		margin-bottom: 0.6rem;
+	}
+	.step {
+		font-family: var(--mono);
+		font-size: 0.78rem;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		border-radius: 7px;
+		padding: 0.5rem 0.8rem;
+	}
+	.step--catalog {
+		border-color: var(--catalog);
+		color: var(--catalog);
+		background: var(--catalog-bg);
+		font-weight: 600;
+	}
+	.step--deploy {
+		border-color: var(--deploy);
+		color: var(--deploy);
+		background: var(--deploy-bg);
+		font-weight: 600;
+	}
+	.step--tooling {
+		border-color: var(--tooling);
+		color: var(--tooling);
+		background: var(--tooling-bg);
+		font-weight: 600;
+	}
+	.step--bug {
+		border-color: var(--bug);
+		color: var(--bug);
+		background: var(--bug-bg);
+		font-weight: 600;
+	}
+	.arrow {
+		color: var(--ink-soft);
+		font-size: 0.8rem;
+	}
+
+	/* zoom cards */
+	.zoom {
+		border: 1px solid var(--line);
+		background: var(--surface);
+		border-radius: 10px;
+		padding: 1.1rem 1.3rem 1.2rem;
+		margin-bottom: 1rem;
+	}
+	.zoom p {
+		margin: 0;
+		font-size: 0.9rem;
+		line-height: 1.6;
+		color: var(--ink);
+		max-width: 74ch;
+	}
+	.zoom code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+	}
+	.zoom-head {
+		display: flex;
+		align-items: baseline;
+		gap: 0.7rem;
+		margin-bottom: 0.55rem;
+		flex-wrap: wrap;
+	}
+	.zoom-tag {
+		font-family: var(--mono);
+		font-size: 0.64rem;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		padding: 0.2rem 0.55rem;
+		border-radius: 4px;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+	.zoom--catalog .zoom-tag {
+		color: var(--catalog);
+		background: var(--catalog-bg);
+	}
+	.zoom--deploy .zoom-tag {
+		color: var(--deploy);
+		background: var(--deploy-bg);
+	}
+	.zoom--tooling .zoom-tag {
+		color: var(--tooling);
+		background: var(--tooling-bg);
+	}
+	.zoom--bug .zoom-tag {
+		color: var(--bug);
+		background: var(--bug-bg);
+	}
+	.zoom--open .zoom-tag {
+		color: var(--open);
+		background: var(--open-bg);
+	}
+	.zoom-title {
+		font-size: 0.92rem;
+		font-weight: 600;
+		margin: 0;
+	}
+
+	.bug-before-after {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.8rem;
+		margin-top: 0.7rem;
+	}
+	@media (max-width: 640px) {
+		.bug-before-after {
+			grid-template-columns: 1fr;
+		}
+	}
+	.ba {
+		border: 1px dashed var(--line);
+		border-radius: 8px;
+		padding: 0.7rem 0.85rem;
+	}
+	.ba-label {
+		font-family: var(--mono);
+		font-size: 0.62rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.4rem;
+	}
+	.ba code {
+		display: block;
+		font-family: var(--mono);
+		font-size: 0.76rem;
+		line-height: 1.55;
+		white-space: pre-wrap;
+		word-break: break-word;
+	}
+
+	.callout {
+		border: 1px solid var(--line);
+		background: var(--surface);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin: 1.4rem 0 0.5rem;
+	}
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--ink-soft);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+	.callout a {
+		color: var(--ink);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--line);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — pnpm to Yarn migration</p>
+	<h1>Six pnpm mechanisms with no exact Yarn equivalent — six real decisions, two of them wrong at first.</h1>
+	<p class="dek">
+		Directus's own monorepo is pnpm-native: a 331-entry
+		<code>catalog:</code>
+		version table,
+		<code>pnpm.overrides</code>
+		, a regex script-filter,
+		<code>pnpm deploy</code>
+		,
+		<code>pnpm fetch</code>
+		's layer-cache trick, and an
+		<code>onlyBuiltDependencies</code>
+		allowlist. None of those have an exact Yarn Berry equivalent — each one got a real decision, tested against a real
+		install, not a find-and-replace. Two of those first-pass decisions were wrong and got corrected properly. See
+		<a href="system-architecture.html">System Architecture</a>
+		for where this manifest layer sits relative to real source.
+	</p>
+
+	<h2>What Changed</h2>
+	<div class="pipeline">
+		<span class="step step--catalog">catalog: protocol</span>
+		<span class="arrow">→</span>
+		<span class="step">Yarn's own catalog config</span>
+		<span class="arrow">·</span>
+		<span class="step">overrides</span>
+		<span class="arrow">→</span>
+		<span class="step">resolutions</span>
+		<span class="arrow">·</span>
+		<span class="step step--deploy">pnpm deploy</span>
+		<span class="arrow">→</span>
+		<span class="step">custom worktree script</span>
+		<span class="arrow">·</span>
+		<span class="step step--tooling">onlyBuiltDependencies</span>
+		<span class="arrow">→</span>
+		<span class="step">enableScripts: true</span>
+	</div>
+	<p class="dek" style="margin: 0.6rem 0 0; font-size: 0.86rem">
+		Six mechanisms, six outcomes: two required no special handling once verified (
+		<code>overrides</code>
+		, the regex-script-filter dropped for explicit lists), two got a working replacement built (
+		<code>catalog:</code>
+		,
+		<code>pnpm deploy</code>
+		), and two are accepted, disclosed regressions with no real equivalent (
+		<code>enableScripts</code>
+		,
+		<code>pnpm fetch</code>
+		's layer-caching).
+	</p>
+
+	<h2>Real Gaps Found</h2>
+
+	<div class="zoom zoom--bug" id="gap-isolated-vm">
+		<div class="zoom-head">
+			<span class="zoom-tag">01 · build-breaking</span>
+			<p class="zoom-title">isolated-vm@5.0.3 — incompatible with Node 26's V8</p>
+		</div>
+		<p>
+			The version inherited from Directus's own catalog failed to compile identically on Windows and the GitHub Actions
+			Ubuntu runner. Real compiler output (
+			<code>gh run view --log-failed</code>
+			) showed the native addon calling V8 APIs Node 26's bundled V8 has since removed or changed —
+			<code>Template::SetAccessor</code>
+			,
+			<code>GetPrototype</code>
+			, internal-field accessor signatures. Every
+			<em>other</em>
+			native module in the ~2,150-package graph built cleanly, ruling out a missing-toolchain theory first. Fixed by
+			bumping to
+			<code>7.0.1</code>
+			, verified with a real
+			<code>yarn install</code>
+			.
+		</p>
+	</div>
+
+	<div class="zoom zoom--catalog">
+		<div class="zoom-head">
+			<span class="zoom-tag">02 · process correction</span>
+			<p class="zoom-title">"Yarn has no shared-catalog feature" — wrong, corrected</p>
+		</div>
+		<p>
+			Stood documented as fact — in this repo's own docs, its wiki, and several commit messages — until
+			<code>yarn config -v</code>
+			's full settings dump (not
+			<code>yarn help</code>
+			, which doesn't mention it) surfaced real
+			<code>catalog</code>
+			/
+			<code>catalogs</code>
+			config keys. Verified in a throwaway scratch project before touching this repo.
+		</p>
+		<div class="bug-before-after">
+			<div class="ba">
+				<p class="ba-label">First pass — wrong</p>
+				<code>// "Yarn has no catalog: // equivalent" — assumed, // never actually checked "lodash": "4.17.21"</code>
+			</div>
+			<div class="ba">
+				<p class="ba-label">Corrected — verified</p>
+				<code>// .yarnrc.yml catalog: { lodash: 4.17.21 } // package.json "lodash": "catalog:"</code>
+			</div>
+		</div>
+	</div>
+
+	<div class="zoom zoom--deploy">
+		<div class="zoom-head">
+			<span class="zoom-tag">03 · destructive-action correction</span>
+			<p class="zoom-title">deploy-production.mjs — pruned the live repo's own node_modules</p>
+		</div>
+		<p>
+			<code>pnpm deploy --legacy --prod</code>
+			has no Yarn equivalent; the first replacement script pruned this repo's own root
+			<code>node_modules</code>
+			in place — a real regression from pnpm's separately-built deploy output. Reconsidered:
+			<code>yarn workspaces focus --production</code>
+			only needs
+			<em>a</em>
+			checkout at the right commit, not the live working tree, so the script now runs inside a disposable
+			<code>git worktree</code>
+			instead. Verified end-to-end — a working
+			<code>dist/</code>
+			with 724
+			<code>node_modules</code>
+			entries came out the other side.
+		</p>
+	</div>
+
+	<div class="zoom zoom--tooling">
+		<div class="zoom-head">
+			<span class="zoom-tag">04 · upstream tooling gap</span>
+			<p class="zoom-title">@directus/tsconfig — neither config sets rootDir</p>
+		</div>
+		<p>
+			A real gap in Directus's own published
+			<code>@directus/tsconfig</code>
+			npm package (v4.0.0): with
+			<code>outDir</code>
+			set but no explicit
+			<code>rootDir</code>
+			, TypeScript falls back to inferring it from the include set's "common source directory." Real
+			<code>tsc</code>
+			5.9.3 builds identically either way — confirmed by running it directly and diffing output before/after — but newer
+			TS tooling errors on the implicit inference. Fixed with an explicit
+			<code>"rootDir": "./src"</code>
+			in
+			<code>packages/types/tsconfig.json</code>
+			, the value already being inferred.
+		</p>
+	</div>
+
+	<div class="zoom zoom--tooling">
+		<div class="zoom-head">
+			<span class="zoom-tag">05 · false positive</span>
+			<p class="zoom-title">Webhint — stale bundled schema flagged a valid tsconfig value</p>
+		</div>
+		<p>
+			The VS Code Webhint extension's
+			<code>typescript-config/is-valid</code>
+			hint flagged
+			<code>lib: ["ES2023"]</code>
+			as invalid. It isn't — TypeScript 5.9.3 (the version actually installed) has supported
+			<code>ES2023</code>
+			as a
+			<code>lib</code>
+			value since 5.2; the hint's bundled schema is just out of date. Confirmed against the real installed TypeScript
+			version before suppressing, and scoped the suppression to that one hint only.
+		</p>
+	</div>
+
+	<h2>Still Open</h2>
+	<div class="zoom zoom--open">
+		<div class="zoom-head">
+			<span class="zoom-tag">06 · tracked, not fixed</span>
+			<p class="zoom-title">release-notes-generator — still imports removed pnpm internals</p>
+		</div>
+		<p>
+			<code>package.json</code>
+			no longer lists
+			<code>@pnpm/workspace.find-packages</code>
+			,
+			<code>@pnpm/workspace.pkgs-graph</code>
+			, or
+			<code>@pnpm/logger</code>
+			— but the actual source file that imports them,
+			<code>src/utils/process-packages.ts</code>
+			, hasn't been rewritten yet. Caught and tracked rather than assumed fixed just because the manifest looked clean.
+			Planned replacement: read each workspace's
+			<code>package.json</code>
+			directly and build the dependency graph from
+			<code>workspace:*</code>
+			references — no package-manager-specific API needed at all.
+		</p>
+	</div>
+
+	<h2>Accepted, Not Fixed</h2>
+	<div class="zoom">
+		<div class="zoom-head">
+			<p class="zoom-title">enableScripts: true — a real security-posture downgrade</p>
+		</div>
+		<p>
+			pnpm's
+			<code>onlyBuiltDependencies</code>
+			is a default-deny list for which packages may run install/postinstall scripts. Yarn Berry has no scoped equivalent
+			—
+			<code>enableScripts: true</code>
+			is its permissive default. Accepted and documented rather than silently inherited.
+		</p>
+	</div>
+	<div class="zoom">
+		<div class="zoom-head">
+			<p class="zoom-title">Docker build-cache regression — no pnpm fetch equivalent</p>
+		</div>
+		<p>
+			<code>pnpm fetch</code>
+			populates the store from just the lockfile, before the full source tree is copied in — a real Docker layer-caching
+			optimization. Yarn workspaces need every workspace's
+			<code>package.json</code>
+			present to resolve at all, so there's no equivalent partial-copy trick without fragile wildcards. Both Dockerfiles
+			now do one
+			<code>COPY . .</code>
+			then
+			<code>yarn install</code>
+			— any source change invalidates the install layer too.
+		</p>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">i</span>
+		<p>
+			Five gaps found and fixed, one tracked openly, two accepted trade-offs — all six categories recorded in this
+			repo's own
+			<a href="https://github.com/Terrence721/directus-main/blob/main/todo.md">todo.md</a>
+			, not just here. See
+			<a href="known-gaps.html">Known Gaps</a>
+			for the rest of what's still open across CI, testing, and Docker.
+		</p>
+	</div>
+
+	<footer>directus-main · 6 pnpm mechanisms replaced · 5 gaps fixed · 1 tracked · 2 accepted trade-offs</footer>
+</div>
