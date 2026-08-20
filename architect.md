@@ -15,12 +15,12 @@ infrastructure, and all `.github/` CI are fully migrated. `directus/` (the thin 
 source tree, though **not yet a runnable one** — `cli.js` imports `@directus/update-check` and dynamically imports
 `@directus/api/cli/run.js`, both still manifest-only, so `node directus/cli.js` fails on its first import today; same
 "manifests first" tolerance as everything else mid-migration, just not previously written down for this package.
-`types/` is **partially started** (55 of ~56 planned files — the `websockets/` submodule turned out to be 4 files, not
-1, once its `index.ts` was actually read; `src/index.ts` already exports from 1 module that doesn't exist yet, so it
-doesn't type-check as a whole; see `todo.md`). `sdk/`, `api/`, `app/`, the other 31 `packages/*`, and all 4 `tests/*`
-projects exist on disk as manifests — `yarn install` succeeds and resolves the full dependency graph, but there's no
-application code to run yet. Everything below describing the full system is the target this repo is being built toward
-one file at a time, not a claim that it already runs end-to-end.
+`types/` is **partially started** (56 of ~56 planned files — every real source file written; `src/index.ts` still
+exports from 1 module that doesn't exist yet, `websockets/index.ts` itself, so it doesn't type-check as a whole; see
+`todo.md`). `sdk/`, `api/`, `app/`, the other 31 `packages/*`, and all 4 `tests/*` projects exist on disk as manifests —
+`yarn install` succeeds and resolves the full dependency graph, but there's no application code to run yet. Everything
+below describing the full system is the target this repo is being built toward one file at a time, not a claim that it
+already runs end-to-end.
 
 ## 1. What this is
 
@@ -87,7 +87,7 @@ directus-main/
 │   ├── stores/                  📋
 │   ├── system-data/             📋
 │   ├── themes/                  📋
-│   ├── types/                   🚧  55 of ~56 planned files — see todo.md
+│   ├── types/                   🚧  56 of ~56 planned files — see todo.md
 │   ├── update-check/            📋
 │   ├── utils/                   📋
 │   ├── validation/              📋
