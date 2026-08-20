@@ -518,14 +518,17 @@
   <section>
     <h2>Manifests first, then real source, one file at a time</h2>
     <p class="h2-sub">
-      All 43 package.json files done · directus/ complete · types/ 42 of ~54 files
+      All 43 package.json files done · directus/ source complete, not yet runnable · types/ 42 of ~54 files
     </p>
     <p class="lede">
       Migration order is deliberate: every workspace's <code>package.json</code>
       was individually inspected and transformed before any real source landed
       — <code>yarn install</code> has resolved the complete dependency graph
       since that phase finished. Real source is additive from there.
-      <code>directus/</code> (the CLI wrapper, 6 files) is complete;
+      <code>directus/</code> (the CLI wrapper, 6 files) has a complete source tree, though not yet a
+      runnable one — <code>cli.js</code> imports two still-manifest-only packages
+      (<code>@directus/update-check</code>, <code>@directus/api/cli/run.js</code>), the same
+      "manifests first" gap <code>packages/types</code> already discloses for itself;
       <code>packages/types</code> is now 42 of ~54 planned files, added one
       file per commit, each one diffed byte-for-byte against Directus's real
       upstream source before landing — not reconstructed from memory. The
