@@ -1,0 +1,772 @@
+<title>Terrence Daniels — Full-Stack Node.js/Vue Engineer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta
+  name="description"
+  content="An independently maintained port of Directus's own monorepo — a real-time API/App dashboard for managing SQL database content — migrated from pnpm to Yarn and rebuilt one package at a time. Five real gaps found and corrected along the way, one more tracked openly, each verified against real installs and real compiler output rather than assumed."
+/>
+<link rel="canonical" href="https://terrence721.github.io/directus-main/portfolio.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Terrence Daniels — Portfolio" />
+<meta property="og:url" content="https://terrence721.github.io/directus-main/portfolio.html" />
+<meta property="og:title" content="directus-main — a pnpm-to-Yarn monorepo migration, by Terrence Daniels" />
+<meta
+  property="og:description"
+  content="An independently maintained port of Directus's own monorepo, migrated from pnpm to Yarn and rebuilt one package at a time — five real gaps found and corrected, one more tracked openly, verified against real installs and real compiler output."
+/>
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="directus-main — a pnpm-to-Yarn monorepo migration, by Terrence Daniels" />
+<meta
+  name="twitter:description"
+  content="An independently maintained port of Directus's own monorepo, migrated from pnpm to Yarn and rebuilt one package at a time — five real gaps found and corrected, verified rather than assumed."
+/>
+<style>
+  :root {
+    --paper: #eef0f0;
+    --paper-2: #e2e6e7;
+    --ink: #182225;
+    --ink-soft: #52626a;
+    --rule: #c4ccce;
+    --accent: #0b7d8c;
+    --accent-ink: #eafcfb;
+    --accent-2: #6a5a9c;
+    --font-display:
+      'IBM Plex Serif', Georgia, 'Iowan Old Style', 'Palatino Linotype', serif;
+    --font-body:
+      -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+      sans-serif;
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono',
+      monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10161a;
+      --paper-2: #171e22;
+      --ink: #e6ecec;
+      --ink-soft: #93a3a9;
+      --rule: #2b363b;
+      --accent: #45c2d1;
+      --accent-ink: #051417;
+      --accent-2: #a397d6;
+    }
+  }
+  :root[data-theme='dark'] {
+    --paper: #10161a;
+    --paper-2: #171e22;
+    --ink: #e6ecec;
+    --ink-soft: #93a3a9;
+    --rule: #2b363b;
+    --accent: #45c2d1;
+    --accent-ink: #051417;
+    --accent-2: #a397d6;
+  }
+  :root[data-theme='light'] {
+    --paper: #eef0f0;
+    --paper-2: #e2e6e7;
+    --ink: #182225;
+    --ink-soft: #52626a;
+    --rule: #c4ccce;
+    --accent: #0b7d8c;
+    --accent-ink: #eafcfb;
+    --accent-2: #6a5a9c;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+  html {
+    color-scheme: light dark;
+  }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a {
+    color: var(--accent-2);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  a:hover {
+    color: var(--accent);
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative;
+    padding: 72px 0 44px;
+    background-image: linear-gradient(
+        var(--rule) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-position: -1px -1px;
+    -webkit-mask-image: linear-gradient(to bottom, black, transparent 92%);
+    mask-image: linear-gradient(to bottom, black, transparent 92%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+  .eyebrow::before {
+    content: '◆ ';
+    color: var(--accent);
+  }
+  h1.name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+    margin: 0 0 10px;
+    text-wrap: balance;
+  }
+  .role {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+    color: var(--accent-2);
+    margin: 0 0 22px;
+  }
+  .thesis {
+    max-width: 62ch;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin: 0 0 34px;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    padding: 10px 16px;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    text-decoration: none;
+    background: transparent;
+  }
+  .btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .btn.primary:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+    color: var(--accent-ink);
+  }
+
+  /* stamp badge */
+  .stamp {
+    position: absolute;
+    top: 58px;
+    right: 28px;
+    width: 128px;
+    height: 128px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-9deg);
+    opacity: 0.92;
+    background: var(--paper);
+  }
+  .stamp::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px dashed var(--accent);
+    border-radius: 50%;
+  }
+  .stamp-inner {
+    text-align: center;
+    font-family: var(--font-mono);
+    color: var(--accent);
+  }
+  .stamp-inner .n {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stamp-inner .l {
+    display: block;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+  }
+  @media (max-width: 620px) {
+    .stamp {
+      display: none;
+    }
+  }
+
+  /* ---------- manifest stat strip ---------- */
+  .manifest {
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--rule);
+    overflow-x: auto;
+  }
+  .manifest-row {
+    display: flex;
+    min-width: max-content;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .manifest-cell {
+    padding: 16px 24px;
+    border-right: 1px solid var(--rule);
+    white-space: nowrap;
+  }
+  .manifest-cell:last-child {
+    border-right: none;
+  }
+  .manifest-cell .v {
+    font-size: 1.15rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .manifest-cell .k {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ---------- sections ---------- */
+  section {
+    padding: 52px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  section:last-of-type {
+    border-bottom: none;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.7rem;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  .h2-sub {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 22px;
+  }
+  p {
+    max-width: 68ch;
+  }
+  .lede {
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    max-width: 66ch;
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    color: var(--ink);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 0;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+  }
+
+  /* ledger line items */
+  .ledger {
+    border-top: 1px solid var(--rule);
+    margin-top: 24px;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 4px 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .item .no {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.9rem;
+    padding-top: 2px;
+  }
+  .item .file {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+  .item .desc {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin: 4px 0 8px;
+  }
+  .item .meta {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+  }
+  .item .meta .tag {
+    color: var(--accent-2);
+  }
+  .item .meta a {
+    margin-left: 8px;
+  }
+
+  .note {
+    border-left: 2px solid var(--accent-2);
+    padding: 4px 0 4px 16px;
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    margin: 22px 0 0;
+    max-width: 62ch;
+  }
+  .note strong {
+    color: var(--ink);
+  }
+
+  .twocol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 20px;
+  }
+  @media (max-width: 640px) {
+    .twocol {
+      grid-template-columns: 1fr;
+    }
+  }
+  .card {
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+  }
+  .card h3 {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .card p {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  footer {
+    padding: 44px 0 72px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  footer .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    margin-bottom: 22px;
+  }
+  footer .fine {
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    max-width: 62ch;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+    }
+  }
+</style>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Portfolio Manifest — Prepared 2026-08-20</p>
+    <h1 class="name">Terrence&nbsp;Daniels</h1>
+    <p class="role">Full-Stack Node.js/Vue Engineer</p>
+    <p class="thesis">
+      An independently maintained port of <strong>Directus's own monorepo</strong> — a
+      real-time API/App dashboard for managing SQL database content — migrated
+      from pnpm to Yarn and rebuilt <strong>one package at a time</strong>. All 43
+      workspace manifests are done; real source is genuinely early, two packages
+      in, but every migration decision along the way has been verified against a
+      real install or a real compiler run, and every gap found — five fixed,
+      one tracked openly — is disclosed in this repo's own build log, not
+      smoothed over.
+    </p>
+    <div class="hero-actions">
+      <a class="btn primary" href="https://github.com/Terrence721/directus-main"
+        >View the repository →</a
+      >
+      <a
+        class="btn"
+        href="https://github.com/Terrence721/directus-main/blob/main/architect.md"
+        >Architecture decisions</a
+      >
+      <a
+        class="btn"
+        href="https://github.com/Terrence721/directus-main/blob/main/todo.md"
+        >Build log</a
+      >
+    </div>
+  </div>
+  <div class="stamp" aria-hidden="true">
+    <div class="stamp-inner">
+      <span class="n">5</span>
+      <span class="l">REAL GAPS<br />FOUND &amp; FIXED</span>
+    </div>
+  </div>
+</div>
+
+<div class="manifest">
+  <div class="wrap">
+    <div class="manifest-row">
+      <div class="manifest-cell">
+        <span class="v">43/43</span><span class="k">manifests migrated</span>
+      </div>
+      <div class="manifest-cell">
+        <span class="v">2 of 42</span><span class="k">packages source started</span>
+      </div>
+      <div class="manifest-cell">
+        <span class="v">42 of ~54</span><span class="k">types package files</span>
+      </div>
+      <div class="manifest-cell">
+        <span class="v">5</span><span class="k">real gaps found &amp; fixed</span>
+      </div>
+      <div class="manifest-cell">
+        <span class="v">326</span><span class="k">entry Yarn catalog rebuilt</span>
+      </div>
+      <div class="manifest-cell">
+        <span class="v">5</span><span class="k">public surfaces kept in sync</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section>
+    <h2>Why this project</h2>
+    <p class="h2-sub">A real package-manager migration, verified rather than trusted</p>
+    <p class="lede">
+      Moving a large monorepo off <code>pnpm</code> is a genuinely common,
+      genuinely underrated engineering task — the kind of work that shows up in
+      real migrations far more often than greenfield builds do. Directus's own
+      monorepo (43 workspace packages, a 331-entry shared version catalog, 18
+      CI workflows, two Dockerfiles) made a useful subject precisely because
+      pnpm has mechanisms Yarn has no exact equivalent for: each one needed a
+      real decision, tested against a real install, not a find-and-replace.
+      Two of those first-pass decisions turned out to be wrong and got
+      corrected properly rather than left standing.
+    </p>
+    <div class="chips">
+      <span class="chip">Yarn 4.18.0</span>
+      <span class="chip">Node.js 26</span>
+      <span class="chip">TypeScript 5.9.3</span>
+      <span class="chip">Vue 3</span>
+      <span class="chip">Express / Knex</span>
+      <span class="chip">GitHub Actions</span>
+      <span class="chip">CodeQL</span>
+      <span class="chip">Docker</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Manifests first, then real source, one file at a time</h2>
+    <p class="h2-sub">
+      All 43 package.json files done · directus/ complete · types/ 42 of ~54 files
+    </p>
+    <p class="lede">
+      Migration order is deliberate: every workspace's <code>package.json</code>
+      was individually inspected and transformed before any real source landed
+      — <code>yarn install</code> has resolved the complete dependency graph
+      since that phase finished. Real source is additive from there.
+      <code>directus/</code> (the CLI wrapper, 6 files) is complete;
+      <code>packages/types</code> is now 42 of ~54 planned files, added one
+      file per commit, each one diffed byte-for-byte against Directus's real
+      upstream source before landing — not reconstructed from memory. The
+      other 40 packages, <code>sdk</code>, <code>api</code>, and
+      <code>app</code> are still manifests waiting on their source trees; see
+      <a href="https://github.com/Terrence721/directus-main/blob/main/todo.md">todo.md</a>
+      for the honest current state rather than assuming more is done.
+    </p>
+    <div class="twocol">
+      <div class="card">
+        <h3>Verification over assumption</h3>
+        <p>
+          Every ported file gets a real <code>diff -u</code> against upstream
+          before it's committed. Every import is checked against what's
+          actually landed in the fork, not what's expected to be there. The
+          <code>isolated-vm</code> fix below was confirmed by reading real
+          <code>g++</code> compiler output, not by guessing at a Node
+          compatibility table.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Gaps disclosed, not hidden</h3>
+        <p>
+          A permissive <code>enableScripts: true</code> default (Yarn has no
+          scoped install-script allowlist like pnpm's) and a Docker
+          build-cache regression (no equivalent to <code>pnpm fetch</code>'s
+          layer-caching trick) are both accepted trade-offs — written down as
+          real regressions in <code>todo.md</code>, not silently absorbed.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Five real gaps, found and fixed</h2>
+    <p class="h2-sub">
+      Found by verifying against a real install or a real compiler run, not by assuming the first pass was right
+    </p>
+    <p class="lede">
+      Two turned up in this fork's own first-pass migration work and got
+      corrected before anything was left standing on a wrong assumption. Two
+      turned up in Directus's own upstream source or its published tooling —
+      genuine gaps in a widely-used project, not typos. One turned up in a VS
+      Code extension's own stale bundled data, misdiagnosing this repo's real
+      config as broken.
+    </p>
+    <div class="ledger">
+      <div class="item">
+        <div class="no">01</div>
+        <div>
+          <div class="file">isolated-vm@5.0.3 — incompatible with Node 26's V8</div>
+          <div class="desc">
+            The version inherited from Directus's own catalog failed to
+            compile identically on Windows and the GitHub Actions Ubuntu
+            runner. Real compiler output (<code>gh run view --log-failed</code>)
+            showed the native addon calling V8 APIs Node 26's bundled V8 has
+            since removed or changed —
+            <code>Template::SetAccessor</code>, <code>GetPrototype</code>,
+            internal-field accessor signatures. Every <em>other</em> native
+            module in the ~2,150-package graph built cleanly, ruling out a
+            missing-toolchain theory first. Fixed by bumping to
+            <code>7.0.1</code>, verified with a real <code>yarn install</code>.
+          </div>
+          <div class="meta"><span class="tag">high · build-breaking</span></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="no">02</div>
+        <div>
+          <div class="file">"Yarn has no shared-catalog feature" — wrong, corrected</div>
+          <div class="desc">
+            Stood documented as fact — in this repo's own docs, its wiki, and
+            several commit messages — until <code>yarn config -v</code>'s full
+            settings dump (not <code>yarn help</code>, which doesn't mention
+            it) surfaced real <code>catalog</code>/<code>catalogs</code>
+            config keys. Verified in a throwaway scratch project before
+            touching this repo. Fixed properly, not just reverted: a 326-entry
+            catalog rebuilt from the original 331 (5 confirmed-dead entries
+            dropped), and 671 of 673 literal-pin conversions restored to
+            <code>catalog:</code> across 40 files, each diff reviewed before
+            committing.
+          </div>
+          <div class="meta"><span class="tag">high · process correction</span></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="no">03</div>
+        <div>
+          <div class="file">deploy-production.mjs — pruned the live repo's own node_modules</div>
+          <div class="desc">
+            pnpm's <code>deploy --legacy --prod</code> has no Yarn equivalent;
+            the first replacement script pruned this repo's own root
+            <code>node_modules</code> in place — a real regression from
+            pnpm's separately-built deploy output. Reconsidered:
+            <code>yarn workspaces focus --production</code> only needs
+            <em>a</em> checkout at the right commit, not the live working
+            tree, so the script now runs inside a disposable
+            <code>git worktree</code> instead. Verified end-to-end — a working
+            <code>dist/</code> with 724 <code>node_modules</code> entries came
+            out the other side.
+          </div>
+          <div class="meta"><span class="tag">high · destructive-action correction</span></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="no">04</div>
+        <div>
+          <div class="file">@directus/tsconfig — neither base nor node22 config sets rootDir</div>
+          <div class="desc">
+            A real gap in Directus's own published <code>@directus/tsconfig</code>
+            npm package (v4.0.0): with <code>outDir</code> set but no explicit
+            <code>rootDir</code>, TypeScript falls back to inferring it from
+            the "common source directory" of the include set. Real
+            <code>tsc</code> 5.9.3 builds identically either way — confirmed
+            by running it directly and diffing the output before and after —
+            but newer/preview TS tooling errors on the implicit inference.
+            Fixed with an explicit <code>"rootDir": "./src"</code> in
+            <code>packages/types/tsconfig.json</code>, the same value already
+            being inferred.
+          </div>
+          <div class="meta"><span class="tag">low · tooling gap</span></div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="no">05</div>
+        <div>
+          <div class="file">Webhint — stale bundled schema flagged a valid tsconfig lib value</div>
+          <div class="desc">
+            The VS Code Webhint extension's <code>typescript-config/is-valid</code>
+            hint flagged <code>packages/types/tsconfig.json</code>'s inherited
+            <code>lib: ["ES2023"]</code> as invalid. It isn't — TypeScript
+            5.9.3 (the version actually installed) has supported
+            <code>ES2023</code> as a <code>lib</code> value since 5.2; the
+            hint's bundled schema is just out of date. Confirmed against the
+            real installed TypeScript version before suppressing, and scoped
+            the suppression to that one hint only rather than disabling
+            Webhint's defaults wholesale.
+          </div>
+          <div class="meta"><span class="tag">low · false positive</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <strong>Honest gap, tracked not solved:</strong> <code>release-notes-generator</code>'s
+      <code>package.json</code> no longer lists <code>@pnpm/workspace.find-packages</code>,
+      <code>@pnpm/workspace.pkgs-graph</code>, or <code>@pnpm/logger</code> —
+      but the actual source file that imports them,
+      <code>src/utils/process-packages.ts</code>, hasn't been rewritten yet.
+      Caught and tracked rather than assumed fixed just because the manifest
+      looked clean. Planned replacement: read each workspace's
+      <code>package.json</code> directly and build the dependency graph from
+      <code>workspace:*</code> references — no package-manager-specific API
+      needed at all.
+    </div>
+  </section>
+
+  <section>
+    <h2>Keeping the record honest across five surfaces</h2>
+    <p class="h2-sub">
+      todo.md, architect.md, the profile README, the portfolio site, and the wiki — checked, not assumed in sync
+    </p>
+    <p class="lede">
+      Progress claims that live in more than one place drift, quietly, unless
+      someone actually checks. A full sweep of every surface that
+      cross-references this repo's status — done after the twelfth file
+      landed in <code>packages/types</code> — found three wiki pages still
+      claiming only one workspace package had real source, stale since the
+      first file after <code>directus/</code> landed. Fixed the same day,
+      verified live afterward rather than assumed fixed on commit.
+    </p>
+    <div class="twocol">
+      <div class="card">
+        <h3>Per-file discipline</h3>
+        <p>
+          Every file added to <code>packages/types</code> gets its own commit,
+          followed by a second commit updating <code>todo.md</code> and
+          <code>architect.md</code>'s file counts — not batched at the end of
+          a session where drift is easy to lose track of.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Occasional, not per-file, elsewhere</h3>
+        <p>
+          The <a href="https://github.com/Terrence721/directus-main/wiki">wiki</a>,
+          <a href="https://github.com/users/Terrence721/projects/6">scrum board</a>,
+          and the family profile/portfolio pages carry coarser claims — swept
+          periodically instead, since updating them per-file would be noise
+          for a five-page wiki tracking a 54-file package.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Judgment calls</h2>
+    <p class="h2-sub">Where the real trade-offs got made, and written down</p>
+    <p class="lede">
+      Not every pnpm mechanism has a clean Yarn replacement, and pretending
+      otherwise would just move the gap somewhere less visible.
+      <code>onlyBuiltDependencies</code> — pnpm's default-deny list for which
+      packages may run install/postinstall scripts — has no Yarn Berry
+      equivalent; <code>enableScripts: true</code> is Yarn's permissive
+      default, and that's a real security-posture downgrade, accepted and
+      documented rather than quietly inherited. Similarly, <code>pnpm fetch</code>'s
+      layer-caching trick (populate the store from just the lockfile before
+      copying in source) has no equivalent under Yarn workspaces, since every
+      workspace's <code>package.json</code> needs to be present to resolve at
+      all — so both Dockerfiles now do one <code>COPY . .</code> then
+      <code>yarn install</code>, meaning any source change invalidates the
+      install layer too. Both trade-offs are recorded in
+      <a href="https://github.com/Terrence721/directus-main/blob/main/todo.md">todo.md</a>
+      as accepted regressions, not oversights discovered later.
+    </p>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="links">
+      <a href="https://github.com/Terrence721/directus-main">Repository</a>
+      <a
+        href="https://github.com/Terrence721/directus-main/blob/main/architect.md"
+        >Architecture decisions</a
+      >
+      <a href="https://github.com/Terrence721/directus-main/blob/main/todo.md"
+        >Build log</a
+      >
+      <a href="https://github.com/Terrence721/directus-main/wiki">Wiki</a>
+      <a href="https://github.com/users/Terrence721/projects/6"
+        >Project board</a
+      >
+      <a href="https://terrence721.github.io/">Portfolio hub</a>
+    </div>
+    <p class="fine">
+      An independently maintained port of Directus's own monorepo, not a fork
+      left as-is. Every number on this page is reproducible from the
+      repository's own <code>todo.md</code> evidence trail, commit history,
+      and CI runs — nothing here is asserted without a link to check it
+      against. This one's genuinely early — 2 of 42 workspace packages have
+      real source — see <code>todo.md</code> for the honest current state
+      rather than assuming it's further along.
+    </p>
+  </div>
+</footer>
