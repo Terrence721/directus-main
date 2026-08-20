@@ -16,12 +16,13 @@ source tree, though **not yet a runnable one** — `cli.js` imports `@directus/u
 `@directus/api/cli/run.js`, both still manifest-only, so `node directus/cli.js` fails on its first import today; same
 "manifests first" tolerance as everything else mid-migration, just not previously written down for this package.
 `types/` now has a **complete** source tree (56 of 56 files — every `src/index.ts` export resolves within the package),
-though it **doesn't fully type-check yet**: three cross-package dependencies are still manifest-only — `permissions.ts`
-→ `@directus/constants`, `relations.ts` → `@directus/schema`, `settings.ts` → `@directus/ai`; see `todo.md`. `schema/`
-is newly started (1 of 16 files). `sdk/`, `api/`, `app/`, the other 30 `packages/*`, and all 4 `tests/*` projects exist
-on disk as manifests — `yarn install` succeeds and resolves the full dependency graph, but there's no application code
-to run yet. Everything below describing the full system is the target this repo is being built toward one file at a
-time, not a claim that it already runs end-to-end.
+though it **doesn't fully type-check yet**: cross-package dependencies on `@directus/constants` (4 files) and
+`@directus/schema` (5 files) remain, plus `@directus/ai` (1 file); see `todo.md`. `schema/` is newly started (2 of 16
+files) — its own `Column`/`ForeignKey` types now have real source, but the gap isn't closed until `schema/`'s own
+`src/index.ts` lands. `sdk/`, `api/`, `app/`, the other 30 `packages/*`, and all 4 `tests/*` projects exist on disk as
+manifests — `yarn install` succeeds and resolves the full dependency graph, but there's no application code to run yet.
+Everything below describing the full system is the target this repo is being built toward one file at a time, not a
+claim that it already runs end-to-end.
 
 ## 1. What this is
 
@@ -75,7 +76,7 @@ directus-main/
 │   ├── memory/                  📋
 │   ├── pressure/                📋
 │   ├── release-notes-generator/ 📋  — see Section 5, "pnpm-internals dependency" note
-│   ├── schema/                  🚧  1 of 16 files — see todo.md
+│   ├── schema/                  🚧  2 of 16 files — see todo.md
 │   ├── schema-builder/          📋
 │   ├── specs/                   📋
 │   ├── storage/                 📋
