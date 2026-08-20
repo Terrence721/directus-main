@@ -9,7 +9,7 @@ This document describes the architecture directus-main is being built toward —
 in this repo, not a generic description of what a headless-CMS platform "usually" looks like. See [todo.md](todo.md) for
 exactly how much of this exists right now.
 
-**Current status, stated plainly:** every workspace package's `package.json` (43 of them) has been copied over and
+**Current status, stated plainly:** every workspace package's `package.json` (40 of them) has been copied over and
 migrated from pnpm to Yarn — dependency versions resolved, scripts rewritten. Root config, Docker/deployment
 infrastructure, and all `.github/` CI are fully migrated. `directus/` (the thin CLI wrapper, 6 files) has a **complete**
 source tree, though **not yet a runnable one** — `cli.js` imports `@directus/update-check` and dynamically imports
@@ -17,9 +17,9 @@ source tree, though **not yet a runnable one** — `cli.js` imports `@directus/u
 "manifests first" tolerance as everything else mid-migration, just not previously written down for this package.
 `types/` is **partially started** (43 of ~54 planned files — `src/index.ts` already exports from 11 modules that don't
 exist yet, so it doesn't type-check as a whole; see `todo.md`). `sdk/`, `api/`, `app/`, the other 31 `packages/*`, and
-all 4 `tests/*` projects exist on disk as manifests only — `yarn install` succeeds and resolves the full dependency
-graph, but there's no application code to run yet. Everything below describing the full system is the target this repo
-is being built toward one file at a time, not a claim that it already runs end-to-end.
+all 4 `tests/*` projects exist on disk as manifests — `yarn install` succeeds and resolves the full dependency graph,
+but there's no application code to run yet. Everything below describing the full system is the target this repo is being
+built toward one file at a time, not a claim that it already runs end-to-end.
 
 ## 1. What this is
 

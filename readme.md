@@ -7,8 +7,8 @@
 
 **[📜 View the portfolio page →](https://terrence721.github.io/directus-main/portfolio.html)**
 
-Last updated: August 20, 2026 (43/43 manifests migrated · 2 of 42 packages have real source — `directus` complete but
-not yet runnable, `types` 42 of ~54 files · 5 real gaps found and fixed, 1 tracked openly)
+Last updated: August 20, 2026 (40/40 manifests migrated · 2 of 40 packages have real source — `directus` complete but
+not yet runnable, `types` 43 of ~54 files · 5 real gaps found and fixed, 1 tracked openly)
 
 This is an independently maintained port of [Directus's own monorepo](https://github.com/directus/directus) — a
 real-time API/App dashboard that wraps any SQL database with REST and GraphQL APIs and a visual management Studio —
@@ -21,7 +21,7 @@ standing. Two more real gaps turned up in Directus's own published source and to
 smoothed over — see the
 **[Yarn Migration diagram](https://terrence721.github.io/directus-main/diagrams/yarn-migration.html)**.
 
-**At a glance:** 43/43 workspace manifests migrated, `packages/types` at 42 of ~54 planned files (added one file per
+**At a glance:** 40/40 workspace manifests migrated, `packages/types` at 43 of ~54 planned files (added one file per
 commit, each diffed byte-for-byte against upstream before landing), five real gaps found and fixed, and this repo's own
 status kept honest across five public surfaces — `todo.md`, `architect.md`, the profile README, the portfolio site, and
 the wiki — with a full drift sweep run periodically rather than assumed still accurate.
@@ -32,7 +32,7 @@ the wiki — with a full drift sweep run periodically rather than assumed still 
   four-layer dependency shape (foundation → CLI → runtimes → tests) and exactly what's real today
 - **[Yarn Migration](https://terrence721.github.io/directus-main/diagrams/yarn-migration.html)** — the six pnpm
   mechanisms with no exact Yarn equivalent, five real gaps found and fixed, one still open
-- **[Package Manifests](https://terrence721.github.io/directus-main/diagrams/package-manifests.html)** — all 42
+- **[Package Manifests](https://terrence721.github.io/directus-main/diagrams/package-manifests.html)** — all 40
   workspace packages, grouped by role, each with a real one-line description
 - **[Known Gaps](https://terrence721.github.io/directus-main/diagrams/known-gaps.html)** — CI, testing, and Docker gaps,
   stated plainly rather than buried in a table
@@ -53,7 +53,7 @@ back to the real source rather than repeating it.
 ## 🧭 Why This Matters
 
 Moving a large monorepo off pnpm is a genuinely common, genuinely underrated engineering task — the kind of work that
-shows up in real migrations far more often than greenfield builds do. Directus's own monorepo (42 workspace packages, a
+shows up in real migrations far more often than greenfield builds do. Directus's own monorepo (40 workspace packages, a
 331-entry shared version catalog, 17 CI workflows, two Dockerfiles) made a useful subject precisely because pnpm has
 mechanisms Yarn has no exact equivalent for: `catalog:`, `pnpm.overrides`, a regex script-filter, `pnpm deploy`,
 `pnpm fetch`'s layer-caching, and an `onlyBuiltDependencies` allowlist. Each one needed a real decision, verified
@@ -61,15 +61,15 @@ against a real install or a real compiler run — not assumed correct because it
 
 ## 🏗 What's Here So Far
 
-Every workspace's `package.json` (43 of them) is migrated — `yarn install` resolves the full dependency graph today.
+Every workspace's `package.json` (40 of them) is migrated — `yarn install` resolves the full dependency graph today.
 `directus` (the CLI wrapper) has a complete source tree, though not yet a runnable one: `cli.js` imports
 `@directus/update-check` and dynamically imports `@directus/api/cli/run.js`, both still manifest-only. `packages/types`
-is 42 of ~54 planned files, added one file per commit and diffed byte-for-byte against upstream before landing. The
-other 40 workspace packages exist on disk as manifests only. See [`todo.md`](todo.md) for the full build-out plan and
+is 43 of ~54 planned files, added one file per commit and diffed byte-for-byte against upstream before landing. The
+other 38 workspace packages exist on disk as manifests only. See [`todo.md`](todo.md) for the full build-out plan and
 the honest current state.
 
 ```text
-  packages/types/          shared TypeScript types                        🚧 42 of ~54 files
+  packages/types/          shared TypeScript types                        🚧 43 of ~54 files
   directus/                CLI wrapper (bin)                              ✅ source done, not yet runnable
   packages/ (31 others)    constants, schema, utils, storage drivers…     ⬜ manifest only
   sdk/                     TypeScript client for integrators              ⬜ manifest only

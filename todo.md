@@ -23,9 +23,9 @@ it's put together.
 | Docker and deployment infra                   | Both Dockerfiles, `docker-compose.yml`, `docker-entrypoint.cjs`, `ecosystem.config.cjs`, custom `scripts/deploy-production.mjs`                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | CI and GitHub config                          | 17 workflows, the shared `prepare` action, CodeQL config, templates, `CODEOWNERS`, `FUNDING.yml` — 24 files                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `directus` CLI package                        | Full source (6 files): `cli.js`, version helpers, license, readme. **Not actually runnable yet**: `cli.js` imports `@directus/update-check` and dynamically imports `@directus/api/cli/run.js` — both manifest-only, no `dist/` output — so `node directus/cli.js` would fail on the first import today. Found 2026-08-20 while fact-checking a portfolio page against real files rather than assumed; not previously disclosed. Same "manifests first" tolerance as `packages/types`'s own forward-references, just not stated for `directus` before. |
-| **All 43 workspace `package.json` manifests** | Migrated from pnpm's `catalog:` protocol to pinned Yarn-compatible versions — see "Package manifest migration" below                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| **All 40 workspace `package.json` manifests** | Migrated from pnpm's `catalog:` protocol to pinned Yarn-compatible versions — see "Package manifest migration" below                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 
-**Still to do:** full source trees for 40 of 42 workspace packages (everything except `directus/`, and a
+**Still to do:** full source trees for 38 of 40 workspace packages (everything except `directus/`, and a
 partially-started `types/`) and a handful of tracked follow-ups — see the "Still to do" section below.
 
 ## ✅ Done
@@ -169,7 +169,7 @@ real source to each one is purely additive from here — nothing about the root 
 **CI build/test scoped to what actually exists, same practice as eShop-full's trimmed `.slnx`/`.slnf`.** Root
 `build`/`test`/`test:coverage` scripts use `yarn workspaces foreach --include directus` — `directus` is the only
 workspace with real source right now (and has no `build`/`test` scripts of its own, so this is currently a clean no-op
-rather than attempting all 42 workspaces and failing on the 41 that are still just manifests with an inherited
+rather than attempting all 40 workspaces and failing on the 39 that are still just manifests with an inherited
 `tsdown src/index.ts` build script pointing at a `src/` that doesn't exist yet). The `--include` list grows by name as
 each package's real source lands — not a permanent scoping decision, a rolling one.
 
