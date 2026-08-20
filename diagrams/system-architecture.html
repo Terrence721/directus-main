@@ -1,4 +1,4 @@
-<title>System Architecture — Forty Manifests, Two Packages Real</title>
+<title>System Architecture — Forty Manifests, Three Packages Real</title>
 <style>
 	:root {
 		--ink: #182225;
@@ -323,7 +323,7 @@
 
 <div class="page">
 	<p class="eyebrow">directus-main — system architecture</p>
-	<h1>Forty manifests done, two packages of forty carrying real source — foundation first.</h1>
+	<h1>Forty manifests done, three packages of forty carrying real source — foundation first.</h1>
 	<p class="dek">
 		Every workspace's
 		<code>package.json</code>
@@ -361,8 +361,9 @@
 		<div class="layer">
 			<span class="layer-label">Foundation (32)</span>
 			<div class="layer-nodes">
-				<span class="node node--progress">types (43 of ~54 files)</span>
-				<span class="node node--planned">31 other packages/*</span>
+				<span class="node node--progress">types (56 of 56 files, complete)</span>
+				<span class="node node--progress">schema (3 of 16 files)</span>
+				<span class="node node--planned">30 other packages/*</span>
 			</div>
 		</div>
 		<div class="layer-arrow">↓ every layer above builds on this one</div>
@@ -409,11 +410,22 @@
 		</div>
 
 		<div class="card card--progress">
-			<span class="card-tag">In progress</span>
+			<span class="card-tag">Complete, doesn't fully type-check</span>
 			<p class="card-title">packages/types</p>
 			<ul>
-				<li>43 of ~54 planned files, one commit each</li>
+				<li>56 of 56 planned files, one commit each</li>
 				<li>Every file diffed byte-for-byte against upstream before landing</li>
+				<li>3 cross-package dependencies (constants, schema, ai) still unresolved</li>
+			</ul>
+			<div class="card-link"><a href="package-manifests.html">→ Package Manifests</a></div>
+		</div>
+
+		<div class="card card--progress">
+			<span class="card-tag">In progress</span>
+			<p class="card-title">packages/schema</p>
+			<ul>
+				<li>3 of 16 planned files, one commit each</li>
+				<li>Directly unblocks 2 of packages/types's 3 cross-package gaps once its own index.ts lands</li>
 			</ul>
 			<div class="card-link"><a href="package-manifests.html">→ Package Manifests</a></div>
 		</div>
@@ -423,7 +435,7 @@
 			<p class="card-title">Everything else</p>
 			<ul>
 				<li>
-					31 other
+					30 other
 					<code>packages/*</code>
 					,
 					<code>sdk</code>
@@ -456,5 +468,5 @@
 		</p>
 	</div>
 
-	<footer>directus-main · Node.js 26 / Yarn 4.18.0 · 40/40 manifests · 2 of 40 packages have real source</footer>
+	<footer>directus-main · Node.js 26 / Yarn 4.18.0 · 40/40 manifests · 3 of 40 packages have real source</footer>
 </div>

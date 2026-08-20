@@ -273,18 +273,21 @@
 	<div class="item item--info">
 		<div class="item-head">
 			<span class="item-tag">Scale</span>
-			<p class="item-title">38 of 40 workspace packages have no real source yet</p>
+			<p class="item-title">37 of 40 workspace packages have no real source yet</p>
 		</div>
 		<p>
 			This is the main body of remaining work, not a footnote — see
 			<a href="system-architecture.html">System Architecture</a>
 			for the layer breakdown and
 			<a href="package-manifests.html">Package Manifests</a>
-			for every package's real role. Even the 2 packages with real source have caveats:
+			for every package's real role. Even the 3 packages with real source have caveats:
 			<code>directus</code>
-			's complete source tree can't actually run yet (imports 2 manifest-only packages), and
+			's complete source tree can't actually run yet (imports 2 manifest-only packages),
 			<code>packages/types</code>
-			doesn't type-check as a whole until its remaining 12 files land.
+			is complete (56/56) but doesn't type-check as a whole until 3 still-manifest-only cross-package
+			dependencies land, and
+			<code>packages/schema</code>
+			itself is only 3 of 16 files in.
 		</p>
 	</div>
 
@@ -402,6 +405,6 @@
 	</div>
 
 	<footer>
-		directus-main · 38 of 40 packages still source-empty · 3 CI/test gaps · 1 Docker gap · 1 bug already fixed
+		directus-main · 37 of 40 packages still source-empty · 3 CI/test gaps · 1 Docker gap · 1 bug already fixed
 	</footer>
 </div>

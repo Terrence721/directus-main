@@ -7,8 +7,9 @@
 
 **[📜 View the portfolio page →](https://terrence721.github.io/directus-main/portfolio.html)**
 
-Last updated: August 20, 2026 (40/40 manifests migrated · 2 of 40 packages have real source — `directus` complete but
-not yet runnable, `types` 43 of ~54 files · 5 real gaps found and fixed, 1 tracked openly)
+Last updated: August 20, 2026 (40/40 manifests migrated · 3 of 40 packages have real source — `directus` complete but
+not yet runnable, `types` complete (56 of 56 files), `schema` newly started (3 of 16 files) · 5 real gaps found and
+fixed, 1 tracked openly)
 
 This is an independently maintained port of [Directus's own monorepo](https://github.com/directus/directus) — a
 real-time API/App dashboard that wraps any SQL database with REST and GraphQL APIs and a visual management Studio —
@@ -21,10 +22,11 @@ standing. Two more real gaps turned up in Directus's own published source and to
 smoothed over — see the
 **[Yarn Migration diagram](https://terrence721.github.io/directus-main/diagrams/yarn-migration.html)**.
 
-**At a glance:** 40/40 workspace manifests migrated, `packages/types` at 43 of ~54 planned files (added one file per
-commit, each diffed byte-for-byte against upstream before landing), five real gaps found and fixed, and this repo's own
-status kept honest across five public surfaces — `todo.md`, `architect.md`, the profile README, the portfolio site, and
-the wiki — with a full drift sweep run periodically rather than assumed still accurate.
+**At a glance:** 40/40 workspace manifests migrated, `packages/types` complete (56 of 56 files) and `packages/schema`
+started (3 of 16 files) — each file added one commit at a time and diffed byte-for-byte against upstream before landing
+— five real gaps found and fixed, and this repo's own status kept honest across five public surfaces — `todo.md`,
+`architect.md`, the profile README, the portfolio site, and the wiki — with a full drift sweep run periodically rather
+than assumed still accurate.
 
 ## 🧭 Start Here
 
@@ -64,14 +66,17 @@ against a real install or a real compiler run — not assumed correct because it
 Every workspace's `package.json` (40 of them) is migrated — `yarn install` resolves the full dependency graph today.
 `directus` (the CLI wrapper) has a complete source tree, though not yet a runnable one: `cli.js` imports
 `@directus/update-check` and dynamically imports `@directus/api/cli/run.js`, both still manifest-only. `packages/types`
-is 43 of ~54 planned files, added one file per commit and diffed byte-for-byte against upstream before landing. The
-other 38 workspace packages exist on disk as manifests only. See [`todo.md`](todo.md) for the full build-out plan and
-the honest current state.
+is complete — 56 of 56 files, added one file per commit and diffed byte-for-byte against upstream before landing —
+though it doesn't fully type-check yet: cross-package dependencies on `@directus/constants` and `@directus/schema` touch
+several of its files each, plus one more on `@directus/ai`. `packages/schema` is newly started (3 of 16 files), directly
+chipping away at two of those gaps. The other 37 workspace packages exist on disk as manifests only. See
+[`todo.md`](todo.md) for the full build-out plan and the honest current state.
 
 ```text
-  packages/types/          shared TypeScript types                        🚧 43 of ~54 files
+  packages/types/          shared TypeScript types                        ✅ 56 of 56 files
+  packages/schema/         DB schema inspector                            🚧 3 of 16 files
   directus/                CLI wrapper (bin)                              ✅ source done, not yet runnable
-  packages/ (31 others)    constants, schema, utils, storage drivers…     ⬜ manifest only
+  packages/ (30 others)    constants, utils, storage drivers…             ⬜ manifest only
   sdk/                     TypeScript client for integrators              ⬜ manifest only
   api/                     Express/Knex backend                           ⬜ manifest only
   app/                     Vue 3 Studio                                   ⬜ manifest only

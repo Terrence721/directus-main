@@ -419,7 +419,7 @@
 			<strong>Directus's own monorepo</strong>
 			— a real-time API/App dashboard for managing SQL database content — migrated from pnpm to Yarn and rebuilt
 			<strong>one package at a time</strong>
-			. All 40 workspace manifests are done; real source is genuinely early, two packages in, but every migration
+			. All 40 workspace manifests are done; real source is genuinely early, three packages in, but every migration
 			decision along the way has been verified against a real install or a real compiler run, and every gap found — five
 			fixed, one tracked openly — is disclosed in this repo's own build log, not smoothed over.
 		</p>
@@ -451,12 +451,12 @@
 				<span class="k">manifests migrated</span>
 			</div>
 			<div class="manifest-cell">
-				<span class="v">2 of 40</span>
+				<span class="v">3 of 40</span>
 				<span class="k">packages source started</span>
 			</div>
 			<div class="manifest-cell">
-				<span class="v">43 of ~54</span>
-				<span class="k">types package files</span>
+				<span class="v">56 of 56</span>
+				<span class="k">types package files (complete)</span>
 			</div>
 			<div class="manifest-cell">
 				<span class="v">5</span>
@@ -503,7 +503,7 @@
 	<section>
 		<h2>Manifests first, then real source, one file at a time</h2>
 		<p class="h2-sub">
-			All 40 package.json files done · directus/ source complete, not yet runnable · types/ 43 of ~54 files
+			All 40 package.json files done · directus/ source complete, not yet runnable · types/ complete (56/56) · schema/ started (3/16)
 		</p>
 		<p class="lede">
 			Migration order is deliberate: every workspace's
@@ -522,8 +522,17 @@
 			<code>packages/types</code>
 			already discloses for itself;
 			<code>packages/types</code>
-			is now 43 of ~54 planned files, added one file per commit, each one diffed byte-for-byte against Directus's real
-			upstream source before landing — not reconstructed from memory. The other 38 packages,
+			is now complete — 56 of 56 planned files, added one file per commit, each one diffed byte-for-byte against
+			Directus's real upstream source before landing, not reconstructed from memory — though it doesn't fully
+			type-check yet: cross-package dependencies on
+			<code>@directus/constants</code>
+			and
+			<code>@directus/schema</code>
+			touch several files each, plus one more on
+			<code>@directus/ai</code>
+			.
+			<code>packages/schema</code>
+			is newly started (3 of 16 files), directly chipping away at two of those gaps. The other 37 packages,
 			<code>sdk</code>
 			,
 			<code>api</code>
@@ -795,7 +804,7 @@
 			reproducible from the repository's own
 			<code>todo.md</code>
 			evidence trail, commit history, and CI runs — nothing here is asserted without a link to check it against. This
-			one's genuinely early — 2 of 40 workspace packages have real source — see
+			one's genuinely early — 3 of 40 workspace packages have real source — see
 			<code>todo.md</code>
 			for the honest current state rather than assuming it's further along.
 		</p>
