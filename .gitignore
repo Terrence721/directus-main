@@ -1,0 +1,9 @@
+node_modules/
+dist/
+
+# Yarn (node-modules linker; package cache is global, not repo-local)
+.yarn/
+
+# Local-only, machine-specific
+cspell.json
+*.code-workspace

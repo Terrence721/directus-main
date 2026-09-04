@@ -3,7 +3,46 @@
 	"private": true,
 	"homepage": "https://github.com/Terrence721/directus-main#readme",
 	"type": "module",
-	"workspaces": ["directus", "app", "api", "sdk", "packages/*", "tests/*"],
+	"workspaces": [
+		"directus",
+		"app",
+		"api",
+		"sdk",
+		"packages/*",
+		"tests/*"
+	],
+	"scripts": {
+		"build": "yarn workspaces foreach -A -t run build",
+		"format": "prettier --cache --check .",
+		"lint": "eslint --cache .",
+		"lint:style": "stylelint '**/*.{css,scss,vue}' --ignore-path .gitignore --cache",
+		"test": "yarn workspaces foreach -A --exclude tests-blackbox run test",
+		"test:coverage": "yarn workspaces foreach -A --exclude tests-blackbox run test:coverage"
+	},
+	"devDependencies": {
+		"@changesets/cli": "catalog:",
+		"@eslint/js": "catalog:",
+		"eslint": "catalog:",
+		"eslint-config-prettier": "catalog:",
+		"eslint-plugin-import-x": "catalog:",
+		"eslint-plugin-vue": "catalog:",
+		"globals": "catalog:",
+		"postcss": "catalog:",
+		"postcss-html": "catalog:",
+		"prettier": "catalog:",
+		"rimraf": "catalog:",
+		"stylelint": "catalog:",
+		"stylelint-config-html": "catalog:",
+		"stylelint-config-recommended": "catalog:",
+		"stylelint-config-recommended-vue": "catalog:",
+		"stylelint-config-standard": "catalog:",
+		"stylelint-config-standard-scss": "catalog:",
+		"stylelint-config-standard-vue": "catalog:",
+		"stylelint-use-logical": "catalog:",
+		"typescript": "catalog:",
+		"typescript-eslint": "catalog:",
+		"vue-eslint-parser": "catalog:"
+	},
 	"packageManager": "yarn@4.18.0",
 	"engines": {
 		"node": "26"
