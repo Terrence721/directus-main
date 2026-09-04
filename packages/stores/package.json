@@ -1,0 +1,28 @@
+{
+	"name": "@directus/stores",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.json"
+	},
+	"dependencies": {
+		"pinia": "catalog:"
+	},
+	"peerDependencies": {
+		"vue": "^3.5.11"
+	},
+	"devDependencies": {
+		"@vue/devtools-api": "catalog:",
+		"typescript": "catalog:",
+		"vue": "catalog:"
+	}
+}
