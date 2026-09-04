@@ -5,7 +5,7 @@
 
 Last updated: September 4, 2026
 
-This repository is a personal demonstration workspace: a Node.js/Vue 3/Yarn monorepo built one file at a time, taking the real, battle-tested [Directus](https://github.com/directus/directus) project as a reference point rather than a source to reproduce. Where the goal is a defensible, different architectural call, this repo redesigns instead of copying — that's the default, not the exception.
+This repository is a personal demonstration workspace: a Node.js/Vue 3/Yarn monorepo built one file at a time, taking the real, battle-tested Directus project as a reference point rather than a source to reproduce. Where the goal is a defensible, different architectural call, this repo redesigns instead of copying — that's the default, not the exception.
 
 This repo is **not affiliated with, and not published by, the upstream Directus project or Monospace Inc.** It is MIT-licensed; see [LICENSE](./LICENSE).
 
