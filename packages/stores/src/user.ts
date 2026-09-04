@@ -1,0 +1,44 @@
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
+
+export interface CurrentUser {
+	id: string;
+	email: string;
+	firstName: string | null;
+	lastName: string | null;
+	avatarUrl: string | null;
+}
+
+export const useUserStore = defineStore('user', () => {
+	const user = ref<CurrentUser | null>(null);
+
+	const fullName = computed(() => {
+		if (!user.value) return null;
+
+		const name = [user.value.firstName, user.value.lastName].filter(Boolean).join(' ');
+
+		return name || user.value.email;
+	});
+
+	const initials = computed(() => {
+		if (!user.value) return null;
+
+		const parts = [user.value.firstName, user.value.lastName].filter((part): part is string => Boolean(part));
+
+		if (parts.length === 0) {
+			return user.value.email.charAt(0).toUpperCase();
+		}
+
+		return parts.map((part) => part.charAt(0).toUpperCase()).join('');
+	});
+
+	function setUser(newUser: CurrentUser) {
+		user.value = newUser;
+	}
+
+	function clearUser() {
+		user.value = null;
+	}
+
+	return { user, fullName, initials, setUser, clearUser };
+});
