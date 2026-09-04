@@ -1,6 +1,6 @@
 # 📝 TODO
 
-**Last Updated:** September 4, 2026 (root file scaffolding — README, LICENSE, .gitattributes, .editorconfig — all added)
+**Last Updated:** September 4, 2026 (scrum board populated — 5 issues closed into Done, 1 backlog issue opened)
 
 A phase-by-phase log of what's been done on this repo and what's still open. This is the source of truth for
 progress — a GitHub Project board (once set up) will be a lighter-weight view of the same work, kept in sync with
@@ -15,13 +15,14 @@ not the exception. MIT-licensed. Node.js, Vue 3, and Yarn throughout.
 
 **Done, in full:**
 
-| Item               | Detail                                                                                                                                  | Phase   |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ------- |
-| Repo bootstrap     | Root `package.json`, `.yarnrc.yml` catalog, and `.gitignore` all in place. `yarn install` resolves clean, no errors or warnings         | Phase 1 |
-| CI                 | GitHub Actions `CI` (format/lint/lint:style/build/test) and `CodeQL` workflows added, both verified locally before commit               | Phase 2 |
-| Labels & milestone | `code-review` label added (repo's default set + this one, matching `platform-main`'s label set); `Repo infrastructure` milestone opened | Phase 2 |
-| Project board      | `directus-main` board (user project #6) brought in line with `platform-main` (project #2), field-for-field                              | Phase 2 |
-| Root file scaffold | `LICENSE` (MIT), `README.md`, `.gitattributes` (LF normalization), `.editorconfig` all added                                            | Phase 2 |
+| Item                | Detail                                                                                                                                                    | Phase   |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| Repo bootstrap      | Root `package.json`, `.yarnrc.yml` catalog, and `.gitignore` all in place. `yarn install` resolves clean, no errors or warnings                           | Phase 1 |
+| CI                  | GitHub Actions `CI` (format/lint/lint:style/build/test) and `CodeQL` workflows added, both verified locally before commit                                 | Phase 2 |
+| Labels & milestone  | `code-review` label added (repo's default set + this one, matching `platform-main`'s label set); `Repo infrastructure` milestone opened                   | Phase 2 |
+| Project board       | `directus-main` board (user project #6) brought in line with `platform-main` (project #2), field-for-field                                                | Phase 2 |
+| Root file scaffold  | `LICENSE` (MIT), `README.md`, `.gitattributes` (LF normalization), `.editorconfig` all added                                                              | Phase 2 |
+| Scrum board content | 5 issues closed into `Done`, 1 backlog issue (`Real source, package by package`) opened into `Backlog`, matching `platform-main`'s issue-per-item pattern | Phase 2 |
 
 **Actually still open, right now:** every real package source tree. See the **Still to do** table below.
 
@@ -63,8 +64,14 @@ not the exception. MIT-licensed. Node.js, Vue 3, and Yarn throughout.
 | 2     | `33fd191` | 2026-09-04 | `.gitattributes` added (`* text=auto eol=lf`) — normalizes line endings to LF regardless of local git config, fixing the repeated CRLF/LF warnings seen on every commit so far. Confirmed it doesn't retroactively flag already-committed files as modified                                                   |
 | 2     | `24d8007` | 2026-09-04 | `.editorconfig` added — tabs by default (matching this repo's actual `.prettierrc.json`, not blindly copied from `platform-main`'s space-based one), spaces for `*.yml` (YAML doesn't allow tabs), unlimited line length for `*.md`                                                                           |
 
+### Scrum board content
+
+| Phase | Commit | Date       | What                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----- | ------ | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2     | —      | 2026-09-04 | Board (#6) was structurally correct but had 0 items — matched `platform-main`'s pattern of real, closed GitHub Issues per completed unit of work rather than draft items: opened issues #1–5 (`Repo bootstrap`, `CI/CD: CI + CodeQL GitHub Actions workflows`, `Labels & milestone setup`, `GitHub Project board`, `Root file scaffolding`), each labeled `enhancement`, milestoned `Repo infrastructure`, closed, added to the board, and set to `Done`. Opened a new `Module additions` milestone (mirroring `platform-main`'s) and issue #6 (`Real source, package by package`), left open, added to the board, and set to `Backlog` |
+
 ## 🚧 Still to do
 
-| Item                            | Detail                                                                                                                                         |
-| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| Real source, package by package | Starting with foundational shared packages (the ones with the widest fan-in), Vue-ecosystem packages prioritized once their dependencies exist |
+| Item                            | Detail                                                                                                                                                                                                                       |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Real source, package by package | Starting with foundational shared packages (the ones with the widest fan-in), Vue-ecosystem packages prioritized once their dependencies exist. Tracked as [issue #6](https://github.com/Terrence721/directus-main/issues/6) |
