@@ -15,7 +15,7 @@
 		"build": "yarn workspaces foreach -A -t run build",
 		"format": "prettier --cache --check .",
 		"lint": "eslint --cache .",
-		"lint:style": "stylelint '**/*.{css,scss,vue}' --ignore-path .gitignore --cache",
+		"lint:style": "stylelint '**/*.{css,scss,vue}' --ignore-path .gitignore --allow-empty-input --cache",
 		"test": "yarn workspaces foreach -A --exclude tests-blackbox run test",
 		"test:coverage": "yarn workspaces foreach -A --exclude tests-blackbox run test:coverage"
 	},

@@ -1,8 +1,13 @@
 node_modules/
 dist/
+coverage/
 
 # Yarn (node-modules linker; package cache is global, not repo-local)
 .yarn/
+
+# Lint/format tool caches
+.eslintcache
+.stylelintcache
 
 # Local-only, machine-specific
 cspell.json
