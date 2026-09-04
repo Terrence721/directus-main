@@ -1,21 +1,24 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
+interface Session {
+	accessToken: string;
+	/** Epoch milliseconds, comparable directly against Date.now(). */
+	expiresAt: number;
+}
+
 export const useAuthStore = defineStore('auth', () => {
-	const accessToken = ref<string | null>(null);
-	const expiresAt = ref<number | null>(null);
+	const session = ref<Session | null>(null);
 
-	const loggedIn = computed(() => accessToken.value !== null);
+	const loggedIn = computed(() => session.value !== null && session.value.expiresAt > Date.now());
 
-	function setSession(token: string, expires: number) {
-		accessToken.value = token;
-		expiresAt.value = expires;
+	function setSession(accessToken: string, expiresAt: number) {
+		session.value = { accessToken, expiresAt };
 	}
 
 	function clearSession() {
-		accessToken.value = null;
-		expiresAt.value = null;
+		session.value = null;
 	}
 
-	return { accessToken, expiresAt, loggedIn, setSession, clearSession };
+	return { session, loggedIn, setSession, clearSession };
 });
