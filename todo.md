@@ -6,8 +6,8 @@ A phase-by-phase log of what's been done on this repo and what's still open. Thi
 progress — a GitHub Project board (once set up) will be a lighter-weight view of the same work, kept in sync with
 this file, not a separate source of truth.
 
-**What this repo is:** a personal demonstration workspace, not a fork or continuation of the real
-[Directus](https://github.com/directus/directus) project. It's built one file at a time, taking the real,
+**What this repo is:** a personal demonstration workspace, not a fork or continuation of the real Directus
+project. It's built one file at a time, taking the real,
 battle-tested Directus project as a reference point rather than a source to reproduce — redesigning is the default,
 not the exception. MIT-licensed. Node.js, Vue 3, and Yarn throughout.
 
