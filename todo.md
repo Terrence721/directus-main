@@ -1,6 +1,6 @@
 # 📝 TODO
 
-**Last Updated:** September 4, 2026 (labels and a milestone added, matching this author's `platform-main` conventions)
+**Last Updated:** September 4, 2026 (GitHub Project board brought in line with `platform-main`, exactly)
 
 A phase-by-phase log of what's been done on this repo and what's still open. This is the source of truth for
 progress — a GitHub Project board (once set up) will be a lighter-weight view of the same work, kept in sync with
@@ -21,8 +21,9 @@ Yarn throughout.
 | Repo bootstrap     | Root `package.json`, `.yarnrc.yml` catalog, and `.gitignore` all in place. `yarn install` resolves clean, no errors or warnings         | Phase 1 |
 | CI                 | GitHub Actions `CI` (format/lint/lint:style/build/test) and `CodeQL` workflows added, both verified locally before commit               | Phase 2 |
 | Labels & milestone | `code-review` label added (repo's default set + this one, matching `platform-main`'s label set); `Repo infrastructure` milestone opened | Phase 2 |
+| Project board      | `directus-main` board (user project #6) brought in line with `platform-main` (project #2), field-for-field                              | Phase 2 |
 
-**Actually still open, right now:** the GitHub Project board itself, and every real package source tree. See the **Still to do** table below.
+**Actually still open, right now:** every real package source tree. See the **Still to do** table below.
 
 ## ✅ Done
 
@@ -47,9 +48,14 @@ Yarn throughout.
 | ----- | ------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2     | —      | 2026-09-04 | `code-review` label added on top of GitHub's default set, matching `platform-main`'s label list exactly (the repo's pre-existing `accessibility` label was kept, since it's genuinely relevant to a Vue UI project). `Repo infrastructure` milestone opened for CI/tooling/board work not scoped to one package — per-package milestones deferred until real packages exist, following the `platform-main` pattern of one milestone per module once that module is being worked |
 
+### Project board
+
+| Phase | Commit | Date       | What                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ----- | ------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2     | —      | 2026-09-04 | `directus-main` user project (#6) — already existed empty from earlier this session, since GitHub Projects v2 are user-scoped and survived the repo deletion — brought exactly in line with `platform-main` (#2): `Status` single-select field's five options fixed to the same names and colors (Backlog/gray, Planned/blue, In Progress/yellow, Verification & QA/orange, Done/green), the default view renamed `View 1` → `Board`, its `BOARD_LAYOUT` grouped by `Status` (matches `platform-main`, so items render as columns), and the project linked to the `Terrence721/directus-main` repository (it wasn't linked to any repo before) |
+
 ## 🚧 Still to do
 
 | Item                            | Detail                                                                                                                                         |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| GitHub Project board            | Scrum-style Backlog/Planned/In Progress/Verification & QA/Done, matching this author's other portfolio repos                                   |
 | Real source, package by package | Starting with foundational shared packages (the ones with the widest fan-in), Vue-ecosystem packages prioritized once their dependencies exist |
