@@ -1,16 +1,15 @@
 # 📝 TODO
 
-**Last Updated:** September 4, 2026 (GitHub Project board brought in line with `platform-main`, exactly)
+**Last Updated:** September 4, 2026 (root file scaffolding — README, LICENSE, .gitattributes, .editorconfig — all added)
 
 A phase-by-phase log of what's been done on this repo and what's still open. This is the source of truth for
 progress — a GitHub Project board (once set up) will be a lighter-weight view of the same work, kept in sync with
 this file, not a separate source of truth.
 
 **What this repo is:** a personal demonstration workspace, not a fork or continuation of the real
-[Directus](https://github.com/directus/directus) project. It's built one file at a time — adding real source where
-fidelity to a battle-tested implementation matters, and deliberately redesigning specific pieces where the goal is a
-different, defensible architectural call, each deviation disclosed explicitly when it happens. Node.js, Vue 3, and
-Yarn throughout.
+[Directus](https://github.com/directus/directus) project. It's built one file at a time, taking the real,
+battle-tested Directus project as a reference point rather than a source to reproduce — redesigning is the default,
+not the exception. MIT-licensed. Node.js, Vue 3, and Yarn throughout.
 
 ## At a glance
 
@@ -22,6 +21,7 @@ Yarn throughout.
 | CI                 | GitHub Actions `CI` (format/lint/lint:style/build/test) and `CodeQL` workflows added, both verified locally before commit               | Phase 2 |
 | Labels & milestone | `code-review` label added (repo's default set + this one, matching `platform-main`'s label set); `Repo infrastructure` milestone opened | Phase 2 |
 | Project board      | `directus-main` board (user project #6) brought in line with `platform-main` (project #2), field-for-field                              | Phase 2 |
+| Root file scaffold | `LICENSE` (MIT), `README.md`, `.gitattributes` (LF normalization), `.editorconfig` all added                                            | Phase 2 |
 
 **Actually still open, right now:** every real package source tree. See the **Still to do** table below.
 
@@ -53,6 +53,15 @@ Yarn throughout.
 | Phase | Commit | Date       | What                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ----- | ------ | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2     | —      | 2026-09-04 | `directus-main` user project (#6) — already existed empty from earlier this session, since GitHub Projects v2 are user-scoped and survived the repo deletion — brought exactly in line with `platform-main` (#2): `Status` single-select field's five options fixed to the same names and colors (Backlog/gray, Planned/blue, In Progress/yellow, Verification & QA/orange, Done/green), the default view renamed `View 1` → `Board`, its `BOARD_LAYOUT` grouped by `Status` (matches `platform-main`, so items render as columns), and the project linked to the `Terrence721/directus-main` repository (it wasn't linked to any repo before) |
+
+### Root file scaffold
+
+| Phase | Commit    | Date       | What                                                                                                                                                                                                                                                                                                          |
+| ----- | --------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2     | `2910112` | 2026-09-04 | `LICENSE` added, plain MIT with only this author's copyright — checked the real Directus project's actual license first (Monospace Sustainable Core License, source-available, not permissive) but MIT was chosen since this repo isn't reproducing Directus source verbatim, per the redesign-first approach |
+| 2     | `c109534` | 2026-09-04 | `README.md` added: non-affiliation notice, links to `todo.md` and the Project board, AI-assisted-development disclosure, structured after `platform-main`'s README but with its own framing (redesign-first, not fidelity-first)                                                                              |
+| 2     | `33fd191` | 2026-09-04 | `.gitattributes` added (`* text=auto eol=lf`) — normalizes line endings to LF regardless of local git config, fixing the repeated CRLF/LF warnings seen on every commit so far. Confirmed it doesn't retroactively flag already-committed files as modified                                                   |
+| 2     | `24d8007` | 2026-09-04 | `.editorconfig` added — tabs by default (matching this repo's actual `.prettierrc.json`, not blindly copied from `platform-main`'s space-based one), spaces for `*.yml` (YAML doesn't allow tabs), unlimited line length for `*.md`                                                                           |
 
 ## 🚧 Still to do
 
