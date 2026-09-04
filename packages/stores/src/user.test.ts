@@ -17,15 +17,17 @@ describe('useUserStore', () => {
 
 	it('derives fullName and initials from first/last name', () => {
 		const store = useUserStore();
-
-		store.setUser({
+		const newUser = {
 			id: '1',
 			email: 'jane.doe@example.com',
 			firstName: 'Jane',
 			lastName: 'Doe',
 			avatarUrl: null,
-		});
+		};
 
+		store.setUser(newUser);
+
+		expect(store.user).toEqual(newUser);
 		expect(store.fullName).toBe('Jane Doe');
 		expect(store.initials).toBe('JD');
 	});
