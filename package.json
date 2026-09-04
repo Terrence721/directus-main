@@ -1,0 +1,11 @@
+{
+	"name": "directus-monorepo",
+	"private": true,
+	"homepage": "https://github.com/Terrence721/directus-main#readme",
+	"type": "module",
+	"workspaces": ["directus", "app", "api", "sdk", "packages/*", "tests/*"],
+	"packageManager": "yarn@4.18.0",
+	"engines": {
+		"node": "26"
+	}
+}
