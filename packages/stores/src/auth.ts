@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
-interface Session {
+export interface Session {
 	accessToken: string;
 	/** Epoch milliseconds, comparable directly against Date.now(). */
 	expiresAt: number;
