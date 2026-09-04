@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Terrence Daniels — Principal Frontend Engineer</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta
+			name="description"
+			content="A redesigned rebuild of Directus's admin-panel state layer, package by package: Pinia stores built fresh from the real project's domain, not reproduced from its source. Early-stage, honest about the scale, every number reproducible."
+		/>
+		<link rel="canonical" href="https://terrence721.github.io/directus-main/portfolio.html" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Terrence Daniels — Portfolio" />
+		<meta property="og:url" content="https://terrence721.github.io/directus-main/portfolio.html" />
+		<meta property="og:title" content="directus-main — a redesigned Directus admin state layer, by Terrence Daniels" />
+		<meta
+			property="og:description"
+			content="A redesigned rebuild of Directus's admin-panel state layer, package by package — real architectural judgment applied fresh, not reproduced. Not a toy demo."
+		/>
+
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="directus-main — a redesigned Directus admin state layer" />
+		<meta
+			name="twitter:description"
+			content="A redesigned rebuild of Directus's admin-panel state layer, package by package — real architectural judgment applied fresh, not reproduced."
+		/>
+		<style>
+			:root {
+				--paper: #ede9df;
+				--paper-2: #e2ddd0;
+				--ink: #1c2333;
+				--ink-soft: #4b5567;
+				--rule: #c7c0ac;
+				--accent: #2e6b52;
+				--accent-ink: #f2fff9;
+				--accent-2: #2e5266;
+				--font-display: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', serif;
+				--font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+				--font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+			}
+
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--paper: #14181f;
+					--paper-2: #1b212b;
+					--ink: #e8e4d9;
+					--ink-soft: #a3aabb;
+					--rule: #303748;
+					--accent: #5fcf9f;
+					--accent-ink: #06251a;
+					--accent-2: #7fb2cc;
+				}
+			}
+			:root[data-theme='dark'] {
+				--paper: #14181f;
+				--paper-2: #1b212b;
+				--ink: #e8e4d9;
+				--ink-soft: #a3aabb;
+				--rule: #303748;
+				--accent: #5fcf9f;
+				--accent-ink: #06251a;
+				--accent-2: #7fb2cc;
+			}
+			:root[data-theme='light'] {
+				--paper: #ede9df;
+				--paper-2: #e2ddd0;
+				--ink: #1c2333;
+				--ink-soft: #4b5567;
+				--rule: #c7c0ac;
+				--accent: #2e6b52;
+				--accent-ink: #f2fff9;
+				--accent-2: #2e5266;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+			html {
+				color-scheme: light dark;
+			}
+			body {
+				margin: 0;
+				background: var(--paper);
+				color: var(--ink);
+				font-family: var(--font-body);
+				line-height: 1.55;
+				-webkit-font-smoothing: antialiased;
+			}
+			a {
+				color: var(--accent-2);
+				text-decoration-thickness: 1px;
+				text-underline-offset: 3px;
+			}
+			a:hover {
+				color: var(--accent);
+			}
+			a:focus-visible,
+			button:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 3px;
+			}
+
+			.wrap {
+				max-width: 880px;
+				margin: 0 auto;
+				padding: 0 28px;
+			}
+
+			.hero {
+				position: relative;
+				padding: 72px 0 44px;
+				background-image: repeating-linear-gradient(
+					135deg,
+					color-mix(in srgb, var(--ink) 4%, transparent) 0 2px,
+					transparent 2px 26px
+				);
+				border-bottom: 1px solid var(--rule);
+			}
+			.eyebrow {
+				font-family: var(--font-mono);
+				font-size: 0.72rem;
+				letter-spacing: 0.16em;
+				text-transform: uppercase;
+				color: var(--ink-soft);
+				margin: 0 0 18px;
+			}
+			.eyebrow::before {
+				content: '◆ ';
+				color: var(--accent);
+			}
+			h1.name {
+				font-family: var(--font-display);
+				font-weight: 400;
+				font-size: clamp(2.6rem, 6vw, 4.2rem);
+				letter-spacing: -0.01em;
+				line-height: 1.02;
+				margin: 0 0 10px;
+				text-wrap: balance;
+			}
+			.role {
+				font-family: var(--font-display);
+				font-style: italic;
+				font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+				color: var(--accent-2);
+				margin: 0 0 22px;
+			}
+			.thesis {
+				max-width: 62ch;
+				font-size: 1.05rem;
+				color: var(--ink-soft);
+				margin: 0 0 34px;
+			}
+			.hero-actions {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 12px;
+				align-items: center;
+			}
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				font-family: var(--font-mono);
+				font-size: 0.82rem;
+				letter-spacing: 0.03em;
+				padding: 10px 16px;
+				border: 1px solid var(--ink);
+				color: var(--ink);
+				text-decoration: none;
+				background: transparent;
+			}
+			.btn:hover {
+				background: var(--ink);
+				color: var(--paper);
+			}
+			.btn.primary {
+				background: var(--accent);
+				border-color: var(--accent);
+				color: var(--accent-ink);
+			}
+			.btn.primary:hover {
+				background: var(--accent-2);
+				border-color: var(--accent-2);
+				color: var(--accent-ink);
+			}
+
+			.stamp {
+				position: absolute;
+				top: 58px;
+				right: 28px;
+				width: 128px;
+				height: 128px;
+				border: 2px solid var(--accent);
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transform: rotate(-9deg);
+				opacity: 0.92;
+			}
+			.stamp::before {
+				content: '';
+				position: absolute;
+				inset: 8px;
+				border: 1px dashed var(--accent);
+				border-radius: 50%;
+			}
+			.stamp-inner {
+				text-align: center;
+				font-family: var(--font-mono);
+				color: var(--accent);
+			}
+			.stamp-inner .n {
+				font-size: 1.5rem;
+				font-weight: 700;
+				line-height: 1;
+			}
+			.stamp-inner .l {
+				display: block;
+				font-size: 0.55rem;
+				letter-spacing: 0.12em;
+				margin-top: 4px;
+			}
+			@media (max-width: 620px) {
+				.stamp {
+					display: none;
+				}
+			}
+
+			.manifest {
+				background: var(--paper-2);
+				border-bottom: 1px solid var(--rule);
+				overflow-x: auto;
+			}
+			.manifest-row {
+				display: flex;
+				min-width: max-content;
+				font-family: var(--font-mono);
+				font-variant-numeric: tabular-nums;
+			}
+			.manifest-cell {
+				padding: 16px 24px;
+				border-right: 1px solid var(--rule);
+				white-space: nowrap;
+			}
+			.manifest-cell:last-child {
+				border-right: none;
+			}
+			.manifest-cell .v {
+				font-size: 1.15rem;
+				color: var(--accent);
+				font-weight: 700;
+			}
+			.manifest-cell .k {
+				display: block;
+				font-size: 0.68rem;
+				letter-spacing: 0.08em;
+				color: var(--ink-soft);
+				text-transform: uppercase;
+				margin-top: 2px;
+			}
+
+			section {
+				padding: 52px 0;
+				border-bottom: 1px solid var(--rule);
+			}
+			section:last-of-type {
+				border-bottom: none;
+			}
+			h2 {
+				font-family: var(--font-display);
+				font-weight: 400;
+				font-size: 1.7rem;
+				margin: 0 0 6px;
+				text-wrap: balance;
+			}
+			.h2-sub {
+				font-family: var(--font-mono);
+				font-size: 0.72rem;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				color: var(--ink-soft);
+				margin: 0 0 22px;
+			}
+			p {
+				max-width: 68ch;
+			}
+			.lede {
+				font-size: 1.02rem;
+				color: var(--ink-soft);
+				max-width: 66ch;
+			}
+
+			.chips {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				margin: 18px 0 0;
+			}
+			.chip {
+				font-family: var(--font-mono);
+				font-size: 0.75rem;
+				padding: 4px 10px;
+				border: 1px solid var(--rule);
+				color: var(--ink-soft);
+			}
+
+			.ledger {
+				border-top: 1px solid var(--rule);
+				margin-top: 24px;
+			}
+			.item {
+				display: grid;
+				grid-template-columns: 40px 1fr;
+				gap: 4px 18px;
+				padding: 18px 0;
+				border-bottom: 1px solid var(--rule);
+			}
+			.item .no {
+				font-family: var(--font-mono);
+				color: var(--accent);
+				font-size: 0.9rem;
+				padding-top: 2px;
+			}
+			.item .file {
+				font-family: var(--font-mono);
+				font-size: 0.88rem;
+				color: var(--ink);
+			}
+			.item .desc {
+				color: var(--ink-soft);
+				font-size: 0.95rem;
+				margin: 4px 0 8px;
+			}
+			.item .meta {
+				font-family: var(--font-mono);
+				font-size: 0.72rem;
+				color: var(--ink-soft);
+			}
+			.item .meta .tag {
+				color: var(--accent-2);
+			}
+			.item .meta a {
+				margin-left: 8px;
+			}
+
+			.note {
+				border-left: 2px solid var(--accent-2);
+				padding: 4px 0 4px 16px;
+				color: var(--ink-soft);
+				font-size: 0.92rem;
+				margin: 22px 0 0;
+				max-width: 62ch;
+			}
+			.note strong {
+				color: var(--ink);
+			}
+
+			.twocol {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 28px;
+				margin-top: 20px;
+			}
+			@media (max-width: 640px) {
+				.twocol {
+					grid-template-columns: 1fr;
+				}
+			}
+			.card {
+				border: 1px solid var(--rule);
+				padding: 18px 20px;
+			}
+			.card h3 {
+				font-family: var(--font-body);
+				font-size: 0.95rem;
+				font-weight: 700;
+				margin: 0 0 8px;
+			}
+			.card p {
+				font-size: 0.9rem;
+				color: var(--ink-soft);
+				margin: 0;
+			}
+
+			footer {
+				padding: 44px 0 72px;
+				font-family: var(--font-mono);
+				font-size: 0.85rem;
+			}
+			footer .links {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px 22px;
+				margin-bottom: 22px;
+			}
+			footer .fine {
+				color: var(--ink-soft);
+				font-size: 0.78rem;
+				max-width: 62ch;
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				* {
+					transition: none !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="hero">
+			<div class="wrap">
+				<p class="eyebrow">Portfolio Manifest — Updated September 4, 2026</p>
+				<h1 class="name">Terrence&nbsp;Daniels</h1>
+				<p class="role">Principal Frontend Engineer</p>
+				<p class="thesis">
+					A redesigned rebuild of <strong>Directus</strong>'s admin-panel state layer, package by package: Pinia stores
+					built fresh from the real project's domain, not reproduced from its source — early-stage, and honest about
+					that scale, with the reasoning for each redesign decision written down as it happens.
+				</p>
+				<div class="hero-actions">
+					<a class="btn primary" href="https://github.com/Terrence721/directus-main">View the repository →</a>
+					<a class="btn" href="https://github.com/Terrence721/directus-main/blob/main/todo.md">Working log</a>
+					<a class="btn" href="https://github.com/Terrence721/directus-main/wiki">Wiki</a>
+				</div>
+			</div>
+			<div class="stamp" aria-hidden="true">
+				<div class="stamp-inner">
+					<span class="n">2</span>
+					<span class="l">DESYNC BUGS<br />PREVENTED BY DESIGN</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="manifest">
+			<div class="wrap">
+				<div class="manifest-row">
+					<div class="manifest-cell"><span class="v">48</span><span class="k">commits</span></div>
+					<div class="manifest-cell"><span class="v">20</span><span class="k">Vitest tests</span></div>
+					<div class="manifest-cell"><span class="v">100%</span><span class="k">test coverage</span></div>
+					<div class="manifest-cell"><span class="v">0</span><span class="k">lint errors</span></div>
+					<div class="manifest-cell"><span class="v">0</span><span class="k">CodeQL findings</span></div>
+					<div class="manifest-cell"><span class="v">1</span><span class="k">package shipped</span></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="wrap">
+			<section>
+				<h2>Why this project</h2>
+				<p class="h2-sub">Redesign is the default, not the exception</p>
+				<p class="lede">
+					Directus is a real, battle-tested admin panel — a legitimate reference point for what a CMS state layer
+					actually needs. Rather than reproducing its source, this repo takes the real project as a domain reference and
+					rebuilds each piece from that understanding: same problem space, independent implementation, judged on its own
+					merits rather than measured against fidelity to the original.
+				</p>
+				<div class="chips">
+					<span class="chip">Vue 3</span>
+					<span class="chip">Pinia</span>
+					<span class="chip">TypeScript</span>
+					<span class="chip">Yarn Berry</span>
+					<span class="chip">Vitest</span>
+					<span class="chip">GitHub Actions</span>
+					<span class="chip">CodeQL</span>
+				</div>
+			</section>
+
+			<section>
+				<h2>Redesign by default, not by exception</h2>
+				<p class="h2-sub">Independent refs that must stay in sync are a bug waiting to happen</p>
+				<p class="lede">
+					The real Directus <code>useAppStore</code> tracks hydration as three separate, independently-mutated refs —
+					<code>hydrated</code>, <code>hydrating</code>, <code>error</code> — nothing stops all three from being set at
+					once into a state that's actually meaningless (hydrated <em>and</em> errored, simultaneously). The same shape
+					of risk showed up independently in this repo's own first pass at session state: <code>accessToken</code> and
+					<code>expiresAt</code> as two separate nullable refs that had to be kept in lockstep by hand.
+				</p>
+				<div class="twocol">
+					<div class="card">
+						<h3>One discriminated value, not several refs</h3>
+						<p>
+							Both cases were collapsed into a single value with a fixed set of valid shapes —
+							<code>Session | null</code> for auth, a <code>{ status }</code> union for hydration. Invalid combinations
+							aren't handled defensively; they're not representable at all.
+						</p>
+					</div>
+					<div class="card">
+						<h3>Applied twice, on purpose</h3>
+						<p>
+							The second instance (<code>useAppStore</code>) wasn't a coincidence — it was deliberately checked for,
+							once the first fix in <code>useAuthStore</code> established the pattern was worth applying consistently
+							rather than treating it as a one-off.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>Coverage doesn't catch everything</h2>
+				<p class="h2-sub">
+					A completeness audit, prompted by comparing this package's file count against the real source
+				</p>
+				<p class="lede">
+					100% statement/branch coverage was already true before this audit — and it still let four real gaps through,
+					because every line executing isn't the same as the right value ending up in the right place. All four found
+					and fixed in the same pass, once file-count parity with the real source prompted a second look.
+				</p>
+				<div class="ledger">
+					<div class="item">
+						<div class="no">01</div>
+						<div>
+							<div class="file">auth.ts</div>
+							<div class="desc">
+								<code>Session</code> wasn't <code>export</code>ed, unlike every other store's public type — a consumer
+								could use the value but never name its type.
+							</div>
+							<div class="meta">
+								<span class="tag">consistency</span>
+								<a href="https://github.com/Terrence721/directus-main/commit/a381c27">commit a381c27</a>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="no">02</div>
+						<div>
+							<div class="file">package.json</div>
+							<div class="desc">
+								A strict <code>exports</code> map with no <code>./package.json</code> subpath blocks any tooling that
+								resolves a package's own <code>package.json</code> directly.
+							</div>
+							<div class="meta">
+								<span class="tag">tooling</span>
+								<a href="https://github.com/Terrence721/directus-main/commit/ec2205c">commit ec2205c</a>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="no">03</div>
+						<div>
+							<div class="file">auth.test.ts, user.test.ts</div>
+							<div class="desc">
+								Both only asserted <em>derived</em> values (<code>loggedIn</code>, <code>fullName</code>), never the raw
+								stored state — a bug that swapped stored fields would still pass every existing test.
+							</div>
+							<div class="meta">
+								<span class="tag">test gap</span>
+								<a href="https://github.com/Terrence721/directus-main/commit/513dd21">commit 513dd21</a>
+								<a href="https://github.com/Terrence721/directus-main/commit/895c449">895c449</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<p class="note">
+					<strong>What prompted it:</strong> asked why this package had more files than the real source's — the honest
+					answer was the real <code>packages/stores</code> is one flat store with 7 raw refs and no computed properties
+					or actions at all. That comparison is what triggered auditing every file in this package against itself, not
+					just against the original.
+				</p>
+			</section>
+
+			<section>
+				<h2>Verifying it actually works</h2>
+				<p class="h2-sub">CI on every push, not a one-time local check</p>
+				<p class="lede">
+					Every store change runs through the same five real gates before being called done — format, lint, style lint,
+					build, test — then again on GitHub Actions infrastructure this repo doesn't control. Two real CI failures were
+					hit and fixed during this build, both from the same root cause: pushing a
+					<code>yarn.lock</code> or a config file ahead of the file it actually depends on.
+				</p>
+				<div class="twocol">
+					<div class="card">
+						<h3>20 tests, 0 lint errors</h3>
+						<p>
+							Across every store added so far, real assertions against real behavior — including regression tests for
+							the two bugs this project found and fixed in itself.
+						</p>
+					</div>
+					<div class="card">
+						<h3>CodeQL, checked, not assumed</h3>
+						<p>
+							0 open findings as of this page's last update — verified against the repository's own Code Scanning API,
+							not asserted from memory.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>Judgment calls</h2>
+				<p class="h2-sub">Building more than the reference, on purpose</p>
+				<p class="lede">
+					A direct file-count comparison against the real source could have gone the other way: find out the real
+					<code>packages/stores</code> is a single 38-line file and conclude this repo was over-built. Instead, the real
+					source's own code says otherwise — a literal <code>@TODO maybe move to userStore</code> comment sitting on its
+					<code>authenticated</code> field, acknowledging the flat single-store shape was never the intended end state.
+					Building three purpose-specific stores instead of one grab-bag isn't scope creep relative to that; it's
+					finishing a direction the original source already pointed at but hadn't taken yet.
+				</p>
+			</section>
+		</div>
+
+		<footer>
+			<div class="wrap">
+				<div class="links">
+					<a href="https://github.com/Terrence721/directus-main">Repository</a>
+					<a href="https://github.com/Terrence721/directus-main/blob/main/todo.md">Working log</a>
+					<a href="https://github.com/Terrence721/directus-main/wiki">Wiki</a>
+					<a href="https://github.com/users/Terrence721/projects/6">Project board</a>
+					<a href="https://terrence721.github.io/">Portfolio hub</a>
+				</div>
+				<p class="fine">
+					Not affiliated with, and not published by, the upstream Directus project or Monospace Inc. Every number on
+					this page is reproducible from the repository's own commit history and CI runs — nothing here is asserted
+					without a link to check it against.
+				</p>
+			</div>
+		</footer>
+	</body>
+</html>
