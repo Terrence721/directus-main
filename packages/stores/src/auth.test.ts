@@ -15,10 +15,12 @@ describe('useAuthStore', () => {
 
 	it('is logged in once a session with a future expiry is set', () => {
 		const auth = useAuthStore();
+		const expiresAt = Date.now() + 60_000;
 
-		auth.setSession('token', Date.now() + 60_000);
+		auth.setSession('token', expiresAt);
 
 		expect(auth.loggedIn).toBe(true);
+		expect(auth.session).toEqual({ accessToken: 'token', expiresAt });
 	});
 
 	it('is logged out once the session has expired', () => {
