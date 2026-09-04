@@ -1,4 +1,5 @@
 import js from '@eslint/js';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import { flatConfigs as importXFlatConfigs } from 'eslint-plugin-import-x';
 import vue from 'eslint-plugin-vue';
 import globals from 'globals';
@@ -20,6 +21,9 @@ export default tseslint.config(
 				...globals.node,
 				...globals.browser,
 			},
+		},
+		settings: {
+			'import-x/resolver-next': [createTypeScriptImportResolver()],
 		},
 	},
 	{
