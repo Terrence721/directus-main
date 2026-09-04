@@ -1,4 +1,6 @@
-# 🔷 Directus, Redesigned
+**[→ Read the one-page portfolio](https://terrence721.github.io/directus-main/portfolio.html)** — the 60-second version, with links back into this repo for anyone who wants to go deeper.
+
+# ⚙️ Principal Frontend Engineering Demonstration (Vue/Node.js/Yarn)
 
 [![CI](https://github.com/Terrence721/directus-main/actions/workflows/ci.yml/badge.svg)](https://github.com/Terrence721/directus-main/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/Terrence721/directus-main/actions/workflows/codeql.yml/badge.svg)](https://github.com/Terrence721/directus-main/actions/workflows/codeql.yml)
@@ -13,11 +15,12 @@ This repo is **not affiliated with, and not published by, the upstream Directus 
 
 - **[`todo.md`](todo.md)** — the phase-by-phase log of everything done and everything still open. This is the source of truth for progress.
 - **[GitHub Project board](https://github.com/users/Terrence721/projects/6)** — a lighter-weight, at-a-glance view of the same work, kept in sync with `todo.md`.
+- **[Wiki](https://github.com/Terrence721/directus-main/wiki)** — short pointers into specific decisions, one page per package.
 
 On AI-assisted development: commits co-authored as Claude are AI-assisted implementations directed, reviewed, and merged by Terrence Daniels — same process as every other change.
 
 ## 🏗 What's Here So Far
 
-Root scaffolding only, so far: a Yarn Berry workspace (`directus`, `app`, `api`, `sdk`, `packages/*`, `tests/*` — none populated yet), CI (lint/format/build/test plus CodeQL), and the lint/format tooling backing it. See `todo.md` for the exact commit-by-commit breakdown.
+`packages/stores` is done: four Pinia stores (`useAuthStore`, `useUserStore`, `useServerStore`, `useAppStore`), 20 tests, 100% coverage. `packages/constants` is in progress. Root scaffolding (Yarn Berry workspace, CI, lint/format tooling) is complete. See `todo.md` for the exact commit-by-commit breakdown.
 
-Real package source is next, starting with the foundational shared packages and prioritizing the Vue-ecosystem pieces.
+Vue-ecosystem packages are prioritized next, following the real dependency graph rather than name-based guessing.
