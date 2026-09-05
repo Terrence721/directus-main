@@ -57,6 +57,7 @@ jobs:
           mkdir -p site
           cp portfolio.html site/portfolio.html
           cp -r app/dist site/app
+          cp -r diagrams site/diagrams
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v5
