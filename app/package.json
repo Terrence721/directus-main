@@ -1,0 +1,28 @@
+{
+	"name": "app",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"typecheck": "vue-tsc --noEmit",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage"
+	},
+	"devDependencies": {
+		"@directus/stores": "workspace:*",
+		"@vitejs/plugin-vue": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"@vue/compiler-dom": "catalog:",
+		"@vue/devtools-api": "catalog:",
+		"@vue/test-utils": "catalog:",
+		"happy-dom": "catalog:",
+		"pinia": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:",
+		"vue": "catalog:",
+		"vue-tsc": "catalog:"
+	}
+}
