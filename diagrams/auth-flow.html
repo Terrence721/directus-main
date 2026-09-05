@@ -1,0 +1,315 @@
+<title>Auth &amp; Request Flow — One Guard, Two Directions</title>
+<style>
+	:root {
+		--paper: #ede9df;
+		--paper-2: #e2ddd0;
+		--surface: #ffffff;
+		--ink: #1c2333;
+		--ink-soft: #4b5567;
+		--rule: #c7c0ac;
+		--pkg: #2e6b52;
+		--pkg-bg: #dcf0e6;
+		--app: #2e5266;
+		--app-bg: #dce8f0;
+		--warn: #a1481f;
+		--warn-bg: #f6e6dc;
+		--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+		--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--paper: #14181f;
+		--paper-2: #1b212b;
+		--surface: #1c2230;
+		--ink: #e8e4d9;
+		--ink-soft: #a3aabb;
+		--rule: #303748;
+		--pkg: #5fcf9f;
+		--pkg-bg: #163026;
+		--app: #7fb2cc;
+		--app-bg: #16232f;
+		--warn: #e0a074;
+		--warn-bg: #332318;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--paper: #14181f;
+			--paper-2: #1b212b;
+			--surface: #1c2230;
+			--ink: #e8e4d9;
+			--ink-soft: #a3aabb;
+			--rule: #303748;
+			--pkg: #5fcf9f;
+			--pkg-bg: #163026;
+			--app: #7fb2cc;
+			--app-bg: #16232f;
+			--warn: #e0a074;
+			--warn-bg: #332318;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html {
+		color-scheme: light dark;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 70ch;
+		margin: 0 0 2.2rem;
+	}
+
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--app);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 1rem;
+	}
+
+	.diagram {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 2.2rem;
+	}
+
+	.diagram-row {
+		display: flex;
+		justify-content: center;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+	}
+
+	.node {
+		font-family: var(--mono);
+		font-size: 0.82rem;
+		background: var(--surface);
+		border: 1px solid var(--rule);
+		border-radius: 8px;
+		padding: 0.6rem 1.1rem;
+		white-space: nowrap;
+	}
+
+	.node--pkg {
+		border-color: var(--pkg);
+		color: var(--pkg);
+		font-weight: 600;
+	}
+	.node--app {
+		border-color: var(--app);
+		color: var(--app);
+		font-weight: 600;
+	}
+
+	.diagram-arrow-v {
+		color: var(--ink-soft);
+		font-size: 0.78rem;
+		font-family: var(--mono);
+		text-align: center;
+	}
+
+	.fork {
+		display: flex;
+		justify-content: center;
+		gap: 1.6rem;
+		flex-wrap: wrap;
+		margin-top: 0.3rem;
+		margin-bottom: 2.2rem;
+	}
+
+	.fork-branch {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4rem;
+		border: 1px dashed var(--rule);
+		border-radius: 10px;
+		padding: 0.9rem 1.1rem;
+		max-width: 24ch;
+	}
+
+	.fork-label {
+		font-family: var(--mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+	}
+
+	.fork-note {
+		font-size: 0.78rem;
+		color: var(--ink-soft);
+		text-align: center;
+		line-height: 1.45;
+	}
+	.fork-note code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+		color: var(--ink);
+	}
+
+	.callout {
+		border: 1px solid var(--warn);
+		background: var(--warn-bg);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin-bottom: 2rem;
+	}
+
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--warn);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+	.callout a {
+		color: var(--app);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--rule);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — auth &amp; request flow</p>
+	<h1>One route guard, two directions — and the branch a test never covered.</h1>
+	<p class="dek">
+		<code>LoginForm.vue</code> knows nothing about how login actually works — it just calls whatever
+		<code>onSubmit</code> function it's given. <code>LoginPage.vue</code> is the one that wires it to a real (simulated)
+		<code>authClient</code>. See <a href="system-architecture.html">System Architecture</a> for where these pieces sit,
+		and <a href="data-model.html">Data Model</a> for the <code>Session</code> shape <code>setSession</code> actually
+		stores.
+	</p>
+
+	<h2>Login</h2>
+	<div class="diagram">
+		<div class="diagram-row">
+			<span class="node node--app">LoginForm submits { email, password }</span>
+		</div>
+		<span class="diagram-arrow-v">↓ onSubmit prop — LoginForm never imports authClient itself</span>
+		<div class="diagram-row">
+			<span class="node node--app">LoginPage.handleLogin → authClient.login(credentials)</span>
+		</div>
+	</div>
+	<div class="fork">
+		<div class="fork-branch">
+			<span class="fork-label">demo@directus-main.dev / demo1234</span>
+			<span class="fork-note"><code>auth.setSession(token, expiresAt)</code> → <code>router.push('/')</code></span>
+		</div>
+		<div class="fork-branch">
+			<span class="fork-label">anything else</span>
+			<span class="fork-note"
+				>throws <code>InvalidCredentialsError</code> — <code>LoginForm</code> shows its message, stays on
+				<code>/login</code></span
+			>
+		</div>
+	</div>
+
+	<h2>Route Guard (every navigation)</h2>
+	<div class="fork">
+		<div class="fork-branch">
+			<span class="fork-label">→ / without a session</span>
+			<span class="fork-note"><code>requiresAuth</code> meta + no session → redirected to <code>/login</code></span>
+		</div>
+		<div class="fork-branch">
+			<span class="fork-label">→ /login while already logged in</span>
+			<span class="fork-note">redirected straight to <code>/</code> — never shows the form again</span>
+		</div>
+	</div>
+
+	<h2>Logout</h2>
+	<div class="diagram">
+		<div class="diagram-row">
+			<span class="node node--app">HomePage: "Log out" clicked</span>
+		</div>
+		<span class="diagram-arrow-v">↓</span>
+		<div class="diagram-row">
+			<span class="node node--app">auth.clearSession() → router.push('/login')</span>
+		</div>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">!</span>
+		<p>
+			<strong>Real bug, found while writing a test:</strong> the "redirected away from <code>/login</code> when already
+			authenticated" branch above had zero test coverage — unlike a genuinely untestable branch elsewhere in this app,
+			this one just hadn't gotten a test yet. Writing it exposed a real, previously-silent defect: earlier tests'
+			mounted <code>App</code> instances were never unmounted, and since they all shared one
+			<code>router</code> singleton, their stale <code>RouterView</code> registrations interfered with the new test.
+			Fixed with <code>@vue/test-utils</code>'s <code>enableAutoUnmount(afterEach)</code>, then applied to every test
+			file with the same latent risk — not just the one that had actually failed. See
+			<a href="testing-strategy.html">Testing Strategy</a> for the full test-layer picture this bug came out of.
+		</p>
+	</div>
+
+	<footer>directus-main · vue-router · createWebHashHistory · beforeEach guard, no per-route guards</footer>
+</div>
