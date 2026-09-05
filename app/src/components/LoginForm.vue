@@ -46,3 +46,61 @@ async function handleSubmit() {
 		<button type="submit" :disabled="submitting">{{ submitting ? 'Signing in…' : 'Sign in' }}</button>
 	</form>
 </template>
+
+<style scoped>
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	inline-size: 100%;
+	max-inline-size: 24rem;
+	padding: 2rem;
+	background: var(--paper-2);
+	border: 1px solid var(--rule);
+	border-radius: 0.5rem;
+}
+
+label {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+	font-size: 0.875rem;
+	color: var(--ink-soft);
+}
+
+input {
+	padding: 0.625rem 0.75rem;
+	font: inherit;
+	color: var(--ink);
+	background: var(--paper);
+	border: 1px solid var(--rule);
+	border-radius: 0.375rem;
+}
+
+input:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 1px;
+}
+
+button {
+	padding: 0.625rem 1rem;
+	font: inherit;
+	font-weight: 600;
+	color: var(--accent-ink);
+	background: var(--accent);
+	border: none;
+	border-radius: 0.375rem;
+	cursor: pointer;
+}
+
+button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+[role='alert'] {
+	margin: 0;
+	font-size: 0.875rem;
+	color: #b3261e;
+}
+</style>
