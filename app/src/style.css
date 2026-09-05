@@ -1,0 +1,40 @@
+/* Same paper/ink palette as portfolio.html, for visual consistency across this repo's live pages. */
+:root {
+	--paper: #ede9df;
+	--paper-2: #e2ddd0;
+	--ink: #1c2333;
+	--ink-soft: #4b5567;
+	--rule: #c7c0ac;
+	--accent: #2e6b52;
+	--accent-ink: #f2fff9;
+	--font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--paper: #14181f;
+		--paper-2: #1b212b;
+		--ink: #e8e4d9;
+		--ink-soft: #a3aabb;
+		--rule: #303748;
+		--accent: #5fcf9f;
+		--accent-ink: #06251a;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	color-scheme: light dark;
+}
+
+body {
+	margin: 0;
+	background: var(--paper);
+	color: var(--ink);
+	font-family: var(--font-body);
+	line-height: 1.55;
+	-webkit-font-smoothing: antialiased;
+}
