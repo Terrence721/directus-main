@@ -23,7 +23,7 @@ describe('App', () => {
 		await wrapper.find('input[type="password"]').setValue('demo1234');
 		await wrapper.find('form').trigger('submit');
 
-		await vi.waitFor(() => expect(wrapper.text()).toBe('Welcome back.'));
+		await vi.waitFor(() => expect(wrapper.find('.session').text()).toBe('Welcome back.Log out'));
 	});
 
 	it('shows an error and stays logged out when the credentials are wrong', async () => {
@@ -42,7 +42,18 @@ describe('App', () => {
 
 		const wrapper = mount(App);
 
-		expect(wrapper.text()).toBe('Welcome back.');
+		expect(wrapper.find('.session').text()).toBe('Welcome back.Log out');
+	});
+
+	it('logs out and shows the login form again when "Log out" is clicked', async () => {
+		const auth = useAuthStore();
+		auth.setSession('token', Date.now() + 60_000);
+
+		const wrapper = mount(App);
+		await wrapper.find('button').trigger('click');
+
+		expect(auth.loggedIn).toBe(false);
+		expect(wrapper.find('form').exists()).toBe(true);
 	});
 
 	it('completes hydration on mount', () => {
