@@ -9,21 +9,25 @@ export interface CurrentUser {
 	avatarUrl: string | null;
 }
 
+function getNameParts(user: CurrentUser): string[] {
+	return [user.firstName, user.lastName].filter((part): part is string => Boolean(part));
+}
+
 export const useUserStore = defineStore('user', () => {
 	const user = ref<CurrentUser | null>(null);
 
 	const fullName = computed(() => {
 		if (!user.value) return null;
 
-		const name = [user.value.firstName, user.value.lastName].filter(Boolean).join(' ');
+		const parts = getNameParts(user.value);
 
-		return name || user.value.email;
+		return parts.join(' ') || user.value.email;
 	});
 
 	const initials = computed(() => {
 		if (!user.value) return null;
 
-		const parts = [user.value.firstName, user.value.lastName].filter((part): part is string => Boolean(part));
+		const parts = getNameParts(user.value);
 
 		if (parts.length === 0) {
 			return user.value.email.charAt(0).toUpperCase();
