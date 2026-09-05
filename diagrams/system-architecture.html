@@ -1,0 +1,367 @@
+<title>System Architecture — Four Workspaces, One Real Dependency Order</title>
+<style>
+	:root {
+		--paper: #ede9df;
+		--paper-2: #e2ddd0;
+		--surface: #ffffff;
+		--ink: #1c2333;
+		--ink-soft: #4b5567;
+		--rule: #c7c0ac;
+		--pkg: #2e6b52;
+		--pkg-bg: #dcf0e6;
+		--app: #2e5266;
+		--app-bg: #dce8f0;
+		--warn: #a1481f;
+		--warn-bg: #f6e6dc;
+		--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+		--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--paper: #14181f;
+		--paper-2: #1b212b;
+		--surface: #1c2230;
+		--ink: #e8e4d9;
+		--ink-soft: #a3aabb;
+		--rule: #303748;
+		--pkg: #5fcf9f;
+		--pkg-bg: #163026;
+		--app: #7fb2cc;
+		--app-bg: #16232f;
+		--warn: #e0a074;
+		--warn-bg: #332318;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--paper: #14181f;
+			--paper-2: #1b212b;
+			--surface: #1c2230;
+			--ink: #e8e4d9;
+			--ink-soft: #a3aabb;
+			--rule: #303748;
+			--pkg: #5fcf9f;
+			--pkg-bg: #163026;
+			--app: #7fb2cc;
+			--app-bg: #16232f;
+			--warn: #e0a074;
+			--warn-bg: #332318;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html {
+		color-scheme: light dark;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 70ch;
+		margin: 0 0 2.2rem;
+	}
+
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--app);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 1rem;
+	}
+
+	.diagram {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 2.2rem;
+	}
+
+	.diagram-row {
+		display: flex;
+		justify-content: center;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+	}
+
+	.node {
+		font-family: var(--mono);
+		font-size: 0.82rem;
+		background: var(--surface);
+		border: 1px solid var(--rule);
+		border-radius: 8px;
+		padding: 0.6rem 1.1rem;
+		white-space: nowrap;
+	}
+
+	.node--pkg {
+		border-color: var(--pkg);
+		color: var(--pkg);
+		font-weight: 600;
+	}
+	.node--app {
+		border-color: var(--app);
+		color: var(--app);
+		font-weight: 600;
+	}
+
+	.diagram-arrow-v {
+		color: var(--ink-soft);
+		font-size: 0.78rem;
+		font-family: var(--mono);
+		text-align: center;
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1rem;
+		margin-bottom: 1.6rem;
+	}
+
+	.card {
+		border: 1px solid var(--rule);
+		border-radius: 10px;
+		background: var(--surface);
+		padding: 1.1rem 1.2rem 1.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+
+	.card-tag {
+		font-family: var(--mono);
+		font-size: 0.66rem;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		padding: 0.2rem 0.5rem;
+		border-radius: 4px;
+		font-weight: 600;
+		width: fit-content;
+	}
+
+	.card--pkg .card-tag {
+		color: var(--pkg);
+		background: var(--pkg-bg);
+	}
+	.card--app .card-tag {
+		color: var(--app);
+		background: var(--app-bg);
+	}
+
+	.card-title {
+		font-size: 0.95rem;
+		font-weight: 600;
+		margin: 0;
+	}
+	.card-title code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+
+	.card ul {
+		margin: 0;
+		padding-left: 1.1rem;
+		font-size: 0.82rem;
+		line-height: 1.6;
+		color: var(--ink-soft);
+	}
+	.card ul li::marker {
+		color: var(--rule);
+	}
+
+	.card-link {
+		font-size: 0.78rem;
+		margin-top: auto;
+	}
+	.card-link a {
+		color: var(--ink);
+	}
+
+	.callout {
+		border: 1px solid var(--warn);
+		background: var(--warn-bg);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin-bottom: 2rem;
+	}
+
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--warn);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+	.callout a {
+		color: var(--app);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--rule);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+
+	@media (max-width: 720px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — system architecture</p>
+	<h1>Four workspaces, one real dependency order — not name-based guessing.</h1>
+	<p class="dek">
+		Every dependency below was checked against the real Directus project's actual <code>package.json</code> fields
+		before anything was built, not assumed from what a package's name sounds like it should need. That's how
+		<code>packages/constants</code> — not <code>packages/types</code> — turned out to be the actual zero-dependency
+		leaf. See <a href="auth-flow.html">Auth &amp; Request Flow</a> for how <code>app/</code> actually uses these
+		packages at runtime.
+	</p>
+
+	<h2>Workspace Dependency Graph</h2>
+	<div class="diagram">
+		<div class="diagram-row">
+			<span class="node node--pkg">@directus/constants</span>
+			<span class="node node--pkg">@directus/errors</span>
+		</div>
+		<span class="diagram-arrow-v">↓ workspace:*</span>
+		<div class="diagram-row">
+			<span class="node node--pkg">@directus/stores</span>
+		</div>
+		<span class="diagram-arrow-v">↓ workspace:* (stores + errors) · catalog: (vue-router, pinia, vue)</span>
+		<div class="diagram-row">
+			<span class="node node--app">app/</span>
+		</div>
+	</div>
+
+	<h2>The Three Layers</h2>
+	<div class="grid">
+		<div class="card card--pkg">
+			<span class="card-tag">Complete</span>
+			<p class="card-title">packages/constants + packages/errors</p>
+			<ul>
+				<li>Both genuine zero-dependency leaves — verified against the real source, not guessed</li>
+				<li>
+					<code>PERMISSION_ACTIONS</code>, <code>LOCAL_AUTH_DRIVER</code>, and a real <code>DirectusError</code> class
+					hierarchy
+				</li>
+				<li>Grow only against real consumers, never speculatively</li>
+			</ul>
+			<div class="card-link"><a href="data-model.html">→ Data model</a></div>
+		</div>
+
+		<div class="card card--pkg">
+			<span class="card-tag">Complete</span>
+			<p class="card-title">packages/stores</p>
+			<ul>
+				<li>4 Pinia stores, 20 tests, 100% coverage</li>
+				<li>Depends on <code>@directus/constants</code> for real, wired RBAC/auth-driver vocabulary</li>
+			</ul>
+			<div class="card-link"><a href="data-model.html">→ Data model</a></div>
+		</div>
+
+		<div class="card card--app">
+			<span class="card-tag">Live</span>
+			<p class="card-title">app/</p>
+			<ul>
+				<li>Vite + Vue 3 + Pinia + <code>vue-router</code>, routed and styled</li>
+				<li>The only workspace that depends on both packages above at once</li>
+			</ul>
+			<div class="card-link"><a href="auth-flow.html">→ Auth &amp; request flow</a></div>
+		</div>
+	</div>
+
+	<h2>Verify → Deploy</h2>
+	<div class="diagram">
+		<div class="diagram-row">
+			<span class="node">push to main</span>
+		</div>
+		<span class="diagram-arrow-v">↓</span>
+		<div class="diagram-row">
+			<span class="node">CI: format → build → lint → lint:style → test</span>
+			<span class="node">CodeQL</span>
+		</div>
+		<span class="diagram-arrow-v">↓ CI green triggers workflow_run</span>
+		<div class="diagram-row">
+			<span class="node node--app">Deploy Pages: yarn build → copy app/dist + portfolio.html → GitHub Pages</span>
+		</div>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">!</span>
+		<p>
+			<strong>Real CI bug, found and fixed:</strong> the workflow originally ran <code>Lint</code>/<code>Test</code>
+			before <code>Build</code>. That passed locally (where a previous <code>yarn build</code> had already left
+			<code>dist/</code> on disk) but failed on a fresh CI checkout, because <code>packages/stores</code> importing from
+			<code>@directus/constants</code> resolves against <code>dist/index.js</code> — which doesn't exist until
+			<code>Build</code> runs. Fixed by moving <code>Build</code> right after <code>Format</code>, and verified by
+			deleting all local <code>dist/</code> output and re-running the full suite in the new order before trusting it.
+		</p>
+	</div>
+
+	<footer>directus-main · Yarn Berry workspaces · Vue 3 + Pinia + vue-router · GitHub Actions + Pages</footer>
+</div>
