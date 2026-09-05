@@ -26,7 +26,18 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
-        run: yarn install --immutable
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            if yarn install --immutable; then
+              exit 0
+            fi
+            echo "::warning::yarn install failed (attempt $attempt/3)"
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 10))
+            fi
+          done
+          exit 1
 
       - name: Format
         run: yarn format
