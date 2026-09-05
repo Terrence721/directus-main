@@ -1,6 +1,6 @@
 # 📝 TODO
 
-**Last Updated:** September 5, 2026 (repo-wide drift sweep complete — see the note below)
+**Last Updated:** September 5, 2026 (diagrams/ added — 4 real architecture diagrams, guided by conduit-full's set)
 
 A phase-by-phase log of what's been done on this repo and what's still open. This is the source of truth for
 progress — a GitHub Project board (once set up) will be a lighter-weight view of the same work, kept in sync with
@@ -38,6 +38,7 @@ already tracked as its own backlog issue (#11–#13).
 | `packages/stores`  | 4 stores (`useAuthStore`, `useUserStore`, `useServerStore`, `useAppStore`), 20 tests, 100% coverage, audited against the real source and against itself                                                                                                                        | Phase 2 |
 | Portfolio surfaces | `portfolio.html` + GitHub Pages deploy, portfolio hub card, profile README entry, and wiki (`Home`, `Stores`, `Constants`, `Errors`, `App`) all live and current as of the drift sweep                                                                                         | Phase 2 |
 | `app/` workspace   | Vite + Vue 3 + Pinia; a real, styled, routed app (`vue-router`, `/login` and `/` with an auth guard) wired to a real (simulated) `authClient` and a working logout button; live at [terrence721.github.io/directus-main/app](https://terrence721.github.io/directus-main/app/) | Phase 3 |
+| `diagrams/`        | 4 real architecture diagrams (system architecture, auth flow, data model, testing strategy), structure guided by `conduit-full`'s own diagram set, restyled in this repo's paper/ink palette; live and linked from `README.md`                                                 | Phase 3 |
 
 **In progress right now:** nothing — the drift sweep is fully closed out. See the **Still to do** table below for the real backlog (`#11` session persistence, `#12` `api/` workspace, `#13` remaining packages).
 
@@ -207,6 +208,17 @@ already tracked as its own backlog issue (#11–#13).
 | —     | —      | 2026-09-05 | `README.md` and `portfolio.html` refreshed: stale date/commit-count/package-count claims fixed (`portfolio.html` had claimed 48 commits and 1 package shipped against an actual 130+ and 3 packages plus a deployed app), live app added as the primary CTA on both, and a new `portfolio.html` section added about what the sweep itself found                                                                                      |
 | —     | —      | 2026-09-05 | `directus-main.wiki` (separate repo): `Constants`, `Errors`, and `App` pages added; `Home.md` updated to link all of them plus a general issues-list link (replacing a single stale issue-#6 pointer)                                                                                                                                                                                                                                |
 | —     | —      | 2026-09-05 | External surfaces updated via the GitHub Contents API: `Terrence721/Terrence721`'s profile README and the `terrence721.github.io` hub card, both previously stuck at "packages/stores complete." The hub card's first draft used three boxed buttons, which didn't fit the card width — fixed to one primary button plus two lightweight text links, matching every other card's actual pattern                                      |
+
+### diagrams/
+
+| Phase | Commit    | Date       | What                                                                                                                                                                                                                                                                                                                 |
+| ----- | --------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 3     | `ca58e6b` | 2026-09-05 | `system-architecture.html` added — structure guided by `conduit-full/diagrams/`, restyled in this repo's own paper/ink palette rather than conduit's purple/blue/green. Real workspace dependency graph plus the CI Build-before-Lint/Test ordering bug as the callout                                               |
+| 3     | `9431fe1` | 2026-09-05 | `auth-flow.html` added — login/route-guard/logout flows, with the `enableAutoUnmount` test-isolation bug (found during the drift sweep) as the callout                                                                                                                                                               |
+| 3     | `c4b3d40` | 2026-09-05 | `data-model.html` added — Pinia store state shapes plus the `DirectusError` class hierarchy, with the two independent-refs-that-must-stay-in-sync bugs prevented by design as the callout                                                                                                                            |
+| 3     | `6073022` | 2026-09-05 | `testing-strategy.html` added, completing the 4-page set — the four-package test-layer stack (46 tests total), with the completeness-audit "100% coverage still let 4 gaps through" story as the callout, deliberately distinct from `auth-flow.html`'s callout even though both come from the same drift-sweep pass |
+| 3     | `f778415` | 2026-09-05 | `.github/workflows/pages.yml` updated to also copy `diagrams/` into the deployed site, alongside `portfolio.html` and `app/dist` — verified locally first by simulating the exact `Assemble site` step before trusting it in CI                                                                                      |
+| 3     | `c326805` | 2026-09-05 | All 4 diagrams linked from `README.md`'s **Start Here** section, ahead of `todo.md`/the project board/the wiki — matching `conduit-full` README's own ordering. Verified live: all four URLs return HTTP 200 on the real GitHub Pages deploy                                                                         |
 
 ## 🚧 Still to do
 
