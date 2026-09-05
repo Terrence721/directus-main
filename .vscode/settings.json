@@ -13,5 +13,6 @@
 	"[yaml]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	"npm.packageManager": "yarn"
+	"npm.packageManager": "yarn",
+	"json.schemaDownload.enable": false
 }
