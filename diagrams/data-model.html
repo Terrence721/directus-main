@@ -1,0 +1,384 @@
+<title>Data Model — One Discriminated Value, Not Several Refs</title>
+<style>
+	:root {
+		--paper: #ede9df;
+		--paper-2: #e2ddd0;
+		--surface: #ffffff;
+		--ink: #1c2333;
+		--ink-soft: #4b5567;
+		--rule: #c7c0ac;
+		--pkg: #2e6b52;
+		--pkg-bg: #dcf0e6;
+		--app: #2e5266;
+		--app-bg: #dce8f0;
+		--warn: #a1481f;
+		--warn-bg: #f6e6dc;
+		--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+		--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--paper: #14181f;
+		--paper-2: #1b212b;
+		--surface: #1c2230;
+		--ink: #e8e4d9;
+		--ink-soft: #a3aabb;
+		--rule: #303748;
+		--pkg: #5fcf9f;
+		--pkg-bg: #163026;
+		--app: #7fb2cc;
+		--app-bg: #16232f;
+		--warn: #e0a074;
+		--warn-bg: #332318;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--paper: #14181f;
+			--paper-2: #1b212b;
+			--surface: #1c2230;
+			--ink: #e8e4d9;
+			--ink-soft: #a3aabb;
+			--rule: #303748;
+			--pkg: #5fcf9f;
+			--pkg-bg: #163026;
+			--app: #7fb2cc;
+			--app-bg: #16232f;
+			--warn: #e0a074;
+			--warn-bg: #332318;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html {
+		color-scheme: light dark;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 70ch;
+		margin: 0 0 2.2rem;
+	}
+
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--app);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 1rem;
+	}
+
+	.table-wrap {
+		overflow-x: auto;
+		border: 1px solid var(--rule);
+		border-radius: 10px;
+		background: var(--surface);
+		margin-bottom: 2.2rem;
+	}
+
+	table {
+		border-collapse: collapse;
+		width: 100%;
+		font-size: 0.82rem;
+	}
+
+	th,
+	td {
+		text-align: left;
+		padding: 0.7rem 0.85rem;
+		border-bottom: 1px solid var(--rule);
+		vertical-align: top;
+		line-height: 1.5;
+	}
+
+	thead th {
+		font-family: var(--mono);
+		font-size: 0.66rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		background: var(--paper);
+		white-space: nowrap;
+	}
+
+	tbody tr:last-child td {
+		border-bottom: none;
+	}
+
+	.model-name {
+		font-weight: 600;
+		white-space: nowrap;
+	}
+
+	td code {
+		font-family: var(--mono);
+		font-size: 0.86em;
+		background: var(--paper);
+		border-radius: 3px;
+		padding: 0.05rem 0.3rem;
+	}
+
+	.diagram {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 2.2rem;
+	}
+
+	.diagram-row {
+		display: flex;
+		justify-content: center;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+	}
+
+	.node {
+		font-family: var(--mono);
+		font-size: 0.82rem;
+		background: var(--surface);
+		border: 1px solid var(--rule);
+		border-radius: 8px;
+		padding: 0.6rem 1.1rem;
+		white-space: nowrap;
+	}
+
+	.node--pkg {
+		border-color: var(--pkg);
+		color: var(--pkg);
+		font-weight: 600;
+	}
+
+	.diagram-arrow-v {
+		color: var(--ink-soft);
+		font-size: 0.78rem;
+		font-family: var(--mono);
+		text-align: center;
+	}
+
+	.fork {
+		display: flex;
+		justify-content: center;
+		gap: 1.6rem;
+		flex-wrap: wrap;
+		margin-top: 0.3rem;
+		margin-bottom: 2.2rem;
+	}
+
+	.fork-branch {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4rem;
+		border: 1px dashed var(--rule);
+		border-radius: 10px;
+		padding: 0.9rem 1.1rem;
+		max-width: 26ch;
+	}
+
+	.fork-label {
+		font-family: var(--mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--pkg);
+		font-weight: 600;
+	}
+
+	.fork-note {
+		font-size: 0.78rem;
+		color: var(--ink-soft);
+		text-align: center;
+		line-height: 1.45;
+	}
+	.fork-note code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+		color: var(--ink);
+	}
+
+	.callout {
+		border: 1px solid var(--warn);
+		background: var(--warn-bg);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin-bottom: 2rem;
+	}
+
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--warn);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+		background: var(--surface);
+		border-radius: 3px;
+		padding: 0.05rem 0.3rem;
+	}
+	.callout a {
+		color: var(--app);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--rule);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — data model</p>
+	<h1>Every store shape here is designed to make an invalid state unrepresentable.</h1>
+	<p class="dek">
+		The real Directus <code>useAppStore</code> tracks hydration as three separate, independently-mutated refs. Nothing
+		stops all three from being set at once into a state that's actually meaningless — hydrated <em>and</em> errored,
+		simultaneously. Every shape below was designed so that specific class of bug can't compile, not just won't happen in
+		practice. See <a href="system-architecture.html">System Architecture</a> for which workspace owns each shape.
+	</p>
+
+	<h2>Store State Shapes</h2>
+	<div class="table-wrap">
+		<table>
+			<thead>
+				<tr>
+					<th>Store</th>
+					<th>Shape</th>
+					<th>Worth knowing</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="model-name">useAuthStore</td>
+					<td><code>session: Session | null</code> — <code>{ accessToken, expiresAt }</code></td>
+					<td>
+						<code>loggedIn</code> checks <code>expiresAt &gt; Date.now()</code>, not just whether a session exists — an
+						expired session used to still report logged in
+					</td>
+				</tr>
+				<tr>
+					<td class="model-name">useAppStore</td>
+					<td>
+						<code>hydrationStatus: HydrationStatus</code> — a union of
+						<code>{ status: 'idle' | 'hydrating' | 'hydrated' }</code> and <code>{ status: 'error', error }</code>
+					</td>
+					<td>One ref, one source of truth — <code>hydrated</code>/<code>hydrating</code> are derived computeds</td>
+				</tr>
+				<tr>
+					<td class="model-name">useUserStore</td>
+					<td><code>CurrentUser</code> — <code>id</code>, <code>email</code>, optional first/last name</td>
+					<td>
+						<code>fullName</code>/<code>initials</code> share one <code>getNameParts()</code> helper instead of each
+						re-filtering the same fields
+					</td>
+				</tr>
+				<tr>
+					<td class="model-name">useServerStore</td>
+					<td><code>ServerInfo</code> — project name, <code>authProviders: AuthProvider[]</code></td>
+					<td>
+						<code>ssoProviders</code> compares against <code>LOCAL_AUTH_DRIVER</code> from
+						<code>packages/constants</code>, not a hardcoded <code>'local'</code> string
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<h2>Error Hierarchy</h2>
+	<div class="diagram">
+		<div class="diagram-row">
+			<span class="node node--pkg">abstract class DirectusError extends Error</span>
+		</div>
+		<span class="diagram-arrow-v">↓ code, status, extensions — each subclass owns all three</span>
+	</div>
+	<div class="fork">
+		<div class="fork-branch">
+			<span class="fork-label">ForbiddenError · 403</span>
+			<span class="fork-note"
+				>optional <code>reason</code> extension, falls back to a default message on empty string</span
+			>
+		</div>
+		<div class="fork-branch">
+			<span class="fork-label">InvalidCredentialsError · 401</span>
+			<span class="fork-note"
+				>deliberately <em>no</em> <code>reason</code> — naming which field was wrong would let an attacker enumerate
+				valid accounts</span
+			>
+		</div>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">!</span>
+		<p>
+			<strong>Two independent-refs-that-must-stay-in-sync bugs, prevented by design:</strong>
+			<code>useAuthStore</code>'s <code>accessToken</code>/<code>expiresAt</code> and <code>useAppStore</code>'s
+			<code>hydrated</code>/<code>hydrating</code>/<code>error</code> both started as separate, independently-mutated
+			refs in early drafts — the same shape of risk the real source's <code>useAppStore</code> still has today. Both
+			were collapsed into one discriminated value before shipping, once the pattern in the first fix made the second one
+			worth checking for deliberately, not by coincidence.
+		</p>
+	</div>
+
+	<footer>directus-main · Pinia (Composition API stores) · TypeScript strict mode throughout</footer>
+</div>
