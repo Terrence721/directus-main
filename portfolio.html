@@ -6,7 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta
 			name="description"
-			content="A redesigned rebuild of Directus's admin-panel state layer, package by package: Pinia stores built fresh from the real project's domain, not reproduced from its source. Early-stage, honest about the scale, every number reproducible."
+			content="A redesigned rebuild of Directus's admin-panel state layer, now including a real deployed Vue app: Pinia stores, a DirectusError class hierarchy, and a routed login flow — built fresh from the real project's domain, not reproduced from its source. Early-stage, honest about the scale, every number reproducible."
 		/>
 		<link rel="canonical" href="https://terrence721.github.io/directus-main/portfolio.html" />
 
@@ -16,14 +16,14 @@
 		<meta property="og:title" content="directus-main — a redesigned Directus admin state layer, by Terrence Daniels" />
 		<meta
 			property="og:description"
-			content="A redesigned rebuild of Directus's admin-panel state layer, package by package — real architectural judgment applied fresh, not reproduced. Not a toy demo."
+			content="A redesigned rebuild of Directus's admin-panel state layer, now with a real deployed Vue app on top of it — real architectural judgment applied fresh, not reproduced. Not a toy demo."
 		/>
 
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:title" content="directus-main — a redesigned Directus admin state layer" />
 		<meta
 			name="twitter:description"
-			content="A redesigned rebuild of Directus's admin-panel state layer, package by package — real architectural judgment applied fresh, not reproduced."
+			content="A redesigned rebuild of Directus's admin-panel state layer, now with a real deployed Vue app on top of it — real architectural judgment applied fresh, not reproduced."
 		/>
 		<style>
 			:root {
@@ -409,7 +409,7 @@
 	<body>
 		<div class="hero">
 			<div class="wrap">
-				<p class="eyebrow">Portfolio Manifest — Updated September 4, 2026</p>
+				<p class="eyebrow">Portfolio Manifest — Updated September 5, 2026</p>
 				<h1 class="name">Terrence&nbsp;Daniels</h1>
 				<p class="role">Principal Frontend Engineer</p>
 				<p class="thesis">
@@ -418,7 +418,8 @@
 					that scale, with the reasoning for each redesign decision written down as it happens.
 				</p>
 				<div class="hero-actions">
-					<a class="btn primary" href="https://github.com/Terrence721/directus-main">View the repository →</a>
+					<a class="btn primary" href="https://terrence721.github.io/directus-main/app/">Try the live app →</a>
+					<a class="btn" href="https://github.com/Terrence721/directus-main">View the repository</a>
 					<a class="btn" href="https://github.com/Terrence721/directus-main/blob/main/todo.md">Working log</a>
 					<a class="btn" href="https://github.com/Terrence721/directus-main/wiki">Wiki</a>
 				</div>
@@ -434,12 +435,12 @@
 		<div class="manifest">
 			<div class="wrap">
 				<div class="manifest-row">
-					<div class="manifest-cell"><span class="v">48</span><span class="k">commits</span></div>
-					<div class="manifest-cell"><span class="v">20</span><span class="k">Vitest tests</span></div>
-					<div class="manifest-cell"><span class="v">100%</span><span class="k">test coverage</span></div>
+					<div class="manifest-cell"><span class="v">140</span><span class="k">commits</span></div>
+					<div class="manifest-cell"><span class="v">46</span><span class="k">Vitest tests</span></div>
+					<div class="manifest-cell"><span class="v">100%</span><span class="k">line coverage</span></div>
 					<div class="manifest-cell"><span class="v">0</span><span class="k">lint errors</span></div>
 					<div class="manifest-cell"><span class="v">0</span><span class="k">CodeQL findings</span></div>
-					<div class="manifest-cell"><span class="v">1</span><span class="k">package shipped</span></div>
+					<div class="manifest-cell"><span class="v">3</span><span class="k">packages + 1 live app</span></div>
 				</div>
 			</div>
 		</div>
@@ -597,11 +598,46 @@
 					finishing a direction the original source already pointed at but hadn't taken yet.
 				</p>
 			</section>
+
+			<section>
+				<h2>Beyond the stores: a real, deployed app</h2>
+				<p class="h2-sub">Now the state layer has something to sit inside</p>
+				<p class="lede">
+					<code>app/</code> is a real Vue app, not a placeholder: routed (<code>vue-router</code>), styled, with a
+					working login/logout flow against a simulated <code>authClient</code> —
+					<a href="https://terrence721.github.io/directus-main/app/">try it yourself</a>:
+					<code>demo@directus-main.dev</code> / <code>demo1234</code>, or anything else to see the real
+					<code>InvalidCredentialsError</code> path. <code>packages/errors</code> shipped alongside it: a real
+					<code>DirectusError</code> class hierarchy, redesigned away from the source's factory-function-plus-enum
+					pattern.
+				</p>
+				<div class="twocol">
+					<div class="card">
+						<h3>A repo-wide drift sweep found a real bug</h3>
+						<p>
+							Adding a test for the router guard's "already logged in" redirect exposed a genuine, previously silent
+							defect: earlier tests' mounted components were never unmounted, and since they all shared one router
+							instance, their stale registrations interfered with later tests. Fixed with
+							<code>enableAutoUnmount</code>, applied everywhere the same risk existed — not just where it had actually
+							failed yet.
+						</p>
+					</div>
+					<div class="card">
+						<h3>The same sweep found this page stale</h3>
+						<p>
+							This page's own numbers were stuck describing an earlier phase until this pass — the manifest above, the
+							issue tracker, the wiki, and the external portfolio hub all got the same audit. Verifiable is only true if
+							it's kept current.
+						</p>
+					</div>
+				</div>
+			</section>
 		</div>
 
 		<footer>
 			<div class="wrap">
 				<div class="links">
+					<a href="https://terrence721.github.io/directus-main/app/">Live app</a>
 					<a href="https://github.com/Terrence721/directus-main">Repository</a>
 					<a href="https://github.com/Terrence721/directus-main/blob/main/todo.md">Working log</a>
 					<a href="https://github.com/Terrence721/directus-main/wiki">Wiki</a>
