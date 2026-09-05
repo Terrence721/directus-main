@@ -16,14 +16,25 @@ describe('App', () => {
 		expect(wrapper.find('button').text()).toBe('Sign in');
 	});
 
-	it('logs in and shows "Welcome back." after a successful submit', async () => {
+	it('logs in and shows "Welcome back." after submitting the demo credentials', async () => {
 		const wrapper = mount(App);
 
-		await wrapper.find('input[type="email"]').setValue('jane@example.com');
-		await wrapper.find('input[type="password"]').setValue('hunter2');
+		await wrapper.find('input[type="email"]').setValue('demo@directus-main.dev');
+		await wrapper.find('input[type="password"]').setValue('demo1234');
 		await wrapper.find('form').trigger('submit');
 
 		await vi.waitFor(() => expect(wrapper.text()).toBe('Welcome back.'));
+	});
+
+	it('shows an error and stays logged out when the credentials are wrong', async () => {
+		const wrapper = mount(App);
+
+		await wrapper.find('input[type="email"]').setValue('wrong@example.com');
+		await wrapper.find('input[type="password"]').setValue('wrongpass');
+		await wrapper.find('form').trigger('submit');
+
+		await vi.waitFor(() => expect(wrapper.find('[role="alert"]').text()).toBe('Invalid user credentials.'));
+		expect(useAuthStore().loggedIn).toBe(false);
 	});
 
 	it('shows "Welcome back." when logged in', () => {
