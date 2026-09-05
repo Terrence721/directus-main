@@ -1,3 +1,4 @@
+import { LOCAL_AUTH_DRIVER } from '@directus/constants';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
@@ -20,7 +21,7 @@ export const useServerStore = defineStore('server', () => {
 	const hasCustomBranding = computed(() => info.value?.projectLogoUrl != null || info.value?.projectColor != null);
 
 	const ssoProviders = computed(
-		() => info.value?.authProviders.filter((provider) => provider.driver !== 'local') ?? [],
+		() => info.value?.authProviders.filter((provider) => provider.driver !== LOCAL_AUTH_DRIVER) ?? [],
 	);
 
 	function setInfo(newInfo: ServerInfo) {
