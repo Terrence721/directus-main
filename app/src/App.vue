@@ -26,3 +26,18 @@ async function handleLogin(credentials: { email: string; password: string }) {
 		<LoginForm v-else :on-submit="handleLogin" />
 	</main>
 </template>
+
+<style scoped>
+main {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	block-size: 100vh;
+	padding: 1.5rem;
+}
+
+p {
+	font-size: 1.125rem;
+	color: var(--ink-soft);
+}
+</style>
