@@ -11,6 +11,7 @@
 		"test:coverage": "vitest run --coverage --passWithNoTests"
 	},
 	"devDependencies": {
+		"@directus/errors": "workspace:*",
 		"@directus/stores": "workspace:*",
 		"@vitejs/plugin-vue": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
