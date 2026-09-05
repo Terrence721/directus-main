@@ -349,7 +349,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@directus/constants@workspace:packages/constants":
+"@directus/constants@workspace:*, @directus/constants@workspace:packages/constants":
   version: 0.0.0-use.local
   resolution: "@directus/constants@workspace:packages/constants"
   dependencies:
@@ -364,6 +364,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@directus/stores@workspace:packages/stores"
   dependencies:
+    "@directus/constants": "workspace:*"
     "@vitest/coverage-v8": "catalog:"
     "@vue/devtools-api": "catalog:"
     pinia: "catalog:"
