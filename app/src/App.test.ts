@@ -1,9 +1,11 @@
-import { useAppStore } from '@directus/stores';
-import { mount } from '@vue/test-utils';
+import { useAppStore, useAuthStore } from '@directus/stores';
+import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App.vue';
 import { router } from './router.js';
+
+enableAutoUnmount(afterEach);
 
 beforeEach(() => {
 	setActivePinia(createPinia());
@@ -23,6 +25,15 @@ describe('App', () => {
 
 		await vi.waitFor(() => expect(wrapper.find('form').exists()).toBe(true));
 		expect(router.currentRoute.value.path).toBe('/login');
+	});
+
+	it('redirects to / when /login is visited while already logged in', async () => {
+		useAuthStore().setSession('token', Date.now() + 60_000);
+		await router.push('/login');
+		const wrapper = mount(App, { global: { plugins: [router] } });
+
+		await vi.waitFor(() => expect(wrapper.find('.session').exists()).toBe(true));
+		expect(router.currentRoute.value.path).toBe('/');
 	});
 
 	it('completes hydration on mount', async () => {
