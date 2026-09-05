@@ -360,7 +360,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@directus/errors@workspace:packages/errors":
+"@directus/errors@workspace:*, @directus/errors@workspace:packages/errors":
   version: 0.0.0-use.local
   resolution: "@directus/errors@workspace:packages/errors"
   dependencies:
@@ -1505,6 +1505,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:app"
   dependencies:
+    "@directus/errors": "workspace:*"
     "@directus/stores": "workspace:*"
     "@vitejs/plugin-vue": "catalog:"
     "@vitest/coverage-v8": "catalog:"
