@@ -1,9 +1,11 @@
 import { useAuthStore } from '@directus/stores';
-import { mount } from '@vue/test-utils';
+import { enableAutoUnmount, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { router } from '../router.js';
 import LoginPage from './LoginPage.vue';
+
+enableAutoUnmount(afterEach);
 
 beforeEach(async () => {
 	setActivePinia(createPinia());
