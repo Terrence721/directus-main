@@ -27,10 +27,36 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 26
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            if yarn install --immutable; then
+              exit 0
+            fi
+            echo "::warning::yarn install failed (attempt $attempt/3)"
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 10))
+            fi
+          done
+          exit 1
+
+      - name: Build
+        run: yarn build
+
       - name: Assemble site
         run: |
           mkdir -p site
           cp portfolio.html site/portfolio.html
+          cp -r app/dist site/app
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v5
