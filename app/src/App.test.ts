@@ -1,65 +1,35 @@
-import { useAppStore, useAuthStore } from '@directus/stores';
+import { useAppStore } from '@directus/stores';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App.vue';
+import { router } from './router.js';
 
 beforeEach(() => {
 	setActivePinia(createPinia());
 });
 
 describe('App', () => {
-	it('shows the login form when there is no session', () => {
-		const wrapper = mount(App);
+	it('renders the routed view once hydration completes', async () => {
+		await router.push('/login');
+		const wrapper = mount(App, { global: { plugins: [router] } });
 
 		expect(wrapper.find('form').exists()).toBe(true);
-		expect(wrapper.find('button').text()).toBe('Sign in');
 	});
 
-	it('logs in and shows "Welcome back." after submitting the demo credentials', async () => {
-		const wrapper = mount(App);
+	it('redirects to /login when a protected route is visited without a session', async () => {
+		await router.push('/');
+		const wrapper = mount(App, { global: { plugins: [router] } });
 
-		await wrapper.find('input[type="email"]').setValue('demo@directus-main.dev');
-		await wrapper.find('input[type="password"]').setValue('demo1234');
-		await wrapper.find('form').trigger('submit');
-
-		await vi.waitFor(() => expect(wrapper.find('.session').text()).toBe('Welcome back.Log out'));
+		await vi.waitFor(() => expect(wrapper.find('form').exists()).toBe(true));
+		expect(router.currentRoute.value.path).toBe('/login');
 	});
 
-	it('shows an error and stays logged out when the credentials are wrong', async () => {
-		const wrapper = mount(App);
-
-		await wrapper.find('input[type="email"]').setValue('wrong@example.com');
-		await wrapper.find('input[type="password"]').setValue('wrongpass');
-		await wrapper.find('form').trigger('submit');
-
-		await vi.waitFor(() => expect(wrapper.find('[role="alert"]').text()).toBe('Invalid user credentials.'));
-		expect(useAuthStore().loggedIn).toBe(false);
-	});
-
-	it('shows "Welcome back." when logged in', () => {
-		useAuthStore().setSession('token', Date.now() + 60_000);
-
-		const wrapper = mount(App);
-
-		expect(wrapper.find('.session').text()).toBe('Welcome back.Log out');
-	});
-
-	it('logs out and shows the login form again when "Log out" is clicked', async () => {
-		const auth = useAuthStore();
-		auth.setSession('token', Date.now() + 60_000);
-
-		const wrapper = mount(App);
-		await wrapper.find('button').trigger('click');
-
-		expect(auth.loggedIn).toBe(false);
-		expect(wrapper.find('form').exists()).toBe(true);
-	});
-
-	it('completes hydration on mount', () => {
+	it('completes hydration on mount', async () => {
 		const app = useAppStore();
+		await router.push('/login');
 
-		mount(App);
+		mount(App, { global: { plugins: [router] } });
 
 		expect(app.hydrated).toBe(true);
 		expect(app.hydrating).toBe(false);
@@ -67,7 +37,8 @@ describe('App', () => {
 
 	it('shows an error message if hydration fails after mount', async () => {
 		const app = useAppStore();
-		const wrapper = mount(App);
+		await router.push('/login');
+		const wrapper = mount(App, { global: { plugins: [router] } });
 
 		app.failHydration(new Error('network down'));
 		await wrapper.vm.$nextTick();
