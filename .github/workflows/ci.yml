@@ -31,14 +31,14 @@ jobs:
       - name: Format
         run: yarn format
 
+      - name: Build
+        run: yarn build
+
       - name: Lint
         run: yarn lint
 
       - name: Lint styles
         run: yarn lint:style
-
-      - name: Build
-        run: yarn build
 
       - name: Test
         run: yarn test
