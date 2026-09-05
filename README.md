@@ -17,6 +17,10 @@ This repo is **not affiliated with, and not published by, the upstream Directus 
 
 ## 🧭 Start Here
 
+- **[System Architecture](https://terrence721.github.io/directus-main/diagrams/system-architecture.html)** — the real workspace dependency graph, and the CI-ordering bug that came out of it
+- **[Auth & Request Flow](https://terrence721.github.io/directus-main/diagrams/auth-flow.html)** — login, the route guard's two directions, and the test-isolation bug one of them exposed
+- **[Data Model](https://terrence721.github.io/directus-main/diagrams/data-model.html)** — the Pinia store shapes and `DirectusError` hierarchy, and the two independent-refs bugs prevented by design
+- **[Testing Strategy](https://terrence721.github.io/directus-main/diagrams/testing-strategy.html)** — the four-package test-layer stack, and what 100% coverage still let through
 - **[`todo.md`](todo.md)** — the phase-by-phase log of everything done and everything still open. This is the source of truth for progress.
 - **[GitHub Project board](https://github.com/users/Terrence721/projects/6)** — a lighter-weight, at-a-glance view of the same work, kept in sync with `todo.md`.
 - **[Wiki](https://github.com/Terrence721/directus-main/wiki)** — short pointers into specific decisions, one page per package.
