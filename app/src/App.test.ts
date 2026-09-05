@@ -1,7 +1,7 @@
 import { useAppStore, useAuthStore } from '@directus/stores';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App.vue';
 
 beforeEach(() => {
@@ -9,10 +9,21 @@ beforeEach(() => {
 });
 
 describe('App', () => {
-	it('shows "Please log in." when there is no session', () => {
+	it('shows the login form when there is no session', () => {
 		const wrapper = mount(App);
 
-		expect(wrapper.text()).toBe('Please log in.');
+		expect(wrapper.find('form').exists()).toBe(true);
+		expect(wrapper.find('button').text()).toBe('Sign in');
+	});
+
+	it('logs in and shows "Welcome back." after a successful submit', async () => {
+		const wrapper = mount(App);
+
+		await wrapper.find('input[type="email"]').setValue('jane@example.com');
+		await wrapper.find('input[type="password"]').setValue('hunter2');
+		await wrapper.find('form').trigger('submit');
+
+		await vi.waitFor(() => expect(wrapper.text()).toBe('Welcome back.'));
 	});
 
 	it('shows "Welcome back." when logged in', () => {
