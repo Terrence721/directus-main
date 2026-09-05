@@ -8,6 +8,7 @@
 		}
 	],
 	"rules": {
-		"csstools/use-logical": true
+		"csstools/use-logical": true,
+		"value-keyword-case": ["lower", { "ignoreProperties": ["font-family", "/^--/"] }]
 	}
 }
