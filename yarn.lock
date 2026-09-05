@@ -360,6 +360,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@directus/errors@workspace:packages/errors":
+  version: 0.0.0-use.local
+  resolution: "@directus/errors@workspace:packages/errors"
+  dependencies:
+    "@vitest/coverage-v8": "catalog:"
+    typescript: "catalog:"
+    vite: "catalog:"
+    vitest: "catalog:"
+  languageName: unknown
+  linkType: soft
+
 "@directus/stores@workspace:*, @directus/stores@workspace:packages/stores":
   version: 0.0.0-use.local
   resolution: "@directus/stores@workspace:packages/stores"
