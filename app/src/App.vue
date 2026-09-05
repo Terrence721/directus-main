@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAppStore, useAuthStore } from '@directus/stores';
 import { onMounted } from 'vue';
+import { login } from './api/authClient.js';
 import LoginForm from './components/LoginForm.vue';
 
 const app = useAppStore();
@@ -12,8 +13,8 @@ onMounted(() => {
 });
 
 async function handleLogin(credentials: { email: string; password: string }) {
-	// Stub until a real API client exists (see todo.md) — accepts any credentials.
-	auth.setSession(`stub-${credentials.email}`, Date.now() + 60 * 60 * 1000);
+	const session = await login(credentials);
+	auth.setSession(session.accessToken, session.expiresAt);
 }
 </script>
 
