@@ -1,0 +1,347 @@
+<title>Testing Strategy — Four Real Layers, 46 Tests</title>
+<style>
+	:root {
+		--paper: #ede9df;
+		--paper-2: #e2ddd0;
+		--surface: #ffffff;
+		--ink: #1c2333;
+		--ink-soft: #4b5567;
+		--rule: #c7c0ac;
+		--pkg: #2e6b52;
+		--pkg-bg: #dcf0e6;
+		--app: #2e5266;
+		--app-bg: #dce8f0;
+		--warn: #a1481f;
+		--warn-bg: #f6e6dc;
+		--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+		--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	}
+
+	:root[data-theme='dark'] {
+		--paper: #14181f;
+		--paper-2: #1b212b;
+		--surface: #1c2230;
+		--ink: #e8e4d9;
+		--ink-soft: #a3aabb;
+		--rule: #303748;
+		--pkg: #5fcf9f;
+		--pkg-bg: #163026;
+		--app: #7fb2cc;
+		--app-bg: #16232f;
+		--warn: #e0a074;
+		--warn-bg: #332318;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme='light']) {
+			--paper: #14181f;
+			--paper-2: #1b212b;
+			--surface: #1c2230;
+			--ink: #e8e4d9;
+			--ink-soft: #a3aabb;
+			--rule: #303748;
+			--pkg: #5fcf9f;
+			--pkg-bg: #163026;
+			--app: #7fb2cc;
+			--app-bg: #16232f;
+			--warn: #e0a074;
+			--warn-bg: #332318;
+		}
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	html {
+		color-scheme: light dark;
+	}
+
+	body {
+		margin: 0;
+		background: var(--paper);
+		color: var(--ink);
+		font-family: var(--sans);
+		padding: 2.5rem 1.5rem 4rem;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	.page {
+		max-width: 1080px;
+		margin: 0 auto;
+	}
+
+	.eyebrow {
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 0.6rem;
+	}
+
+	h1 {
+		font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+		line-height: 1.15;
+		margin: 0 0 0.5rem;
+		letter-spacing: -0.01em;
+	}
+
+	.dek {
+		font-size: 1rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		max-width: 70ch;
+		margin: 0 0 2.2rem;
+	}
+
+	.dek code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+	.dek a {
+		color: var(--app);
+	}
+
+	h2 {
+		font-size: 0.72rem;
+		font-family: var(--mono);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+		margin: 0 0 1rem;
+	}
+
+	.layers {
+		display: flex;
+		flex-direction: column;
+		gap: 0.7rem;
+		margin-bottom: 2.2rem;
+	}
+
+	.layer {
+		display: grid;
+		grid-template-columns: 180px 1fr;
+		gap: 0.4rem 1.2rem;
+		border: 1px solid var(--rule);
+		border-radius: 10px;
+		background: var(--surface);
+		padding: 0.9rem 1.2rem;
+		align-items: baseline;
+	}
+
+	.layer-name {
+		font-family: var(--mono);
+		font-size: 0.82rem;
+		font-weight: 600;
+		color: var(--pkg);
+	}
+	.layer-name .count {
+		color: var(--ink-soft);
+		font-weight: 400;
+	}
+
+	.layer-desc {
+		font-size: 0.86rem;
+		color: var(--ink-soft);
+		line-height: 1.55;
+	}
+	.layer-desc code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+
+	@media (max-width: 640px) {
+		.layer {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1rem;
+		margin-bottom: 1.6rem;
+	}
+
+	.card {
+		border: 1px solid var(--rule);
+		border-radius: 10px;
+		background: var(--surface);
+		padding: 1.1rem 1.2rem 1.2rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+	}
+
+	.card-tag {
+		font-family: var(--mono);
+		font-size: 0.66rem;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		padding: 0.2rem 0.5rem;
+		border-radius: 4px;
+		font-weight: 600;
+		width: fit-content;
+		color: var(--pkg);
+		background: var(--pkg-bg);
+	}
+
+	.card-title {
+		font-size: 0.95rem;
+		font-weight: 600;
+		margin: 0;
+	}
+	.card-title code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+	}
+
+	.card p {
+		margin: 0;
+		font-size: 0.85rem;
+		line-height: 1.6;
+		color: var(--ink-soft);
+	}
+	.card code {
+		font-family: var(--mono);
+		font-size: 0.9em;
+		color: var(--ink);
+	}
+
+	.callout {
+		border: 1px solid var(--warn);
+		background: var(--warn-bg);
+		border-radius: 10px;
+		padding: 1rem 1.3rem;
+		display: flex;
+		align-items: baseline;
+		gap: 0.9rem;
+		margin-bottom: 2rem;
+	}
+
+	.callout-mark {
+		font-family: var(--mono);
+		font-size: 0.95rem;
+		color: var(--warn);
+		font-weight: 600;
+		flex: 0 0 auto;
+	}
+	.callout p {
+		margin: 0;
+		font-size: 0.88rem;
+		line-height: 1.55;
+		color: var(--ink);
+	}
+	.callout code {
+		font-family: var(--mono);
+		font-size: 0.92em;
+		background: var(--surface);
+		border-radius: 3px;
+		padding: 0.05rem 0.3rem;
+	}
+	.callout a {
+		color: var(--app);
+	}
+
+	footer {
+		margin-top: 2.6rem;
+		padding-top: 1.2rem;
+		border-top: 1px solid var(--rule);
+		font-family: var(--mono);
+		font-size: 0.72rem;
+		color: var(--ink-soft);
+		letter-spacing: 0.02em;
+	}
+
+	@media (max-width: 720px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
+
+<div class="page">
+	<p class="eyebrow">directus-main — testing strategy</p>
+	<h1>Four packages, four real Vitest suites — plus one thing no coverage number catches.</h1>
+	<p class="dek">
+		Every workspace runs its own real <code>vitest run</code>, with coverage checked per package rather than one
+		monorepo-wide blended number. See <a href="auth-flow.html">Auth &amp; Request Flow</a> for a real bug this same
+		testing discipline caught later, in a different package.
+	</p>
+
+	<h2>Four Layers, Leaf to App</h2>
+	<div class="layers">
+		<div class="layer">
+			<span class="layer-name">packages/constants <span class="count">· 2 tests</span></span>
+			<span class="layer-desc"
+				>The zero-dependency leaf. Pure value assertions — <code>PERMISSION_ACTIONS</code>,
+				<code>LOCAL_AUTH_DRIVER</code> — nothing to mock because there's no behavior, only constants.</span
+			>
+		</div>
+		<div class="layer">
+			<span class="layer-name">packages/errors <span class="count">· 10 tests</span></span>
+			<span class="layer-desc"
+				>Every error class tested for code, status, message, and <code>toString()</code>, plus
+				<code>isDirectusError</code> identification — including a real regression test for an empty-string
+				<code>reason</code> that used to silently fall through <code>??</code> instead of falling back.</span
+			>
+		</div>
+		<div class="layer">
+			<span class="layer-name">packages/stores <span class="count">· 20 tests, 100%</span></span>
+			<span class="layer-desc"
+				>Pinia stores tested in isolation (<code>environment: 'node'</code> — no DOM needed). 100% coverage was already
+				true before a completeness audit found 4 real gaps it hadn't caught anyway.</span
+			>
+		</div>
+		<div class="layer">
+			<span class="layer-name">app/ <span class="count">· 14 tests</span></span>
+			<span class="layer-desc"
+				>Component tests via <code>@vue/test-utils</code> + <code>happy-dom</code>, plus real headless-browser
+				verification (Playwright) for anything a unit test can't prove — the actual rendered login page, and the live
+				GitHub Pages deploy's routing end to end.</span
+			>
+		</div>
+	</div>
+
+	<h2>Per-Workspace Gates, Same Order Every Time</h2>
+	<div class="grid">
+		<div class="card">
+			<span class="card-tag">Local, before every commit</span>
+			<p class="card-title">format → build → lint → lint:style → test</p>
+			<p>
+				<code>build</code> runs before <code>lint</code>/<code>test</code> deliberately — see
+				<a href="system-architecture.html">System Architecture</a> for the real CI failure that ordering fixed.
+			</p>
+		</div>
+		<div class="card">
+			<span class="card-tag">CI, on every push</span>
+			<p class="card-title">The same five gates, plus CodeQL</p>
+			<p>
+				Never assumed green from a local run alone — every push is watched through to a real
+				<code>gh run watch --exit-status</code> before being called done.
+			</p>
+		</div>
+	</div>
+
+	<div class="callout">
+		<span class="callout-mark">!</span>
+		<p>
+			<strong>100% coverage still let 4 real gaps through:</strong> a completeness audit — prompted by comparing
+			<code>packages/stores</code>'s own file count against the real source — found that <code>auth.test.ts</code>/<code
+				>user.test.ts</code
+			>
+			only ever asserted <em>derived</em> values (<code>loggedIn</code>, <code>fullName</code>), never the raw stored
+			state; a bug that swapped two stored fields would still have passed every existing test. Every line was already
+			executing — coverage just can't tell you the right value ended up in the right place. Fixed with explicit
+			<code>toEqual</code> assertions on the actual stored objects, alongside two smaller gaps in the same pass (a
+			missing type export, a <code>package.json</code> <code>exports</code> map blocking the package's own
+			<code>package.json</code>
+			resolution).
+		</p>
+	</div>
+
+	<footer>directus-main · Vitest per workspace · 46 tests total · CI verified on every push, not assumed</footer>
+</div>
