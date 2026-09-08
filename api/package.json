@@ -1,0 +1,16 @@
+{
+	"name": "api",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"dependencies": {
+		"express": "catalog:"
+	},
+	"devDependencies": {
+		"@types/express": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:"
+	}
+}
