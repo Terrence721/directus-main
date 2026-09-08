@@ -1,4 +1,4 @@
-import type { Session } from '@directus/stores';
+import type { Session, useAuthStore } from '@directus/stores';
 
 const COOKIE_NAME = 'directus-main-session';
 
@@ -38,4 +38,30 @@ export function persistSession(session: Session): void {
 
 export function clearPersistedSession(): void {
 	document.cookie = `${COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Lax`;
+}
+
+/**
+ * Restores a persisted session into the store on boot, then keeps the cookie in sync with every
+ * future setSession/clearSession call. Takes the store instance as a parameter rather than
+ * calling useAuthStore() itself, so it stays easy to test against a fresh store per test.
+ */
+export function initSessionPersistence(authStore: ReturnType<typeof useAuthStore>): void {
+	const persisted = readPersistedSession();
+
+	if (persisted) {
+		authStore.setSession(persisted.accessToken, persisted.expiresAt);
+	}
+
+	authStore.$subscribe(
+		(_mutation, state) => {
+			if (state.session) {
+				persistSession(state.session);
+			} else {
+				clearPersistedSession();
+			}
+		},
+		// Pinia's default flush ('pre') batches until the next Vue tick — too late for a page
+		// unload right after setSession/clearSession. 'sync' persists the cookie immediately.
+		{ flush: 'sync' },
+	);
 }
