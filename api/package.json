@@ -13,7 +13,9 @@
 	},
 	"devDependencies": {
 		"@types/express": "catalog:",
+		"@types/supertest": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
+		"supertest": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vitest": "catalog:"
