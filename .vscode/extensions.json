@@ -4,7 +4,9 @@
 		"dbaeumer.vscode-eslint",
 		"esbenp.prettier-vscode",
 		"stylelint.vscode-stylelint",
-		"Vue.volar"
+		"Vue.volar",
+		"EditorConfig.EditorConfig",
+		"redhat.vscode-yaml"
 	],
-	"unwantedRecommendations": ["Angular.ng-template"]
+	"unwantedRecommendations": ["Angular.ng-template", "octref.vetur"]
 }
