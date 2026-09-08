@@ -1687,6 +1687,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "api@workspace:api"
   dependencies:
+    "@directus/errors": "workspace:*"
     "@types/express": "catalog:"
     "@types/supertest": "catalog:"
     "@vitest/coverage-v8": "catalog:"

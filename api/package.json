@@ -9,6 +9,7 @@
 		"test:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
+		"@directus/errors": "workspace:*",
 		"express": "catalog:"
 	},
 	"devDependencies": {
