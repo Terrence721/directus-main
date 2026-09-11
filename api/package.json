@@ -4,19 +4,23 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"dev": "tsx watch src/index.ts",
 		"build": "tsc -p tsconfig.json",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
 		"@directus/errors": "workspace:*",
+		"cors": "catalog:",
 		"express": "catalog:"
 	},
 	"devDependencies": {
+		"@types/cors": "catalog:",
 		"@types/express": "catalog:",
 		"@types/supertest": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"supertest": "catalog:",
+		"tsx": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vitest": "catalog:"
