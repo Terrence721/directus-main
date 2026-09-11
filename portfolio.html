@@ -409,7 +409,7 @@
 	<body>
 		<div class="hero">
 			<div class="wrap">
-				<p class="eyebrow">Portfolio Manifest — Updated September 5, 2026</p>
+				<p class="eyebrow">Portfolio Manifest — Updated September 11, 2026</p>
 				<h1 class="name">Terrence&nbsp;Daniels</h1>
 				<p class="role">Principal Frontend Engineer</p>
 				<p class="thesis">
@@ -435,12 +435,14 @@
 		<div class="manifest">
 			<div class="wrap">
 				<div class="manifest-row">
-					<div class="manifest-cell"><span class="v">140</span><span class="k">commits</span></div>
-					<div class="manifest-cell"><span class="v">46</span><span class="k">Vitest tests</span></div>
-					<div class="manifest-cell"><span class="v">100%</span><span class="k">line coverage</span></div>
+					<div class="manifest-cell"><span class="v">172</span><span class="k">commits</span></div>
+					<div class="manifest-cell"><span class="v">59</span><span class="k">Vitest tests</span></div>
+					<div class="manifest-cell"><span class="v">99%</span><span class="k">line coverage</span></div>
 					<div class="manifest-cell"><span class="v">0</span><span class="k">lint errors</span></div>
 					<div class="manifest-cell"><span class="v">0</span><span class="k">CodeQL findings</span></div>
-					<div class="manifest-cell"><span class="v">3</span><span class="k">packages + 1 live app</span></div>
+					<div class="manifest-cell">
+						<span class="v">3</span><span class="k">packages + 1 live app + api/ in progress</span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -628,6 +630,38 @@
 							This page's own numbers were stuck describing an earlier phase until this pass — the manifest above, the
 							issue tracker, the wiki, and the external portfolio hub all got the same audit. Verifiable is only true if
 							it's kept current.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2>A real backend, one route at a time</h2>
+				<p class="h2-sub">Session persistence shipped, then a real server started</p>
+				<p class="lede">
+					Session persistence shipped next: a hard refresh no longer logs you out, and testing it caught a real bug
+					along the way. Then <code>api/</code> started: a real Express server with a tested
+					<code>POST /auth/login</code>, reusing the same <code>InvalidCredentialsError</code> the app already used
+					against its fake client — the server side isn't simulated anymore, even though <code>app/</code> hasn't been
+					pointed at it yet.
+				</p>
+				<div class="twocol">
+					<div class="card">
+						<h3>Pinia's default flush batches, silently</h3>
+						<p>
+							<code>$subscribe</code>'s default flush option waits for the next Vue tick — fine for UI updates, wrong
+							for a cookie write that needs to survive a real page unload right after login. A test that set a session
+							and immediately checked the cookie caught it: the write hadn't happened yet. Fixed with an explicit
+							<code>{ flush: 'sync' }</code>.
+						</p>
+					</div>
+					<div class="card">
+						<h3>Same demo login, two files, on purpose — for now</h3>
+						<p>
+							<code>authClient.ts</code>'s fake client and <code>api/</code>'s real route both hardcode the same demo
+							credentials. Not centralized into a shared file: that duplication is a symptom of the fake client being
+							temporary, and resolves to zero once <code>app/</code> calls the real endpoint instead of simulating one —
+							only the backend should ever know what a valid login looks like.
 						</p>
 					</div>
 				</div>
