@@ -1,4 +1,4 @@
-<title>Testing Strategy — Four Real Layers, 46 Tests</title>
+<title>Testing Strategy — Five Real Layers, 59 Tests</title>
 <style>
 	:root {
 		--paper: #ede9df;
@@ -265,14 +265,14 @@
 
 <div class="page">
 	<p class="eyebrow">directus-main — testing strategy</p>
-	<h1>Four packages, four real Vitest suites — plus one thing no coverage number catches.</h1>
+	<h1>Five workspaces, five real Vitest suites — plus one thing no coverage number catches.</h1>
 	<p class="dek">
 		Every workspace runs its own real <code>vitest run</code>, with coverage checked per package rather than one
 		monorepo-wide blended number. See <a href="auth-flow.html">Auth &amp; Request Flow</a> for a real bug this same
 		testing discipline caught later, in a different package.
 	</p>
 
-	<h2>Four Layers, Leaf to App</h2>
+	<h2>Five Layers, Leaf to Server</h2>
 	<div class="layers">
 		<div class="layer">
 			<span class="layer-name">packages/constants <span class="count">· 2 tests</span></span>
@@ -297,11 +297,19 @@
 			>
 		</div>
 		<div class="layer">
-			<span class="layer-name">app/ <span class="count">· 14 tests</span></span>
+			<span class="layer-name">app/ <span class="count">· 23 tests</span></span>
 			<span class="layer-desc"
 				>Component tests via <code>@vue/test-utils</code> + <code>happy-dom</code>, plus real headless-browser
 				verification (Playwright) for anything a unit test can't prove — the actual rendered login page, and the live
 				GitHub Pages deploy's routing end to end.</span
+			>
+		</div>
+		<div class="layer">
+			<span class="layer-name">api/ <span class="count">· 4 tests</span></span>
+			<span class="layer-desc"
+				>A real Express server tested with <code>supertest</code> against the exported app, so no real port gets bound.
+				One disclosed gap: <code>app.listen</code>'s own callback body is genuinely unreachable under
+				<code>NODE_ENV=test</code>, by design — not hidden behind a coverage-ignore pragma.</span
 			>
 		</div>
 	</div>
@@ -343,5 +351,5 @@
 		</p>
 	</div>
 
-	<footer>directus-main · Vitest per workspace · 46 tests total · CI verified on every push, not assumed</footer>
+	<footer>directus-main · Vitest per workspace · 59 tests total · CI verified on every push, not assumed</footer>
 </div>
