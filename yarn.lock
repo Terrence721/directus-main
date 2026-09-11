@@ -388,6 +388,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@directus/system-data@workspace:packages/system-data":
+  version: 0.0.0-use.local
+  resolution: "@directus/system-data@workspace:packages/system-data"
+  dependencies:
+    "@vitest/coverage-v8": "catalog:"
+    typescript: "catalog:"
+    vite: "catalog:"
+    vitest: "catalog:"
+  languageName: unknown
+  linkType: soft
+
 "@emnapi/core@npm:1.10.0":
   version: 1.10.0
   resolution: "@emnapi/core@npm:1.10.0"
