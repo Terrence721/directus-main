@@ -13,6 +13,7 @@
 	],
 	"scripts": {
 		"build": "yarn workspaces foreach -A -t run build",
+		"typecheck": "yarn workspaces foreach -A -t run typecheck",
 		"format": "prettier --cache --check .",
 		"lint": "eslint --cache .",
 		"lint:style": "stylelint '**/*.{css,scss,vue}' --ignore-path .gitignore --allow-empty-input --cache",
