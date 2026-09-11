@@ -1,4 +1,4 @@
-<title>System Architecture — Four Workspaces, One Real Dependency Order</title>
+<title>System Architecture — Five Workspaces, One Real Dependency Order</title>
 <style>
 	:root {
 		--paper: #ede9df;
@@ -156,9 +156,35 @@
 		text-align: center;
 	}
 
+	.fork {
+		display: flex;
+		justify-content: center;
+		gap: 1.6rem;
+		flex-wrap: wrap;
+		margin-top: 0.3rem;
+	}
+
+	.fork-branch {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4rem;
+		border: 1px dashed var(--rule);
+		border-radius: 10px;
+		padding: 0.9rem 1.1rem;
+	}
+
+	.fork-label {
+		font-family: var(--mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--ink-soft);
+	}
+
 	.grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(2, 1fr);
 		gap: 1rem;
 		margin-bottom: 1.6rem;
 	}
@@ -273,7 +299,7 @@
 
 <div class="page">
 	<p class="eyebrow">directus-main — system architecture</p>
-	<h1>Four workspaces, one real dependency order — not name-based guessing.</h1>
+	<h1>Five workspaces, one real dependency order — not name-based guessing.</h1>
 	<p class="dek">
 		Every dependency below was checked against the real Directus project's actual <code>package.json</code> fields
 		before anything was built, not assumed from what a package's name sounds like it should need. That's how
@@ -289,16 +315,22 @@
 			<span class="node node--pkg">@directus/errors</span>
 		</div>
 		<span class="diagram-arrow-v">↓ workspace:*</span>
-		<div class="diagram-row">
-			<span class="node node--pkg">@directus/stores</span>
-		</div>
-		<span class="diagram-arrow-v">↓ workspace:* (stores + errors) · catalog: (vue-router, pinia, vue)</span>
-		<div class="diagram-row">
-			<span class="node node--app">app/</span>
+		<div class="fork">
+			<div class="fork-branch">
+				<span class="fork-label">stores + errors</span>
+				<span class="node node--pkg">@directus/stores</span>
+				<span class="diagram-arrow-v">↓ workspace:* (stores + errors)<br />catalog: (vue-router, pinia, vue)</span>
+				<span class="node node--app">app/</span>
+			</div>
+			<div class="fork-branch">
+				<span class="fork-label">errors only</span>
+				<span class="diagram-arrow-v">↓ workspace:* (errors only)<br />catalog: (express)</span>
+				<span class="node node--app">api/</span>
+			</div>
 		</div>
 	</div>
 
-	<h2>The Three Layers</h2>
+	<h2>The Four Layers</h2>
 	<div class="grid">
 		<div class="card card--pkg">
 			<span class="card-tag">Complete</span>
@@ -329,9 +361,19 @@
 			<p class="card-title">app/</p>
 			<ul>
 				<li>Vite + Vue 3 + Pinia + <code>vue-router</code>, routed and styled</li>
-				<li>The only workspace that depends on both packages above at once</li>
+				<li>Depends on both packages above — the only workspace that needs <code>@directus/stores</code></li>
 			</ul>
 			<div class="card-link"><a href="auth-flow.html">→ Auth &amp; request flow</a></div>
+		</div>
+
+		<div class="card card--app">
+			<span class="card-tag">In progress</span>
+			<p class="card-title">api/</p>
+			<ul>
+				<li>Express, a real <code>POST /auth/login</code>, reusing <code>@directus/errors</code></li>
+				<li>Depends only on <code>@directus/errors</code> — never needed <code>@directus/stores</code> at all</li>
+			</ul>
+			<div class="card-link"><a href="testing-strategy.html">→ Testing strategy</a></div>
 		</div>
 	</div>
 
@@ -363,5 +405,5 @@
 		</p>
 	</div>
 
-	<footer>directus-main · Yarn Berry workspaces · Vue 3 + Pinia + vue-router · GitHub Actions + Pages</footer>
+	<footer>directus-main · Yarn Berry workspaces · Vue 3 + Pinia + vue-router + Express · GitHub Actions + Pages</footer>
 </div>
