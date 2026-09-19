@@ -1,6 +1,6 @@
 # 📝 TODO
 
-**Last Updated:** September 19, 2026 (`packages/system-data`'s type surface complete — `Filter`, `Permission`, `Translation`, `CollectionMeta`, `FieldMeta`, all exported via a real `index.ts`)
+**Last Updated:** September 19, 2026 (`packages/system-data`'s full `types.ts` surface done — `RelationMeta` was the last piece; 89 tests across the workspace now)
 
 A phase-by-phase log of what's been done on this repo and what's still open. This is the source of truth for
 progress — a GitHub Project board (once set up) will be a lighter-weight view of the same work, kept in sync with
@@ -48,9 +48,9 @@ issue (#12–#13, #15–#17).
 Express server (`/health`, `POST /auth/login` reusing `InvalidCredentialsError`), verified as an actually running
 server, fully tested, and now genuinely called by `app/`'s `authClient.ts` in local dev (the deployed GitHub Pages
 app still uses the simulated client, since `api/` isn't hosted anywhere public). Also [#13](https://github.com/Terrence721/directus-main/issues/13)
-— `packages/system-data`'s type surface (`Filter`, `Permission`, `Translation`, `CollectionMeta`, `FieldMeta`) is
-done and exported via a real `index.ts`; `RelationMeta` is the one piece left from the real source's `types.ts`. See
-the **Still to do** table below for the rest of the real backlog (`#15` `sdk/` workspace, `#16` growing `app/`, `#17`
+— `packages/system-data`'s full `types.ts` surface is done: `Filter`, `Permission`, `Translation`, `CollectionMeta`,
+`FieldMeta`, `RelationMeta`, all exported via a real `index.ts`, 30 tests. See the **Still to do** table below for the
+rest of the real backlog (`#15` `sdk/` workspace, `#16` growing `app/`, `#17`
 deployment/testing/release infra).
 
 ## ✅ Done
@@ -284,6 +284,8 @@ deployment/testing/release infra).
 | —     | `ce24592` | 2026-09-19 | `collection.ts` added — `CollectionTranslations` composed from `Translation`; `BaseCollectionMeta`/`DataCollectionMeta` mirror the real source's own `Pick`/`Partial` narrowing, already established by `Permission`/`DataPermission`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | —     | `ae520ea` | 2026-09-19 | `field.ts` added — `FieldTranslations` aliased directly to `Translation`; `Condition.rule` narrowed from the real source's `Record<string, any>` to the already-defined `Filter`, since a condition's rule is always evaluated as a filter. Real self-authored bug caught while verifying this: the first "rejects" test used a bare `string`, which fails `Record<string, unknown>`-style typing for an unrelated reason (not being an object at all) and stayed green even with the narrowing removed — replaced with a real object that isn't `Filter`-shaped, verified that one actually catches the regression                                                                                                                                  |
 | —     | `2a19c24` | 2026-09-19 | `index.ts` added, closing a real latent gap: `package.json`'s `main`/`types`/`exports` have pointed at `dist/index.js`/`dist/index.d.ts` since the package was scaffolded, and neither file has ever existed until now — the first real consumer to import from `@directus/system-data` would have hit a hard resolution failure. Verified with real Node ESM resolution (`import.meta.resolve`), not just a successful build. 28 tests total for `system-data` now, 87 across the workspace                                                                                                                                                                                                                                                         |
+| —     | `915b265` | 2026-09-19 | `relation.ts` added — `RelationMeta`, the last piece of the real source's `types.ts`. A standalone leaf, unlike every other file here: no cross-file dependencies, no `Record<string, any>` to tighten, no obvious redesign opportunity. Exported from `index.ts` alongside everything else. 30 tests total for `system-data` now, 89 across the workspace — the full real `types.ts` surface is covered                                                                                                                                                                                                                                                                                                                                             |
+| —     | —         | 2026-09-19 | Issue [#18](https://github.com/Terrence721/directus-main/issues/18) opened and added to the board as `Backlog`: an original app icon/favicon, designed fresh rather than reusing real Directus's actual brand mark — same "redesigned, not reproduced" reasoning already applied everywhere else. Low priority, portfolio polish, not a real architectural gap                                                                                                                                                                                                                                                                                                                                                                                       |
 
 ## 🚧 Still to do
 
@@ -292,10 +294,11 @@ deployment/testing/release infra).
 | More `packages/constants`                                                                               | Grow only against real consumers as they come up, not speculatively — matches how `LOCAL_AUTH_DRIVER` got added                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | More `packages/errors`                                                                                  | No specific error queued next — grow against real consumers, matching how `InvalidCredentialsError` got added                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | `api/` workspace ([#12](https://github.com/Terrence721/directus-main/issues/12))                        | **In progress.** A real Express server exists (`/health`, `POST /auth/login`), fully tested (4 tests, 100%/71%), with CORS and a real `dev` script. `app/`'s `authClient.ts` now genuinely calls it in local dev (`MODE === 'development'`) — verified end-to-end with both dev servers running. The deployed GitHub Pages app still uses the simulated client, since `api/` isn't hosted anywhere public. Real full scope: 1,243 files (`auth/`, `controllers/`, `services/`, `database/`, `permissions/`, `extensions/`, `websocket/`, `cli/`, and more) — this is a single route, not the backend |
-| Real source, remaining packages ([#13](https://github.com/Terrence721/directus-main/issues/13))         | **In progress.** `packages/system-data`'s type surface is done — `Filter`, `Permission`, `Translation`, `CollectionMeta`, `FieldMeta`, all exported via a real `index.ts`, 28 tests. `RelationMeta` is the one piece left from the real source's `types.ts`. Full 31-package target, not just the frontend-relevant subset. `utils` still needs both `constants` and `system-data` before it can start. See the **Full real-source inventory** below for the complete list                                                                                                                           |
+| Real source, remaining packages ([#13](https://github.com/Terrence721/directus-main/issues/13))         | **In progress.** `packages/system-data`'s full `types.ts` surface is done — `Filter`, `Permission`, `Translation`, `CollectionMeta`, `FieldMeta`, `RelationMeta`, all exported via a real `index.ts`, 30 tests. Full 31-package target, not just the frontend-relevant subset. `utils` still needs both `constants` and `system-data` before it can start. See the **Full real-source inventory** below for the complete list                                                                                                                                                                        |
 | `sdk/` workspace ([#15](https://github.com/Terrence721/directus-main/issues/15))                        | A real client SDK, replacing `authClient.ts`'s hand-rolled shape. Real scope: 220 files (`auth/`, `graphql/`, `realtime/`, `rest/`, `schema/`, `types/`, `utils/`). Already in the workspaces glob, same as `api`. Not started                                                                                                                                                                                                                                                                                                                                                                       |
 | Grow `app/` toward the real admin panel ([#16](https://github.com/Terrence721/directus-main/issues/16)) | Real scope: 8 feature modules (`activity`, `content`, `deployment`, `files`, `insights`, `settings`, `users`, `visual`), a real 256-line `router.ts`, and 6 more real routes this repo doesn't have yet. Not started                                                                                                                                                                                                                                                                                                                                                                                 |
 | Deployment, testing, and release infra ([#17](https://github.com/Terrence721/directus-main/issues/17))  | Real scope this repo has no equivalent of: Docker (`Dockerfile`, `docker-compose.yml`, `ecosystem.config.cjs`), root `tests/` (`blackbox`/`e2e`/`sandbox`, separate from each package's own unit tests), `.changeset` release automation, and open-source process docs (`cla.md`, `contributors.yml`, `crowdin.yml`). Not a portfolio-demo priority like the workspaces above, but tracked so it isn't lost. Not started                                                                                                                                                                             |
+| App icon/favicon ([#18](https://github.com/Terrence721/directus-main/issues/18))                        | Real Directus has a distinctive geometric brand mark; this repo has no equivalent anywhere (`portfolio.html`, the diagrams, `app/` all use the browser default). Designed fresh, not copied — same reasoning as everywhere else in this repo. Low priority, portfolio polish. Not started                                                                                                                                                                                                                                                                                                            |
 
 ### Full real-source inventory
 
@@ -306,39 +309,39 @@ has followed throughout.
 
 **All 31 real packages:**
 
-| Package                     | Real purpose                                                           | Status                                                            |
-| --------------------------- | ---------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `constants`                 | Shared constants for Directus                                          | ✅ Done                                                           |
-| `errors`                    | Create consistent error objects around the codebase                    | ✅ Done                                                           |
-| `stores`                    | Shared Pinia stores used in `@directus/app`                            | 🔶 Built, redesigned scope — see the note above                   |
-| `system-data`               | Definitions and types for Directus system collections                  | 🔶 Type surface done — `RelationMeta` left, needed before `utils` |
-| `ai`                        | Shared AI types and model definitions for Directus AI                  | Not started — a real zero-dependency leaf                         |
-| `schema`                    | Utility for extracting information about existing DB schema            | Not started — only real dependency is `knex`                      |
-| `utils`                     | Utilities shared between the Directus packages                         | Not started — needs `constants` + `system-data`                   |
-| `types`                     | Shared types for Directus                                              | Not started — needs `ai` + `constants` + `schema`                 |
-| `composables`               | Shared Vue composables for Directus use                                | Not started — needs `constants` + `utils`                         |
-| `validation`                | Utils to help with validation                                          | Not started — needs `errors` + `utils`                            |
-| `schema-builder`            | Mocking/constructing a database schema based on code                   | Not started                                                       |
-| `storage`                   | Object storage abstraction layer for Directus                          | Not started                                                       |
-| `storage-driver-local`      | Local file storage abstraction for `@directus/storage`                 | Not started                                                       |
-| `storage-driver-s3`         | S3 file storage abstraction                                            | Not started                                                       |
-| `storage-driver-azure`      | Azure file storage abstraction                                         | Not started                                                       |
-| `storage-driver-cloudinary` | Cloudinary file storage abstraction                                    | Not started                                                       |
-| `storage-driver-supabase`   | Supabase file storage abstraction                                      | Not started                                                       |
-| `storage-driver-gcs`        | GCS file storage abstraction (lives under `specs/` in the real source) | Not started                                                       |
-| `extensions`                | Utilities and types for Directus extensions                            | Not started                                                       |
-| `extensions-sdk`            | A toolkit to develop extensions to extend Directus                     | Not started                                                       |
-| `extensions-registry`       | Exploring Directus extensions on a package registry                    | Not started                                                       |
-| `memory`                    | Memory / Redis abstraction for Directus                                | Not started                                                       |
-| `pressure`                  | Pressure based rate limiter                                            | Not started                                                       |
-| `themes`                    | Themes for Directus                                                    | Not started                                                       |
-| `format-title`              | Custom formatter that converts any string into Title Case              | Not started                                                       |
-| `update-check`              | Check if an update for Directus is available                           | Not started                                                       |
-| `visual-editing`            | In-place editing of a frontend from within the Visual Editor           | Not started                                                       |
-| `create-directus-project`   | Installer util that scaffolds a new Directus project                   | Not started                                                       |
-| `create-directus-extension` | Util that scaffolds a Directus extension                               | Not started                                                       |
-| `release-notes-generator`   | Directus-tailored release notes generator for changesets               | Not started                                                       |
-| `specs`                     | OpenAPI Specification of the Directus API                              | Not started                                                       |
+| Package                     | Real purpose                                                           | Status                                            |
+| --------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------- |
+| `constants`                 | Shared constants for Directus                                          | ✅ Done                                           |
+| `errors`                    | Create consistent error objects around the codebase                    | ✅ Done                                           |
+| `stores`                    | Shared Pinia stores used in `@directus/app`                            | 🔶 Built, redesigned scope — see the note above   |
+| `system-data`               | Definitions and types for Directus system collections                  | 🔶 Type surface done, needed before `utils`       |
+| `ai`                        | Shared AI types and model definitions for Directus AI                  | Not started — a real zero-dependency leaf         |
+| `schema`                    | Utility for extracting information about existing DB schema            | Not started — only real dependency is `knex`      |
+| `utils`                     | Utilities shared between the Directus packages                         | Not started — needs `constants` + `system-data`   |
+| `types`                     | Shared types for Directus                                              | Not started — needs `ai` + `constants` + `schema` |
+| `composables`               | Shared Vue composables for Directus use                                | Not started — needs `constants` + `utils`         |
+| `validation`                | Utils to help with validation                                          | Not started — needs `errors` + `utils`            |
+| `schema-builder`            | Mocking/constructing a database schema based on code                   | Not started                                       |
+| `storage`                   | Object storage abstraction layer for Directus                          | Not started                                       |
+| `storage-driver-local`      | Local file storage abstraction for `@directus/storage`                 | Not started                                       |
+| `storage-driver-s3`         | S3 file storage abstraction                                            | Not started                                       |
+| `storage-driver-azure`      | Azure file storage abstraction                                         | Not started                                       |
+| `storage-driver-cloudinary` | Cloudinary file storage abstraction                                    | Not started                                       |
+| `storage-driver-supabase`   | Supabase file storage abstraction                                      | Not started                                       |
+| `storage-driver-gcs`        | GCS file storage abstraction (lives under `specs/` in the real source) | Not started                                       |
+| `extensions`                | Utilities and types for Directus extensions                            | Not started                                       |
+| `extensions-sdk`            | A toolkit to develop extensions to extend Directus                     | Not started                                       |
+| `extensions-registry`       | Exploring Directus extensions on a package registry                    | Not started                                       |
+| `memory`                    | Memory / Redis abstraction for Directus                                | Not started                                       |
+| `pressure`                  | Pressure based rate limiter                                            | Not started                                       |
+| `themes`                    | Themes for Directus                                                    | Not started                                       |
+| `format-title`              | Custom formatter that converts any string into Title Case              | Not started                                       |
+| `update-check`              | Check if an update for Directus is available                           | Not started                                       |
+| `visual-editing`            | In-place editing of a frontend from within the Visual Editor           | Not started                                       |
+| `create-directus-project`   | Installer util that scaffolds a new Directus project                   | Not started                                       |
+| `create-directus-extension` | Util that scaffolds a Directus extension                               | Not started                                       |
+| `release-notes-generator`   | Directus-tailored release notes generator for changesets               | Not started                                       |
+| `specs`                     | OpenAPI Specification of the Directus API                              | Not started                                       |
 
 **Beyond `packages/`:**
 
