@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { isDirectusError } from '@directus/errors';
 import { ref } from 'vue';
-
-export interface LoginCredentials {
-	email: string;
-	password: string;
-}
+import type { LoginCredentials } from '../api/authClient.js';
 
 const props = defineProps<{
 	onSubmit: (credentials: LoginCredentials) => Promise<void>;
