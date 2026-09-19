@@ -1,4 +1,4 @@
-<title>Testing Strategy — Five Real Layers, 59 Tests</title>
+<title>Testing Strategy — Seven Real Layers, 121 Tests</title>
 <link rel="stylesheet" href="shared.css" />
 <style>
 	.layers {
@@ -153,14 +153,14 @@
 
 <div class="page">
 	<p class="eyebrow">directus-main — testing strategy</p>
-	<h1>Five workspaces, five real Vitest suites — plus one thing no coverage number catches.</h1>
+	<h1>Seven workspaces, seven real Vitest suites — plus one thing no coverage number catches.</h1>
 	<p class="dek">
 		Every workspace runs its own real <code>vitest run</code>, with coverage checked per package rather than one
 		monorepo-wide blended number. See <a href="auth-flow.html">Auth &amp; Request Flow</a> for a real bug this same
 		testing discipline caught later, in a different package.
 	</p>
 
-	<h2>Five Layers, Leaf to Server</h2>
+	<h2>Seven Layers, Leaf to Server</h2>
 	<div class="layers">
 		<div class="layer">
 			<span class="layer-name">packages/constants <span class="count">· 2 tests</span></span>
@@ -178,6 +178,23 @@
 			>
 		</div>
 		<div class="layer">
+			<span class="layer-name">packages/system-data <span class="count">· 30 tests</span></span>
+			<span class="layer-desc"
+				>The real <code>types.ts</code> type surface — filters, permissions, collection/field/relation metadata. All
+				type-only (<code>expectTypeOf</code>), checked only by <code>yarn typecheck</code>;
+				<code>vitest run</code> treats these assertions as inert no-ops at runtime, so 0/0 coverage here is correct, not
+				a gap.</span
+			>
+		</div>
+		<div class="layer">
+			<span class="layer-name">packages/utils <span class="count">· 27 tests, 100%</span></span>
+			<span class="layer-desc"
+				>Real runtime behavior this time, not types — <code>toBoolean</code>/<code>toArray</code> done so far, 2 of a
+				real 61-function scope. The first package in this repo to depend on another real package (<code>constants</code>
+				+ <code>system-data</code>).</span
+			>
+		</div>
+		<div class="layer">
 			<span class="layer-name">packages/stores <span class="count">· 20 tests, 100%</span></span>
 			<span class="layer-desc"
 				>Pinia stores tested in isolation (<code>environment: 'node'</code> — no DOM needed). 100% coverage was already
@@ -185,7 +202,7 @@
 			>
 		</div>
 		<div class="layer">
-			<span class="layer-name">app/ <span class="count">· 23 tests</span></span>
+			<span class="layer-name">app/ <span class="count">· 28 tests</span></span>
 			<span class="layer-desc"
 				>Component tests via <code>@vue/test-utils</code> + <code>happy-dom</code>, plus real headless-browser
 				verification (Playwright) for anything a unit test can't prove — the actual rendered login page, and the live
