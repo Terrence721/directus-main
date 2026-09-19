@@ -1,0 +1,113 @@
+:root {
+	--paper: #ede9df;
+	--paper-2: #e2ddd0;
+	--surface: #fff;
+	--ink: #1c2333;
+	--ink-soft: #4b5567;
+	--rule: #c7c0ac;
+	--pkg: #2e6b52;
+	--pkg-bg: #dcf0e6;
+	--app: #2e5266;
+	--app-bg: #dce8f0;
+	--warn: #a1481f;
+	--warn-bg: #f6e6dc;
+	--mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+	--sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+:root[data-theme='dark'] {
+	--paper: #14181f;
+	--paper-2: #1b212b;
+	--surface: #1c2230;
+	--ink: #e8e4d9;
+	--ink-soft: #a3aabb;
+	--rule: #303748;
+	--pkg: #5fcf9f;
+	--pkg-bg: #163026;
+	--app: #7fb2cc;
+	--app-bg: #16232f;
+	--warn: #e0a074;
+	--warn-bg: #332318;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		--paper: #14181f;
+		--paper-2: #1b212b;
+		--surface: #1c2230;
+		--ink: #e8e4d9;
+		--ink-soft: #a3aabb;
+		--rule: #303748;
+		--pkg: #5fcf9f;
+		--pkg-bg: #163026;
+		--app: #7fb2cc;
+		--app-bg: #16232f;
+		--warn: #e0a074;
+		--warn-bg: #332318;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	color-scheme: light dark;
+}
+
+body {
+	margin: 0;
+	background: var(--paper);
+	color: var(--ink);
+	font-family: var(--sans);
+	padding: 2.5rem 1.5rem 4rem;
+	-webkit-font-smoothing: antialiased;
+}
+
+.page {
+	max-inline-size: 1080px;
+	margin: 0 auto;
+}
+
+.eyebrow {
+	font-family: var(--mono);
+	font-size: 0.72rem;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--ink-soft);
+	margin: 0 0 0.6rem;
+}
+
+h1 {
+	font-size: clamp(1.6rem, 2.6vw, 2.15rem);
+	line-height: 1.15;
+	margin: 0 0 0.5rem;
+	letter-spacing: -0.01em;
+}
+
+.dek {
+	font-size: 1rem;
+	line-height: 1.55;
+	color: var(--ink-soft);
+	max-inline-size: 70ch;
+	margin: 0 0 2.2rem;
+}
+
+.dek code {
+	font-family: var(--mono);
+	font-size: 0.9em;
+	color: var(--ink);
+}
+
+.dek a {
+	color: var(--app);
+}
+
+h2 {
+	font-size: 0.72rem;
+	font-family: var(--mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--ink-soft);
+	margin: 0 0 1rem;
+}
