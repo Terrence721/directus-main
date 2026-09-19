@@ -1,4 +1,4 @@
-<title>System Architecture — Five Workspaces, One Real Dependency Order</title>
+<title>System Architecture — Seven Workspaces, One Real Dependency Order</title>
 <link rel="stylesheet" href="shared.css" />
 <style>
 	.diagram {
@@ -187,7 +187,7 @@
 
 <div class="page">
 	<p class="eyebrow">directus-main — system architecture</p>
-	<h1>Five workspaces, one real dependency order — not name-based guessing.</h1>
+	<h1>Seven workspaces, one real dependency order — not name-based guessing.</h1>
 	<p class="dek">
 		Every dependency below was checked against the real Directus project's actual <code>package.json</code> fields
 		before anything was built, not assumed from what a package's name sounds like it should need. That's how
@@ -201,6 +201,7 @@
 		<div class="diagram-row">
 			<span class="node node--pkg">@directus/constants</span>
 			<span class="node node--pkg">@directus/errors</span>
+			<span class="node node--pkg">@directus/system-data</span>
 		</div>
 		<span class="diagram-arrow-v">↓ workspace:*</span>
 		<div class="fork">
@@ -211,6 +212,10 @@
 				<span class="node node--app">app/</span>
 			</div>
 			<div class="fork-branch">
+				<span class="fork-label">constants + system-data</span>
+				<span class="node node--pkg">@directus/utils</span>
+			</div>
+			<div class="fork-branch">
 				<span class="fork-label">errors only</span>
 				<span class="diagram-arrow-v">↓ workspace:* (errors only)<br />catalog: (express)</span>
 				<span class="node node--app">api/</span>
@@ -218,7 +223,7 @@
 		</div>
 	</div>
 
-	<h2>The Four Layers</h2>
+	<h2>The Six Layers</h2>
 	<div class="grid">
 		<div class="card card--pkg">
 			<span class="card-tag">Complete</span>
@@ -235,6 +240,19 @@
 		</div>
 
 		<div class="card card--pkg">
+			<span class="card-tag">Type surface done</span>
+			<p class="card-title">packages/system-data</p>
+			<ul>
+				<li>
+					Another zero-dependency leaf — the real <code>types.ts</code> surface: filters, permissions,
+					collection/field/relation metadata
+				</li>
+				<li>Type-only (<code>expectTypeOf</code>), so 0/0 runtime coverage is correct by design, not a gap</li>
+			</ul>
+			<div class="card-link"><a href="data-model.html">→ Data model</a></div>
+		</div>
+
+		<div class="card card--pkg">
 			<span class="card-tag">Complete</span>
 			<p class="card-title">packages/stores</p>
 			<ul>
@@ -242,6 +260,19 @@
 				<li>Depends on <code>@directus/constants</code> for real, wired RBAC/auth-driver vocabulary</li>
 			</ul>
 			<div class="card-link"><a href="data-model.html">→ Data model</a></div>
+		</div>
+
+		<div class="card card--pkg">
+			<span class="card-tag">In progress</span>
+			<p class="card-title">packages/utils</p>
+			<ul>
+				<li><code>toBoolean</code>/<code>toArray</code> done so far, 2 of a real 61-function scope</li>
+				<li>
+					Depends on <code>@directus/constants</code> + <code>@directus/system-data</code> — the first package here to
+					depend on another real package
+				</li>
+			</ul>
+			<div class="card-link"><a href="testing-strategy.html">→ Testing strategy</a></div>
 		</div>
 
 		<div class="card card--app">
