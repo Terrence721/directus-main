@@ -3,3 +3,4 @@ export type { DataPermission, Permission, PermissionsAction } from './permission
 export type { Translation } from './translation.js';
 export type { BaseCollectionMeta, CollectionMeta, CollectionTranslations, DataCollectionMeta } from './collection.js';
 export type { Condition, FieldMeta, FieldTranslations, Width } from './field.js';
+export type { RelationMeta } from './relation.js';
