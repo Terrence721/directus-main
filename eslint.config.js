@@ -34,6 +34,11 @@ export default tseslint.config(
 				parser: tseslint.parser,
 			},
 		},
+		rules: {
+			// Allow single-word component names ("Collection" instead of "ActivityCollection") — real Directus route/page
+			// components are named this way throughout, and they aren't reused elsewhere, so collision risk doesn't apply.
+			'vue/multi-word-component-names': 'off',
+		},
 	},
 	prettier,
 );
