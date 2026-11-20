@@ -2,6 +2,8 @@ import { useAuthStore } from '@directus/stores';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import HomePage from './views/HomePage.vue';
 import LoginPage from './views/LoginPage.vue';
+import { getInternalModules } from './modules/index.js';
+import { mergeModuleRoutes } from './modules/routing.js';
 
 declare module 'vue-router' {
 	interface RouteMeta {
@@ -16,10 +18,10 @@ declare module 'vue-router' {
  */
 export const router = createRouter({
 	history: createWebHashHistory(),
-	routes: [
+	routes: mergeModuleRoutes(getInternalModules(), [
 		{ path: '/', name: 'home', component: HomePage, meta: { requiresAuth: true } },
 		{ path: '/login', name: 'login', component: LoginPage },
-	],
+	]),
 });
 
 router.beforeEach((to) => {
