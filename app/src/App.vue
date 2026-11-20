@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { useAppStore } from '@directus/stores';
+import { useAppStore, useServerStore } from '@directus/stores';
 import { onMounted } from 'vue';
+import { fetchServerInfo } from './api/serverClient.js';
 
 const app = useAppStore();
+const server = useServerStore();
 
-onMounted(() => {
+onMounted(async () => {
 	app.startHydration();
+	try {
+		server.setInfo(await fetchServerInfo());
+	} catch {
+		// Server info fetch failure is non-fatal — hydration continues without branding.
+	}
 	app.completeHydration();
 });
 </script>

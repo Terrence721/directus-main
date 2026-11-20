@@ -5,6 +5,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App.vue';
 import { router } from './router.js';
 
+vi.mock('./api/serverClient.js', () => ({
+	fetchServerInfo: vi.fn().mockResolvedValue({
+		projectName: 'Directus Main Demo',
+		projectLogoUrl: null,
+		projectColor: '#563acc',
+		authProviders: [
+			{ name: 'Email / Password', driver: 'local' },
+		],
+		registrationEnabled: true,
+	}),
+}));
+
 enableAutoUnmount(afterEach);
 
 beforeEach(() => {
@@ -42,8 +54,10 @@ describe('App', () => {
 
 		mount(App, { global: { plugins: [router] } });
 
-		expect(app.hydrated).toBe(true);
-		expect(app.hydrating).toBe(false);
+		await vi.waitFor(() => {
+			expect(app.hydrated).toBe(true);
+			expect(app.hydrating).toBe(false);
+		});
 	});
 
 	it('shows an error message if hydration fails after mount', async () => {
