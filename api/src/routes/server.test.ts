@@ -23,8 +23,12 @@ describe('GET /server/info', () => {
 	});
 
 	it('returns a stable, deterministic payload', async () => {
-		const a = await request(app).get('/server/info').then((r) => r.body);
-		const b = await request(app).get('/server/info').then((r) => r.body);
+		const a = await request(app)
+			.get('/server/info')
+			.then((r) => r.body);
+		const b = await request(app)
+			.get('/server/info')
+			.then((r) => r.body);
 
 		expect(a).toEqual(b);
 	});

@@ -10,9 +10,7 @@ vi.mock('./api/serverClient.js', () => ({
 		projectName: 'Directus Main Demo',
 		projectLogoUrl: null,
 		projectColor: '#563acc',
-		authProviders: [
-			{ name: 'Email / Password', driver: 'local' },
-		],
+		authProviders: [{ name: 'Email / Password', driver: 'local' }],
 		registrationEnabled: true,
 	}),
 }));

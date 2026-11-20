@@ -1,7 +1,9 @@
 import cors from 'cors';
 import express from 'express';
 import { authRouter } from './routes/auth.js';
+import { itemsRouter } from './routes/items.js';
 import { serverRouter } from './routes/server.js';
+import { usersRouter } from './routes/users.js';
 
 const PORT = process.env['PORT'] ?? 8055;
 
@@ -18,7 +20,9 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/auth', authRouter);
+app.use('/items', itemsRouter);
 app.use('/server', serverRouter);
+app.use('/users', usersRouter);
 
 if (process.env['NODE_ENV'] !== 'test') {
 	app.listen(PORT, () => {

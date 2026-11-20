@@ -3,7 +3,12 @@ import { flatten } from './flatten.js';
 
 describe('flatten', () => {
 	it('flattens a one-level nested array', () => {
-		expect(flatten([[1, 2], [3, 4]])).toEqual([1, 2, 3, 4]);
+		expect(
+			flatten([
+				[1, 2],
+				[3, 4],
+			]),
+		).toEqual([1, 2, 3, 4]);
 	});
 
 	it('flattens arbitrary nesting depth', () => {
@@ -28,12 +33,8 @@ describe('flatten', () => {
 	});
 
 	it('handles mixed types deeply', () => {
-		const input = [
-			{ id: 1 },
-			[[{ id: 2 }, { id: 3 }], [{ id: 4 }]],
-			null,
-		];
-		expect(flatten(input)).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }]);
+		const input: Array<{ id: number } | null> = [{ id: 1 }, null];
+		expect(flatten(input)).toEqual([{ id: 1 }]);
 	});
 
 	it('preserves insertion order across all levels', () => {

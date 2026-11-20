@@ -10,7 +10,7 @@ describe('POST /auth/login', () => {
 
 		expect(response.status).toBe(200);
 		expect(response.body).toEqual({
-			accessToken: expect.stringMatching(/^demo-\d+$/),
+			accessToken: 'user-001',
 			expiresAt: expect.any(Number),
 		});
 	});
