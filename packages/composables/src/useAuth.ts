@@ -1,5 +1,4 @@
 import { useAuthStore } from '@directus/stores';
-import type { Session } from '@directus/stores';
 
 /**
  * Composable that provides a minimal, type-safe API around the Pinia auth store.

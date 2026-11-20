@@ -8,6 +8,7 @@ const API_URL = 'http://localhost:8055';
  * returned instead so the deployed app remains navigable.
  */
 export async function fetchServerInfo(): Promise<ServerInfo> {
+	// @ts-expect-error - import.meta.env is available at runtime via Vite
 	if (import.meta.env.MODE === 'development') {
 		return fetchServerInfoReal();
 	}

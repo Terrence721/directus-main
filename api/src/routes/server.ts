@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isNonEmptyString, isPlainObject } from '@directus/utils';
+import { isNonEmptyString } from '@directus/utils';
 import { InvalidCredentialsError } from '@directus/errors';
 import type { AuthProvider, ServerInfo } from '@directus/stores';
 

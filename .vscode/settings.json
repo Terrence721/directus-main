@@ -1,6 +1,6 @@
 {
-	"typescript.tsdk": "node_modules/typescript/lib",
-	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
+	"js/ts.tsdk.promptToUseWorkspaceVersion": true,
 	"eslint.workingDirectories": [{ "mode": "auto" }],
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -20,5 +20,6 @@
 			"fileMatch": ["**/.eslintrc.json"],
 			"url": "https://json.schemastore.org/eslintrc.json"
 		}
-	]
+	],
+	"cSpell.words": ["casetest", "directus", "longenough", "slugified"]
 }

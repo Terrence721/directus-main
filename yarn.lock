@@ -349,6 +349,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@directus/composables@workspace:*, @directus/composables@workspace:packages/composables":
+  version: 0.0.0-use.local
+  resolution: "@directus/composables@workspace:packages/composables"
+  dependencies:
+    "@directus/constants": "workspace:*"
+    "@directus/errors": "workspace:*"
+    "@directus/stores": "workspace:*"
+    "@vitest/coverage-v8": "catalog:"
+    "@vue/devtools-api": "catalog:"
+    pinia: "catalog:"
+    typescript: "catalog:"
+    vite: "catalog:"
+    vitest: "catalog:"
+    vue: "catalog:"
+    vue-router: "catalog:"
+  peerDependencies:
+    vue: ^3.5.11
+    vue-router: ^5.3.1
+  languageName: unknown
+  linkType: soft
+
 "@directus/constants@workspace:*, @directus/constants@workspace:packages/constants":
   version: 0.0.0-use.local
   resolution: "@directus/constants@workspace:packages/constants"
@@ -399,10 +420,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@directus/utils@workspace:packages/utils":
+"@directus/utils@workspace:*, @directus/utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@directus/utils@workspace:packages/utils"
   dependencies:
+    "@vitest/coverage-v8": "catalog:"
+    typescript: "catalog:"
+    vite: "catalog:"
+    vitest: "catalog:"
+  languageName: unknown
+  linkType: soft
+
+"@directus/validation@workspace:*, @directus/validation@workspace:packages/validation":
+  version: 0.0.0-use.local
+  resolution: "@directus/validation@workspace:packages/validation"
+  dependencies:
+    "@directus/constants": "workspace:*"
+    "@directus/utils": "workspace:*"
     "@vitest/coverage-v8": "catalog:"
     typescript: "catalog:"
     vite: "catalog:"
@@ -1919,12 +1953,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "app@workspace:app"
   dependencies:
+    "@directus/composables": "workspace:*"
     "@directus/errors": "workspace:*"
     "@directus/stores": "workspace:*"
+    "@directus/validation": "workspace:*"
     "@vitejs/plugin-vue": "catalog:"
     "@vitest/coverage-v8": "catalog:"
     "@vue/compiler-dom": "catalog:"
-    "@vue/devtools-api": "catalog:"
     "@vue/test-utils": "catalog:"
     happy-dom: "catalog:"
     pinia: "catalog:"

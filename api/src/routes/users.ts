@@ -1,10 +1,11 @@
 import { InvalidCredentialsError, NotFoundError } from '@directus/errors';
 import { Router } from 'express';
 import { USERS } from './demo-data.js';
-import { isNonEmptyString, slugify } from '@directus/utils';
+import { slugify } from '@directus/utils';
+import { validateRegister } from '@directus/validation';
 
 /** In-memory user registry keyed by email (slugified). */
-const usersByEmail = new Map<string, typeof USERS[0]>();
+const usersByEmail = new Map<string, (typeof USERS)[0]>();
 for (const u of USERS) {
 	usersByEmail.set(slugify(u.email), u);
 }
@@ -54,8 +55,10 @@ usersRouter.post('/', (req, res) => {
 	const { email, password, firstName, lastName } = body;
 
 	// --- Validation ----------------------------------------------------------
-	if (!isNonEmptyString(email) || !isNonEmptyString(password)) {
-		const error = new InvalidCredentialsError();
+	const validationErrors = validateRegister({ email, password, firstName, lastName });
+	if (validationErrors.length > 0) {
+		// Return the first validation error as 401 to match existing behavior
+		const error = new InvalidCredentialsError(validationErrors[0].message);
 		res.status(error.status).json({ code: error.code, message: error.message });
 		return;
 	}
@@ -78,7 +81,7 @@ usersRouter.post('/', (req, res) => {
 	};
 
 	usersByEmail.set(slugify(email), newUser);
-	USERS.push(newUser as typeof USERS[0]);
+	USERS.push(newUser as (typeof USERS)[0]);
 
 	// --- Return session ------------------------------------------------------
 	res.status(201).json({

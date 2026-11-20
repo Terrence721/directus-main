@@ -36,13 +36,9 @@ describe('GET /items/:collection', () => {
 	});
 
 	it('paginates correctly across pages', async () => {
-		const firstPage = await request(testApp)
-			.get('/demo_items')
-			.query({ page: 1, limit: 2 });
+		const firstPage = await request(testApp).get('/demo_items').query({ page: 1, limit: 2 });
 
-		const secondPage = await request(testApp)
-			.get('/demo_items')
-			.query({ page: 2, limit: 2 });
+		const secondPage = await request(testApp).get('/demo_items').query({ page: 2, limit: 2 });
 
 		expect(firstPage.status).toBe(200);
 		expect(secondPage.status).toBe(200);
@@ -53,9 +49,7 @@ describe('GET /items/:collection', () => {
 	});
 
 	it('caps page size at max', async () => {
-		const response = await request(testApp)
-			.get('/demo_items')
-			.query({ limit: 9999 });
+		const response = await request(testApp).get('/demo_items').query({ limit: 9999 });
 
 		expect(response.status).toBe(200);
 		expect(response.body.meta.pageSize).toBeLessThanOrEqual(100);

@@ -34,7 +34,7 @@ async function registerReal(data: RegisterData): Promise<{ session: Session; use
 	});
 
 	if (!response.ok) {
-		const body = await response.json().catch(() => ({})) as { code?: string; message?: string };
+		const body = (await response.json().catch(() => ({}))) as { code?: string; message?: string };
 		if (body.code === 'NOT_FOUND') {
 			throw new Error(body.message ?? 'Email already registered.');
 		}

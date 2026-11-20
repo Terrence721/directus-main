@@ -6,7 +6,8 @@
 	"dependencies": {
 		"@directus/composables": "workspace:*",
 		"@directus/errors": "workspace:*",
-		"@directus/stores": "workspace:*"
+		"@directus/stores": "workspace:*",
+		"@directus/validation": "workspace:*"
 	},
 	"devDependencies": {
 		"@vitejs/plugin-vue": "catalog:",

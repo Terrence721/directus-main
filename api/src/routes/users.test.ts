@@ -59,9 +59,7 @@ describe('POST /users (registration)', () => {
 		// Register with uppercase email — the internal lookup key uses slugify(), so
 		// 'CASE+TEST' and 'case-test' are not colliding keys here; the point is simply
 		// that both produce valid 201 responses and the stored email preserves input.
-		const response = await request(testApp)
-			.post('/')
-			.send({ email: 'CASE+TEST@example.com', password: 'pass123' });
+		const response = await request(testApp).post('/').send({ email: 'CASE+TEST@example.com', password: 'pass123' });
 
 		expect(response.status).toBe(201);
 		expect(response.body.user.email).toBe('CASE+TEST@example.com');

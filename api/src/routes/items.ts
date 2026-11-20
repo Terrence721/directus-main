@@ -1,4 +1,4 @@
-import { ForbiddenError, InvalidCredentialsError, NotFoundError } from '@directus/errors';
+import { NotFoundError } from '@directus/errors';
 import { Router } from 'express';
 import { ITEMS } from './demo-data.js';
 
@@ -18,9 +18,7 @@ itemsRouter.get('/:collection', (req, res) => {
 	}
 
 	const queryLimit = parseInt(req.query.limit as string, 10);
-	const limit = Number.isFinite(queryLimit) && queryLimit > 0
-		? Math.min(queryLimit, MAX_LIMIT)
-		: DEFAULT_LIMIT;
+	const limit = Number.isFinite(queryLimit) && queryLimit > 0 ? Math.min(queryLimit, MAX_LIMIT) : DEFAULT_LIMIT;
 
 	const total = data.length;
 	const page = parseInt(req.query.page as string, 10) || 1;
