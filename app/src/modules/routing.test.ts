@@ -8,7 +8,7 @@ vi.mock('./routerPass.js', () => ({ default: { name: 'RouterPass' } }));
 
 describe('mergeModuleRoutes', () => {
 	it('returns base routes unchanged when no modules are provided', () => {
-		const base: RouteRecordRaw[] = [{ path: '/home', name: 'home', redirect: undefined }];
+		const base: RouteRecordRaw[] = [{ path: '/home', name: 'home', redirect: '/home' }];
 		const result = mergeModuleRoutes([], base);
 
 		expect(result).toEqual(base);
@@ -20,7 +20,7 @@ describe('mergeModuleRoutes', () => {
 				id: 'settings',
 				name: 'Settings',
 				icon: 'settings',
-				routes: [{ path: '/profile', name: 'profile' }],
+				routes: [{ path: '/profile', name: 'profile', component: RouterPass }],
 			},
 		];
 		const result = mergeModuleRoutes(modules, []);
@@ -34,7 +34,7 @@ describe('mergeModuleRoutes', () => {
 				id: 'users',
 				name: 'Users',
 				icon: 'people',
-				routes: [{ path: 'list', name: 'list' }],
+				routes: [{ path: 'list', name: 'list', component: RouterPass }],
 			},
 		];
 		const result = mergeModuleRoutes(modules, []);
@@ -44,7 +44,7 @@ describe('mergeModuleRoutes', () => {
 
 	it('names routes with the module id prefix', () => {
 		const modules: ModuleConfig[] = [
-			{ id: 'blog', name: 'Blog', icon: 'edit', routes: [{ path: '/', name: 'index' }] },
+			{ id: 'blog', name: 'Blog', icon: 'edit', routes: [{ path: '/', name: 'index', component: RouterPass }] },
 		];
 		const result = mergeModuleRoutes(modules, []);
 
@@ -53,8 +53,14 @@ describe('mergeModuleRoutes', () => {
 
 	it('skips modules marked as hidden', () => {
 		const modules: ModuleConfig[] = [
-			{ id: 'hidden', name: 'Hidden', icon: 'eye_off', hidden: true, routes: [{ path: '/', name: 'root' }] },
-			{ id: 'visible', name: 'Visible', icon: 'eye', routes: [{ path: '/', name: 'root' }] },
+			{
+				id: 'hidden',
+				name: 'Hidden',
+				icon: 'eye_off',
+				hidden: true,
+				routes: [{ path: '/', name: 'root', component: RouterPass }],
+			},
+			{ id: 'visible', name: 'Visible', icon: 'eye', routes: [{ path: '/', name: 'root', component: RouterPass }] },
 		];
 		const result = mergeModuleRoutes(modules, []);
 
@@ -72,7 +78,7 @@ describe('mergeModuleRoutes', () => {
 					{
 						path: '/docs',
 						name: 'docs',
-						children: [{ path: '', name: 'overview' }],
+						children: [{ path: '', name: 'overview' } as RouteRecordRaw],
 					},
 				],
 			},
@@ -105,9 +111,14 @@ describe('mergeModuleRoutes', () => {
 	});
 
 	it('prepends base routes before module routes', () => {
-		const base: RouteRecordRaw[] = [{ path: '/login', name: 'login', redirect: undefined }];
+		const base: RouteRecordRaw[] = [{ path: '/login', name: 'login', component: RouterPass }];
 		const modules: ModuleConfig[] = [
-			{ id: 'reports', name: 'Reports', icon: 'bar_chart', routes: [{ path: '/reports', name: 'reports' }] },
+			{
+				id: 'reports',
+				name: 'Reports',
+				icon: 'bar_chart',
+				routes: [{ path: '/reports', name: 'reports', component: RouterPass }],
+			},
 		];
 		const result = mergeModuleRoutes(modules, base);
 
@@ -129,7 +140,7 @@ describe('mergeModuleRoutes', () => {
 							{
 								path: '',
 								name: 'list',
-								children: [{ path: ':id', name: 'detail' }],
+								children: [{ path: ':id', name: 'detail' } as RouteRecordRaw],
 							},
 						],
 					},
