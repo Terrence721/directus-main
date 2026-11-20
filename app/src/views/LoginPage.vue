@@ -12,8 +12,30 @@ async function handleLogin(credentials: LoginCredentials) {
 	auth.setSession(session.accessToken, session.expiresAt);
 	await router.push('/');
 }
+
+function goToRegister() {
+	router.push('/register');
+}
 </script>
 
 <template>
-	<LoginForm :on-submit="handleLogin" />
+	<div>
+		<LoginForm :on-submit="handleLogin" />
+		<p class="link" @click="goToRegister">No account? Create one</p>
+	</div>
 </template>
+
+<style scoped>
+.link {
+	margin-top: 1rem;
+	text-align: center;
+	font-size: 0.875rem;
+	color: var(--ink-soft);
+	cursor: pointer;
+}
+
+.link:hover {
+	color: var(--accent);
+	text-decoration: underline;
+}
+</style>
