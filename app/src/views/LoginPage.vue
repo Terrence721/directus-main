@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { useAuthStore } from '@directus/stores';
-import { useRouter } from 'vue-router';
-import { login, type LoginCredentials } from '../api/authClient.js';
+import { useAuth, useRouter, login, type LoginCredentials } from '@directus/composables';
 import LoginForm from '../components/LoginForm.vue';
 
-const auth = useAuthStore();
-const router = useRouter();
+const { setSession } = useAuth();
+const { push } = useRouter();
 
 async function handleLogin(credentials: LoginCredentials) {
 	const session = await login(credentials);
-	auth.setSession(session.accessToken, session.expiresAt);
-	await router.push('/');
+	setSession(session.accessToken, session.expiresAt);
+	await push('/');
 }
 
 function goToRegister() {
-	router.push('/register');
+	push('/register');
 }
 </script>
 

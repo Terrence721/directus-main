@@ -13,11 +13,9 @@ class TestRegisterError extends DirectusError<void> {
 	}
 }
 
-vi.mock('../api/registerClient.js', () => ({
+vi.mock('@directus/composables', () => ({
 	register: vi.fn(),
 }));
-
-const { register } = await import('../api/registerClient.js');
 
 enableAutoUnmount(afterEach);
 

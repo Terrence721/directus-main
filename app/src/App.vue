@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAppStore, useServerStore } from '@directus/stores';
 import { onMounted } from 'vue';
-import { fetchServerInfo } from './api/serverClient.js';
+import { fetchServerInfo } from '@directus/composables';
 
 const app = useAppStore();
 const server = useServerStore();

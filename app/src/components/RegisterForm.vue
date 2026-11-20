@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { isDirectusError } from '@directus/errors';
 import { ref } from 'vue';
-import type { RegisterData } from '../api/registerClient.js';
+import type { RegisterData } from '@directus/composables';
 
 const props = defineProps<{
 	onSubmit: (data: RegisterData) => Promise<void>;
@@ -57,12 +57,12 @@ async function handleSubmit() {
 			<input v-model="email" type="email" autocomplete="username" required />
 		</label>
 
-		<div style="display:flex;gap:1rem">
-			<label style="flex:1">
+		<div style="display: flex; gap: 1rem">
+			<label style="flex: 1">
 				First name
 				<input v-model="firstName" type="text" autocomplete="given-name" />
 			</label>
-			<label style="flex:1">
+			<label style="flex: 1">
 				Last name
 				<input v-model="lastName" type="text" autocomplete="family-name" />
 			</label>
