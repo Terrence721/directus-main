@@ -14,25 +14,25 @@ const pageSize = ref(10);
 let itemsInstance: ReturnType<typeof useItems> | null = null;
 
 // Pre-compute selected collection + its fields to avoid nested find() expressions in templates.
-const selectedCollection = computed(() =>
-	collections.value?.find((c) => c.collection === collectionName.value),
-);
+const selectedCollection = computed(() => collections.value?.find((c) => c.collection === collectionName.value));
 const collectionLabel = computed(() => selectedCollection.value?.label ?? collectionName.value);
 
-watch(collections, (cols) => {
-	if (!itemsInstance && cols.length > 0) {
-		const first = cols[0];
-		collectionName.value = first.collection;
-		fields.value = first.fields.map((f) => f.name);
-	}
-}, { immediate: true });
+watch(
+	collections,
+	(cols) => {
+		if (!itemsInstance && cols.length > 0) {
+			const first = cols[0];
+			collectionName.value = first.collection;
+			fields.value = first.fields.map((f) => f.name);
+		}
+	},
+	{ immediate: true },
+);
 
 watch([collectionName, fields, sortField, sortDirection, filterValue, page, pageSize], () => {
 	const coll = collectionName.value;
 	const sort = sortField.value ? `${sortDirection.value === 'desc' ? '-' : ''}${sortField.value}` : '';
-	const filterOp = filterValue.value.trim()
-		? { [sortField.value]: `_icontains|${filterValue.value}` }
-		: {};
+	const filterOp = filterValue.value.trim() ? { [sortField.value]: `_icontains|${filterValue.value}` } : {};
 	itemsInstance = useItems(coll, {
 		page: page.value,
 		limit: pageSize.value,
@@ -134,15 +134,8 @@ async function handleDelete(id: string) {
 			<div v-if="collectionsLoading" class="items-sidebar__loading">Loading...</div>
 			<div v-else-if="collections.length === 0" class="items-sidebar__empty">No collections</div>
 			<ul v-else class="coll-list">
-				<li
-					v-for="coll in collections"
-					:key="coll.collection"
-					:class="{ 'active': coll.collection === collectionName }"
-				>
-					<button
-						class="coll-item"
-						@click="collectionName = coll.collection"
-					>
+				<li v-for="coll in collections" :key="coll.collection" :class="{ active: coll.collection === collectionName }">
+					<button class="coll-item" @click="collectionName = coll.collection">
 						{{ coll.label }}
 					</button>
 				</li>
@@ -152,7 +145,15 @@ async function handleDelete(id: string) {
 		<div class="items-main">
 			<div class="items-header">
 				<h1>{{ collectionLabel }}</h1>
-				<button class="btn" @click="newItemForm = {}; creating = true">Create</button>
+				<button
+					class="btn"
+					@click="
+						newItemForm = {};
+						creating = true;
+					"
+				>
+					Create
+				</button>
 			</div>
 
 			<div v-if="itemRef?.loading" class="items-loading">Loading...</div>
@@ -167,19 +168,28 @@ async function handleDelete(id: string) {
 				</thead>
 				<tbody>
 					<tr v-if="itemRef?.data.value.length === 0">
-						<td :colspan="fields.length + 1" style="text-align:center;color:var(--ink-soft)">No results.</td>
+						<td :colspan="fields.length + 1" style="text-align: center; color: var(--ink-soft)">No results.</td>
 					</tr>
 					<template v-for="(row, index) in itemRef?.data.value" :key="rowKey(row, index)">
 						<tr :class="{ 'items-table--editing': editingItemId === (row as Record<string, unknown>)['id'] }">
 							<template v-for="field in fields" :key="field">
-								<td>{{ (row as Record<string, unknown>)[field] ?? '—' }}</td>
+								<td>{{ row[field] ?? '-' }}</td>
 							</template>
-							<template v-for="[actions]" :key="'actions'">
-								<td class="items-table__actions">
-									<button v-if="editingItemId !== (row as Record<string, unknown>)['id']" class="items-action-btn" @click="startEdit(row as Record<string, unknown>)">Edit</button>
-									<button class="items-action-btn items-action-btn--delete" @click="handleDelete((row as Record<string, unknown>)['id'] as string)">Delete</button>
-								</td>
-							</template>
+							<td class="items-table__actions">
+								<button
+									v-if="editingItemId !== (row as Record<string, unknown>)['id']"
+									class="items-action-btn"
+									@click="startEdit(row as Record<string, unknown>)"
+								>
+									Edit
+								</button>
+								<button
+									class="items-action-btn items-action-btn--delete"
+									@click="handleDelete((row as Record<string, unknown>)['id'] as string)"
+								>
+									Delete
+								</button>
+							</td>
 						</tr>
 					</template>
 				</tbody>
@@ -187,8 +197,16 @@ async function handleDelete(id: string) {
 
 			<footer v-if="itemRef" class="items-pagination">
 				<button :disabled="itemRef.page.value <= 1" @click="itemRef.setPage(itemRef.page.value - 1)">Prev</button>
-				<span>Page {{ itemRef.page.value }} of {{ itemRef.total.value ? Math.ceil(itemRef.total.value / (itemRef.limit.value ?? 1)) : 1 }}</span>
-				<button :disabled="itemRef.page.value >= Math.ceil((itemRef.total.value ?? 0) / (itemRef.limit.value ?? 1))" @click="itemRef.setPage(itemRef.page.value + 1)">Next</button>
+				<span
+					>Page {{ itemRef.page.value }} of
+					{{ itemRef.total.value ? Math.ceil(itemRef.total.value / (itemRef.limit.value ?? 1)) : 1 }}</span
+				>
+				<button
+					:disabled="itemRef.page.value >= Math.ceil((itemRef.total.value ?? 0) / (itemRef.limit.value ?? 1))"
+					@click="itemRef.setPage(itemRef.page.value + 1)"
+				>
+					Next
+				</button>
 			</footer>
 		</div>
 	</div>
@@ -204,11 +222,7 @@ async function handleDelete(id: string) {
 		<form class="create-form__body" @submit.prevent="handleCreate">
 			<div v-for="field in fields" :key="field" class="create-form__field">
 				<label>{{ field }}</label>
-				<input
-					v-model="newItemForm[field]"
-					placeholder="Enter value"
-					class="create-form__input"
-				/>
+				<input v-model="newItemForm[field]" placeholder="Enter value" class="create-form__input" />
 			</div>
 
 			<div class="create-form__actions">
@@ -231,11 +245,7 @@ async function handleDelete(id: string) {
 		<form class="create-form__body" @submit.prevent="handleSaveEdit">
 			<div v-for="field in fields" :key="field" class="create-form__field">
 				<label>{{ field }}</label>
-				<input
-					v-model="editingForm[field]"
-					placeholder="Enter value"
-					class="create-form__input"
-				/>
+				<input v-model="editingForm[field]" placeholder="Enter value" class="create-form__input" />
 			</div>
 
 			<div class="create-form__actions">
