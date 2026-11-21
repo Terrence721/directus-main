@@ -201,16 +201,3 @@ describe('DELETE /users/me (delete account)', () => {
 		expect(response.body.data.deleted).toBe(true);
 	});
 });
-
-// ---------------------------------------------------------------------------
-// GET /server/info - Server info endpoint
-// ---------------------------------------------------------------------------
-
-describe('GET /server/info', () => {
-	it('returns server metadata', async () => {
-		const response = await request(testApp).get('/server/info');
-		expect(response.status).toBe(200);
-		expect(response.body.data).toBeDefined();
-		expect(response.body.data.projectName).toBe('Directus Main Demo');
-	});
-});

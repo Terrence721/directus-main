@@ -127,26 +127,6 @@ usersRouter.delete('/me', (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
-// GET /server/info - Server metadata endpoint
-// ---------------------------------------------------------------------------
-
-usersRouter.get('/server/info', (req, res) => {
-	res.json({
-		data: {
-			projectName: 'Directus Main Demo',
-			projectLogoUrl: null,
-			projectColor: '#563acc',
-			authProviders: [
-				{ name: 'Email / Password', driver: 'local' },
-				{ name: 'Google', driver: 'oauth2' },
-				{ name: 'GitHub', driver: 'oauth2' },
-			],
-			registrationEnabled: true,
-		},
-	});
-});
-
-// ---------------------------------------------------------------------------
 // PATCH /users/me - Update current user profile
 // ---------------------------------------------------------------------------
 
