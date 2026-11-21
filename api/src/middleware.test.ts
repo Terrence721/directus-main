@@ -1,5 +1,5 @@
 import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import { describe, expect, it, vi } from 'vitest';
 import { requireAuth, rateLimit, requestLogger } from './middleware.js';
 
@@ -15,9 +15,7 @@ describe('requireAuth', () => {
 			res.json({ userId: (req as Request & { userId: string }).userId });
 		});
 
-		const response = await request(app)
-			.get('/test')
-			.set('Authorization', 'Bearer test-token-123');
+		const response = await request(app).get('/test').set('Authorization', 'Bearer test-token-123');
 
 		expect(response.status).toBe(200);
 		expect(response.body.userId).toBe('test-token-123');
@@ -40,9 +38,7 @@ describe('requireAuth', () => {
 			requireAuth(req as Request & { userId?: string }, res as Response, () => {});
 		});
 
-		const response = await request(app)
-			.get('/test')
-			.set('Authorization', 'Bearer ');
+		const response = await request(app).get('/test').set('Authorization', 'Bearer ');
 		expect(response.status).toBe(401);
 	});
 });

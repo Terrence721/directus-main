@@ -67,9 +67,7 @@ export function useSearch(
 				params.append(`filter[${key}]`, String(value));
 			});
 
-			const response = await fetch(
-				`${resolveApiBaseUrl()}/search?${params.toString()}`,
-			);
+			const response = await fetch(`${resolveApiBaseUrl()}/search?${params.toString()}`);
 
 			if (!response.ok) {
 				throw new Error(`Failed to search: ${response.status}`);

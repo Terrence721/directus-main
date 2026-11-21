@@ -30,7 +30,9 @@ async function fetchUsers() {
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		if (!response.ok) throw new Error(`Failed to load users (${response.status})`);
-		const result = (await response.json()) as { data: Array<{ id: string; firstName?: string | null; lastName?: string | null; email: string }> };
+		const result = (await response.json()) as {
+			data: Array<{ id: string; firstName?: string | null; lastName?: string | null; email: string }>;
+		};
 		users.value = result.data.map((u) => ({
 			id: u.id,
 			firstName: u.firstName ?? null,
@@ -46,10 +48,14 @@ async function fetchUsers() {
 
 watch(
 	() => accessToken.value,
-	(token) => { if (token) fetchUsers(); }
+	(token) => {
+		if (token) fetchUsers();
+	},
 );
 
-onMounted(() => { if (accessToken.value) fetchUsers(); });
+onMounted(() => {
+	if (accessToken.value) fetchUsers();
+});
 
 // Edit state
 const editingUserId = ref<string | null>(null);
@@ -82,7 +88,12 @@ async function handleSave() {
 		});
 		if (!resp.ok) throw new Error(`Update failed (${resp.status})`);
 		const result = (await resp.json()) as { user: UserInfo & { avatarUrl?: string | null } };
-		userStore.setUser({ ...result.user, firstName: result.user.firstName ?? null, lastName: result.user.lastName ?? null, avatarUrl: result.user.avatarUrl ?? '' });
+		userStore.setUser({
+			...result.user,
+			firstName: result.user.firstName ?? null,
+			lastName: result.user.lastName ?? null,
+			avatarUrl: result.user.avatarUrl ?? '',
+		});
 		cancelEdit();
 		await fetchUsers();
 	} catch (err) {

@@ -47,14 +47,9 @@ describe('POST /files (upload)', () => {
 describe('GET /files (list)', () => {
 	it('lists all uploaded files with metadata', async () => {
 		// Create one file first
-		await request(testApp)
-			.post('/')
-			.set('Authorization', 'Bearer user-1')
-			.send({ filename: 'img.png' });
+		await request(testApp).post('/').set('Authorization', 'Bearer user-1').send({ filename: 'img.png' });
 
-		const response = await request(testApp)
-			.get('/')
-			.set('Authorization', 'Bearer user-1');
+		const response = await request(testApp).get('/').set('Authorization', 'Bearer user-1');
 
 		expect(response.status).toBe(200);
 		expect(Array.isArray(response.body.data)).toBe(true);
@@ -70,9 +65,7 @@ describe('GET /files/:id (detail)', () => {
 			.send({ filename: 'report.pdf' });
 		const fileId = createRes.body.data.id;
 
-		const getRes = await request(testApp)
-			.get(`/${fileId}`)
-			.set('Authorization', 'Bearer user-2');
+		const getRes = await request(testApp).get(`/${fileId}`).set('Authorization', 'Bearer user-2');
 
 		expect(getRes.status).toBe(200);
 		expect(getRes.body.data.filename).toBe('report.pdf');
@@ -80,9 +73,7 @@ describe('GET /files/:id (detail)', () => {
 	});
 
 	it('returns 404 for a non-existent file', async () => {
-		const response = await request(testApp)
-			.get('/nonexistent-id')
-			.set('Authorization', 'Bearer user-2');
+		const response = await request(testApp).get('/nonexistent-id').set('Authorization', 'Bearer user-2');
 
 		expect(response.status).toBe(404);
 		expect(response.body.code).toBe('NOT_FOUND');

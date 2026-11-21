@@ -85,15 +85,12 @@ describe('PATCH /users/me (profile update)', () => {
 		expect(registerResponse.status).toBe(201);
 		const accessToken = registerResponse.body.accessToken;
 
-		const response = await request(testApp)
-			.patch('/me')
-			.set('Authorization', `Bearer ${accessToken}`)
-			.send({
-				firstName: 'Updated',
-				lastName: 'Name',
-				email: 'patched@example.com',
-				password: 'newpass123',
-			});
+		const response = await request(testApp).patch('/me').set('Authorization', `Bearer ${accessToken}`).send({
+			firstName: 'Updated',
+			lastName: 'Name',
+			email: 'patched@example.com',
+			password: 'newpass123',
+		});
 
 		expect(response.status).toBe(200);
 		expect(response.body.user).toMatchObject({
@@ -125,15 +122,12 @@ describe('PATCH /users/me (profile update)', () => {
 		expect(registerResponse.status).toBe(201);
 		const accessToken = registerResponse.body.accessToken;
 
-		const response = await request(testApp)
-			.patch('/me')
-			.set('Authorization', `Bearer ${accessToken}`)
-			.send({
-				firstName: '',
-				lastName: 'Name',
-				email: 'new@example.com',
-				password: 'short',
-			});
+		const response = await request(testApp).patch('/me').set('Authorization', `Bearer ${accessToken}`).send({
+			firstName: '',
+			lastName: 'Name',
+			email: 'new@example.com',
+			password: 'short',
+		});
 		expect(response.status).toBe(401);
 		expect(response.body.code).toBe('INVALID_CREDENTIALS');
 	});
@@ -148,15 +142,12 @@ describe('PATCH /users/me (profile update)', () => {
 		expect(first.status).toBe(201);
 		const accessToken = first.body.accessToken;
 
-		const second = await request(testApp)
-			.patch('/me')
-			.set('Authorization', `Bearer ${accessToken}`)
-			.send({
-				email: 'second@example.com',
-				firstName: 'Updated',
-				lastName: 'Name',
-				password: 'newpass123',
-			});
+		const second = await request(testApp).patch('/me').set('Authorization', `Bearer ${accessToken}`).send({
+			email: 'second@example.com',
+			firstName: 'Updated',
+			lastName: 'Name',
+			password: 'newpass123',
+		});
 		expect(second.status).toBe(200);
 		expect(second.body.user.email).toBe('second@example.com');
 	});
@@ -193,9 +184,7 @@ describe('DELETE /users/me (delete account)', () => {
 		const accessToken = registerResponse.body.accessToken;
 
 		// Now delete the account
-		const response = await request(testApp)
-			.delete('/me')
-			.set('Authorization', `Bearer ${accessToken}`);
+		const response = await request(testApp).delete('/me').set('Authorization', `Bearer ${accessToken}`);
 
 		expect(response.status).toBe(200);
 		expect(response.body.data.deleted).toBe(true);

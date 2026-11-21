@@ -1,17 +1,20 @@
-import { Router, Response } from 'express';
+import { Router } from 'express';
 import { InvalidCredentialsError, NotFoundError } from '@directus/errors';
 import { requireAuth } from '../middleware.js';
 import type { AuthenticatedRequest } from '../middleware.js';
 
 /** In-memory file store keyed by fileId */
-const files = new Map<string, {
-	id: string;
-	filename: string;
-	collection?: string | null;
-	mimeType: string;
-	uploadedBy: string;
-	createdAt: number;
-}>();
+const files = new Map<
+	string,
+	{
+		id: string;
+		filename: string;
+		collection?: string | null;
+		mimeType: string;
+		uploadedBy: string;
+		createdAt: number;
+	}
+>();
 
 export const filesRouter = Router();
 

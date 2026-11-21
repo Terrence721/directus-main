@@ -29,9 +29,11 @@ async function fetchItem(collection: string, id: string) {
 	itemLoading.value = true;
 	itemError.value = null;
 	try {
-		const resp = await fetch(`${resolveApiBaseUrl()}/items/${encodeURIComponent(collection)}/${encodeURIComponent(id)}`);
+		const resp = await fetch(
+			`${resolveApiBaseUrl()}/items/${encodeURIComponent(collection)}/${encodeURIComponent(id)}`,
+		);
 		if (!resp.ok) throw new Error(`Item not found (${resp.status})`);
-		const result = await resp.json() as { data: Record<string, unknown> };
+		const result = (await resp.json()) as { data: Record<string, unknown> };
 		itemData.value = result.data ?? null;
 	} catch (err) {
 		itemError.value = err instanceof Error ? err : new Error('Failed to load item');

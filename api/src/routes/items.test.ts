@@ -59,9 +59,7 @@ describe('GET /items/:collection', () => {
 
 describe('POST /items/:collection', () => {
 	it('creates a new item with title and status', async () => {
-		const response = await request(testApp)
-			.post('/demo_items')
-			.send({ title: 'New item', status: 'published' });
+		const response = await request(testApp).post('/demo_items').send({ title: 'New item', status: 'published' });
 
 		expect(response.status).toBe(201);
 		expect(response.body.data).toMatchObject({
@@ -73,9 +71,7 @@ describe('POST /items/:collection', () => {
 	});
 
 	it('returns 404 for unknown collection', async () => {
-		const response = await request(testApp)
-			.post('/unknown')
-			.send({ title: 'test' });
+		const response = await request(testApp).post('/unknown').send({ title: 'test' });
 
 		expect(response.status).toBe(new NotFoundError().status);
 		expect(response.body.code).toBe('NOT_FOUND');
@@ -84,9 +80,7 @@ describe('POST /items/:collection', () => {
 
 describe('PATCH /items/:collection/:id', () => {
 	it('updates an existing item', async () => {
-		const response = await request(testApp)
-			.patch('/demo_items/1')
-			.send({ title: 'Updated item', status: 'published' });
+		const response = await request(testApp).patch('/demo_items/1').send({ title: 'Updated item', status: 'published' });
 
 		expect(response.status).toBe(200);
 		expect(response.body.data.id).toBe('1');
@@ -94,9 +88,7 @@ describe('PATCH /items/:collection/:id', () => {
 	});
 
 	it('returns 404 for unknown item', async () => {
-		const response = await request(testApp)
-			.patch('/demo_items/nonexistent')
-			.send({ title: 'test' });
+		const response = await request(testApp).patch('/demo_items/nonexistent').send({ title: 'test' });
 
 		expect(response.status).toBe(new NotFoundError().status);
 		expect(response.body.code).toBe('NOT_FOUND');
@@ -105,16 +97,14 @@ describe('PATCH /items/:collection/:id', () => {
 
 describe('DELETE /items/:collection/:id', () => {
 	it('deletes an existing item', async () => {
-		const response = await request(testApp)
-			.delete('/demo_items/2');
+		const response = await request(testApp).delete('/demo_items/2');
 
 		expect(response.status).toBe(200);
 		expect(response.body.data.id).toBe('2');
 	});
 
 	it('returns 404 for unknown item', async () => {
-		const response = await request(testApp)
-			.delete('/demo_items/nonexistent');
+		const response = await request(testApp).delete('/demo_items/nonexistent');
 
 		expect(response.status).toBe(new NotFoundError().status);
 		expect(response.body.code).toBe('NOT_FOUND');

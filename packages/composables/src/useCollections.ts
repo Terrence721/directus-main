@@ -27,7 +27,7 @@ export function useCollections() {
 		try {
 			const resp = await fetch(`${resolveApiBaseUrl()}/collections`);
 			if (!resp.ok) throw new Error(`Failed to fetch collections: ${resp.status}`);
-			const result = await resp.json() as { data: CollectionInfo[] };
+			const result = (await resp.json()) as { data: CollectionInfo[] };
 			data.value = result.data ?? [];
 		} catch (err) {
 			error.value = err instanceof Error ? err : new Error('Unknown error');

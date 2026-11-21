@@ -21,5 +21,14 @@
 			"url": "https://json.schemastore.org/eslintrc.json"
 		}
 	],
-	"cSpell.words": ["casetest", "directus", "icontains", "longenough", "newpass", "slugified"]
+	"cSpell.words": [
+		"alllowercase",
+		"ALLUPPERCASE",
+		"casetest",
+		"directus",
+		"icontains",
+		"longenough",
+		"newpass",
+		"slugified"
+	]
 }
