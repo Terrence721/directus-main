@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, unref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useItems, useCollections } from '@directus/composables';
 
 const { data: collections, loading: collectionsLoading } = useCollections();
@@ -17,7 +17,6 @@ let itemsInstance: ReturnType<typeof useItems> | null = null;
 const selectedCollection = computed(() =>
 	collections.value?.find((c) => c.collection === collectionName.value),
 );
-const activeFields = computed(() => selectedCollection.value?.fields ?? []);
 const collectionLabel = computed(() => selectedCollection.value?.label ?? collectionName.value);
 
 watch(collections, (cols) => {
@@ -32,7 +31,7 @@ watch([collectionName, fields, sortField, sortDirection, filterValue, page, page
 	const coll = collectionName.value;
 	const sort = sortField.value ? `${sortDirection.value === 'desc' ? '-' : ''}${sortField.value}` : '';
 	const filterOp = filterValue.value.trim()
-		? { [sortField.value]: `_ilike|${filterValue.value}` }
+		? { [sortField.value]: `_icontains|${filterValue.value}` }
 		: {};
 	itemsInstance = useItems(coll, {
 		page: page.value,
@@ -53,6 +52,7 @@ function rowKey(row: unknown, index: number): string {
 // Create item form
 const newItemForm = ref<Record<string, unknown>>({});
 const creating = ref(false);
+const creatingItem = ref(false);
 const createError = ref<Error | null>(null);
 
 // Edit item state
@@ -61,8 +61,28 @@ const editingForm = ref<Record<string, unknown>>({});
 const editingError = ref<Error | null>(null);
 
 function clearForm() {
+	creating.value = false;
+	creatingItem.value = false;
 	newItemForm.value = {};
 	createError.value = null;
+}
+
+async function handleCreate() {
+	creatingItem.value = true;
+	createError.value = null;
+
+	try {
+		const created = await itemsInstance?.createItem(newItemForm.value);
+
+		if (created) {
+			clearForm();
+			await itemRef.value?.refresh();
+		}
+	} catch (error) {
+		createError.value = error instanceof Error ? error : new Error(String(error));
+	} finally {
+		creatingItem.value = false;
+	}
 }
 
 function startEdit(row: Record<string, unknown>) {
@@ -78,48 +98,31 @@ function cancelEdit() {
 	editingError.value = null;
 }
 
-async function handleCreate() {
-	const instance = itemsInstance;
-	if (creating.value || instance === null) return;
-	creating.value = true;
-	createError.value = null;
-
-	try {
-		const created = await instance.createItem(newItemForm.value);
-		if (created) {
-			clearForm();
-			await instance.refresh();
-		}
-	} catch (err) {
-		createError.value = err instanceof Error ? err : new Error('Create failed');
-	} finally {
-		creating.value = false;
-	}
-}
-
 async function handleSaveEdit() {
-	const instance = itemsInstance;
-	if (!editingItemId.value || !instance || creating.value) return;
+	if (!editingItemId.value) return;
 	creating.value = true;
 	editingError.value = null;
-
-	try {
-		await instance.updateItem(editingItemId.value, editingForm.value);
+	const updated = await itemsInstance?.updateItem(editingItemId.value, editingForm.value);
+	if (updated) {
 		cancelEdit();
-		await instance.refresh();
-	} catch (err) {
-		editingError.value = err instanceof Error ? err : new Error('Update failed');
-	} finally {
+	} else {
 		creating.value = false;
 	}
 }
 
-async function handleDelete(itemId: string) {
-	const instance = itemsInstance;
-	if (!instance) return;
-	if (!confirm('Are you sure you want to delete this item?')) return;
-	await instance.deleteItem(itemId);
-	await instance.refresh();
+async function handleDelete(id: string) {
+	if (!id || !confirm('Are you sure you want to delete this item?')) return;
+	const result = await itemsInstance?.deleteItem(id);
+	if (result) {
+		if (itemRef.value) {
+			// Navigate to previous page if currently on last page and it's the last item
+			if (itemRef.value.page.value > 1 && itemRef.value.data.value.length === 1) {
+				itemRef.value.setPage(itemRef.value.page.value - 1);
+			} else {
+				await itemRef.value.refresh();
+			}
+		}
+	}
 }
 </script>
 
@@ -127,163 +130,121 @@ async function handleDelete(itemId: string) {
 	<div class="items-view">
 		<aside class="items-sidebar">
 			<h2>Collections</h2>
-			<p v-if="collectionsLoading" class="items-sidebar__loading">Loading…</p>
-			<div v-else-if="collections.length === 0" class="items-sidebar__empty">No collections found.</div>
+
+			<div v-if="collectionsLoading" class="items-sidebar__loading">Loading...</div>
+			<div v-else-if="collections.length === 0" class="items-sidebar__empty">No collections</div>
 			<ul v-else class="coll-list">
-				<li v-for="coll in collections" :key="coll.collection">
+				<li
+					v-for="coll in collections"
+					:key="coll.collection"
+					:class="{ 'active': coll.collection === collectionName }"
+				>
 					<button
-						type="button"
-						class="coll-list__button"
-						:class="{ 'coll-list__button--selected': coll.collection === collectionName }"
-						:aria-pressed="coll.collection === collectionName"
+						class="coll-item"
 						@click="collectionName = coll.collection"
 					>
-						{{ coll.label ?? coll.collection }}
-						<span class="coll-count">{{ coll.sampleCount }}</span>
+						{{ coll.label }}
 					</button>
 				</li>
 			</ul>
 		</aside>
 
 		<div class="items-main">
-			<header class="items-toolbar">
+			<div class="items-header">
 				<h1>{{ collectionLabel }}</h1>
-				<div class="items-toolbar__controls">
-					<select v-model="fields" multiple class="items-select" aria-label="Columns">
-						<option v-for="f in activeFields" :key="f.name" :value="f.name">{{ f.name }}</option>
-					</select>
-					<select v-model="sortField" class="items-select">
-						<option v-for="f in activeFields" :key="f.name" :value="f.name">{{ f.name }}</option>
-					</select>
-					<button class="items-btn" @click="sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'">
-						{{ sortDirection === 'asc' ? '↑ Asc' : '↓ Desc' }}
-					</button>
-					<input
-						v-model="filterValue"
-						placeholder="Filter…"
-						class="items-input"
-					/>
-					<button v-if="!creating" class="items-btn" @click="handleCreate">
-						{{ creating ? 'Creating…' : 'Create new' }}
-					</button>
-				</div>
-			</header>
-
-			<div v-if="itemRef" class="create-form">
-				<div class="create-form__header">
-					<h2>Create new item</h2>
-					<button class="create-form__close" @click="clearForm">✕</button>
-				</div>
-				<p v-if="createError" class="create-form__error">{{ createError.message }}</p>
-
-				<!-- title -->
-				<label>
-					Title
-					<input
-						v-model="newItemForm.title"
-						type="text"
-						placeholder="Enter title"
-						class="create-form__input"
-					/>
-				</label>
-
-				<!-- status -->
-				<label>
-					Status
-					<select v-model="newItemForm.status" class="create-form__input">
-						<option value="draft">Draft</option>
-						<option value="published">Published</option>
-					</select>
-				</label>
-
-				<!-- other fields -->
-				<div v-if="activeFields.length > 2">
-					<h3 class="create-form__section">Additional fields</h3>
-					<fieldset v-for="f in activeFields" :key="f.name">
-						<label>{{ f.name }}</label>
-						<input
-							v-model="newItemForm[f.name]"
-							type="text"
-							placeholder="Enter value"
-							class="create-form__input"
-						/>
-					</fieldset>
-				</div>
-
-				<button
-					class="create-form__submit"
-					:disabled="creating"
-					@click="handleCreate"
-				>
-					{{ creating ? 'Saving…' : 'Create' }}
-				</button>
+				<button class="btn" @click="newItemForm = {}; creating = true">Create</button>
 			</div>
 
-			<div v-if="itemRef?.loading" class="items-loading">Loading…</div>
-			<div v-else-if="itemRef?.error.value" class="items-error">{{ itemRef.error.value?.message }}</div>
+			<div v-if="itemRef?.loading" class="items-loading">Loading...</div>
+			<div v-else-if="itemRef?.error?.value" class="items-error">{{ itemRef.error.value.message }}</div>
+			<div v-else-if="itemRef?.data.value.length === 0" class="items-empty">No items found.</div>
 			<table v-else class="items-table">
 				<thead>
 					<tr>
 						<th v-for="field in fields" :key="field">{{ field }}</th>
-						<th>Actions</th>
+						<th class="items-table__actions">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-if="itemRef?.data.value.length === 0">
 						<td :colspan="fields.length + 1" style="text-align:center;color:var(--ink-soft)">No results.</td>
 					</tr>
-					<tr v-for="(row, index) in itemRef?.data.value" :key="rowKey(row, index)" :class="{ 'items-table--editing': editingItemId === (row as Record<string, unknown>)['id'] }">
-						<template v-for="field in fields" :key="field">
-							<td>{{ (row as Record<string, unknown>)[field] ?? '—' }}</td>
-						</template>
-						<td class="items-table__actions">
-							<button v-if="editingItemId !== (row as Record<string, unknown>)['id']" class="items-action-btn" @click="startEdit(row as Record<string, unknown>)">Edit</button>
-							<button class="items-action-btn items-action-btn--delete" @click="handleDelete((row as Record<string, unknown>)['id'] as string)">Delete</button>
-						</td>
-					</tr>
+					<template v-for="(row, index) in itemRef?.data.value" :key="rowKey(row, index)">
+						<tr :class="{ 'items-table--editing': editingItemId === (row as Record<string, unknown>)['id'] }">
+							<template v-for="field in fields" :key="field">
+								<td>{{ (row as Record<string, unknown>)[field] ?? '—' }}</td>
+							</template>
+							<template v-for="[actions]" :key="'actions'">
+								<td class="items-table__actions">
+									<button v-if="editingItemId !== (row as Record<string, unknown>)['id']" class="items-action-btn" @click="startEdit(row as Record<string, unknown>)">Edit</button>
+									<button class="items-action-btn items-action-btn--delete" @click="handleDelete((row as Record<string, unknown>)['id'] as string)">Delete</button>
+								</td>
+							</template>
+						</tr>
+					</template>
 				</tbody>
 			</table>
 
-			<!-- Inline edit form -->
-			<div v-if="editingItemId && itemRef" class="create-form">
-				<div class="create-form__header">
-					<h2>Edit item</h2>
-					<button class="create-form__close" @click="cancelEdit">✕</button>
-				</div>
-				<p v-if="editingError" class="create-form__error">{{ editingError.message }}</p>
+			<footer v-if="itemRef" class="items-pagination">
+				<button :disabled="itemRef.page.value <= 1" @click="itemRef.setPage(itemRef.page.value - 1)">Prev</button>
+				<span>Page {{ itemRef.page.value }} of {{ itemRef.total.value ? Math.ceil(itemRef.total.value / (itemRef.limit.value ?? 1)) : 1 }}</span>
+				<button :disabled="itemRef.page.value >= Math.ceil((itemRef.total.value ?? 0) / (itemRef.limit.value ?? 1))" @click="itemRef.setPage(itemRef.page.value + 1)">Next</button>
+			</footer>
+		</div>
+	</div>
 
-				<label>
-					Title
-					<input v-model="editingForm.title" type="text" class="create-form__input" />
-				</label>
+	<!-- Create item form -->
+	<div v-if="creating" class="create-form">
+		<div class="create-form__header">
+			<h2>Create item</h2>
+			<button class="create-form__close" @click="clearForm">✕</button>
+		</div>
+		<p v-if="createError" class="create-form__error">{{ createError.message }}</p>
 
-				<label>
-					Status
-					<select v-model="editingForm.status" class="create-form__input">
-						<option value="draft">Draft</option>
-						<option value="published">Published</option>
-					</select>
-				</label>
+		<form class="create-form__body" @submit.prevent="handleCreate">
+			<div v-for="field in fields" :key="field" class="create-form__field">
+				<label>{{ field }}</label>
+				<input
+					v-model="newItemForm[field]"
+					placeholder="Enter value"
+					class="create-form__input"
+				/>
+			</div>
 
-				<div v-if="activeFields.length > 2">
-					<h3 class="create-form__section">Additional fields</h3>
-					<fieldset v-for="f in activeFields" :key="f.name">
-						<label>{{ f.name }}</label>
-						<input v-model="editingForm[f.name]" type="text" class="create-form__input" />
-					</fieldset>
-				</div>
+			<div class="create-form__actions">
+				<button class="create-form__cancel" @click="clearForm">Cancel</button>
+				<button class="create-form__submit" :disabled="creating" @click="handleCreate">
+					{{ creating ? 'Saving…' : 'Create' }}
+				</button>
+			</div>
+		</form>
+	</div>
 
+	<!-- Edit item form -->
+	<div v-if="editingItemId && itemRef" class="create-form">
+		<div class="create-form__header">
+			<h2>Edit item</h2>
+			<button class="create-form__close" @click="cancelEdit">✕</button>
+		</div>
+		<p v-if="editingError" class="create-form__error">{{ editingError.message }}</p>
+
+		<form class="create-form__body" @submit.prevent="handleSaveEdit">
+			<div v-for="field in fields" :key="field" class="create-form__field">
+				<label>{{ field }}</label>
+				<input
+					v-model="editingForm[field]"
+					placeholder="Enter value"
+					class="create-form__input"
+				/>
+			</div>
+
+			<div class="create-form__actions">
+				<button class="create-form__cancel" @click="cancelEdit">Cancel</button>
 				<button class="create-form__submit" :disabled="creating" @click="handleSaveEdit">
 					{{ creating ? 'Saving…' : 'Save changes' }}
 				</button>
 			</div>
-
-			<footer v-if="itemRef" class="items-pagination">
-				<button :disabled="itemRef.page.value <= 1" @click="itemRef.setPage(itemRef.page.value - 1)">Prev</button>
-				<span>Page {{ itemRef.page.value }} of {{ unref(itemRef.total) ? Math.ceil((unref(itemRef.total) ?? 0) / unref(itemRef.limit)) : 1 }}</span>
-				<button :disabled="itemRef.page.value >= Math.ceil((unref(itemRef.total) ?? 0) / unref(itemRef.limit))" @click="itemRef.setPage(itemRef.page.value + 1)">Next</button>
-			</footer>
-		</div>
+		</form>
 	</div>
 </template>
 
@@ -326,92 +287,58 @@ async function handleDelete(itemId: string) {
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
 }
 
-.coll-list__button {
-	width: 100%;
-	padding: 0.5rem;
-	text-align: start;
+.coll-item {
+	display: block;
+	padding: 0.5rem 0.75rem;
 	font: inherit;
-	color: var(--ink);
-	background: transparent;
-	border: 0;
+	font-size: 0.875rem;
+	background: none;
+	border: none;
+	color: inherit;
+	text-align: start;
 	border-radius: 0.375rem;
 	cursor: pointer;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 0.5rem;
 }
 
-.coll-list__button:hover {
-	background: rgba(0,0,0,0.04);
+.coll-item:hover {
+	background: rgba(0, 0, 0, 0.04);
 }
 
-.dark-mode .coll-list__button:hover {
-	background: rgba(255,255,255,0.05);
-}
-
-.coll-list__button--selected {
+.coll-item.active {
 	background: var(--accent);
 	color: var(--accent-ink);
-}
-
-.coll-count {
-	font-size: 0.75rem;
-	opacity: 0.7;
 }
 
 .items-main {
 	flex: 1;
-	min-width: 0;
+	display: flex;
+	flex-direction: column;
 }
 
-.items-toolbar {
+.items-header {
 	display: flex;
-	flex-wrap: wrap;
+	justify-content: space-between;
 	align-items: center;
-	gap: 1rem;
 	margin-bottom: 1rem;
 }
 
-.items-toolbar h1 {
+.items-header h1 {
 	margin: 0;
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 }
 
-.items-toolbar__controls {
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-	flex-wrap: wrap;
-	flex: 1;
-	justify-content: flex-end;
+.items-loading,
+.items-error,
+.items-empty {
+	padding: 2rem;
+	text-align: center;
+	color: var(--ink-soft);
 }
 
-.items-select,
-.items-input {
-	padding: 0.375rem 0.5rem;
-	font: inherit;
-	font-size: 0.8125rem;
-	background: var(--paper);
-	border: 1px solid var(--rule);
-	border-radius: 0.375rem;
-	color: var(--ink);
-}
-
-.items-btn {
-	padding: 0.375rem 0.75rem;
-	font: inherit;
-	font-size: 0.8125rem;
-	background: var(--accent);
-	color: var(--accent-ink);
-	border: none;
-	border-radius: 0.375rem;
-	cursor: pointer;
+.items-error {
+	color: #b3261e;
 }
 
 .items-table {
@@ -440,15 +367,44 @@ async function handleDelete(itemId: string) {
 	background: var(--paper-2);
 }
 
-.items-loading,
-.items-error {
-	padding: 2rem;
+.items-table__actions {
+	width: 120px;
 	text-align: center;
-	color: var(--ink-soft);
 }
 
-.items-error {
+.items-table--editing td {
+	background: var(--accent-soft);
+}
+
+.items-action-btn {
+	padding: 0.375rem 0.75rem;
+	font: inherit;
+	font-size: 0.75rem;
+	background: var(--paper-2);
+	border: 1px solid var(--rule);
+	border-radius: 0.25rem;
+	cursor: pointer;
+	margin: 0.25rem 0;
+	display: block;
+}
+
+.items-action-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.items-action-btn--delete {
 	color: #b3261e;
+	border-color: #fee2e2;
+}
+
+.items-action-btn--delete:hover {
+	background: #fee2e2;
+}
+
+.dark-mode .items-action-btn--delete:hover,
+[data-theme='dark'] .items-action-btn--delete:hover {
+	background: #7f1d1d;
 }
 
 .items-pagination {
@@ -463,7 +419,6 @@ async function handleDelete(itemId: string) {
 .items-pagination button {
 	padding: 0.375rem 0.75rem;
 	font: inherit;
-	font-size: 0.8125rem;
 	background: var(--paper-2);
 	border: 1px solid var(--rule);
 	border-radius: 0.375rem;
@@ -476,11 +431,11 @@ async function handleDelete(itemId: string) {
 }
 
 .create-form {
-	margin-top: 1.5rem;
-	padding: 1.5rem;
 	background: var(--paper-2);
 	border: 1px solid var(--rule);
 	border-radius: 0.5rem;
+	padding: 1.5rem;
+	margin-top: 1.5rem;
 }
 
 .create-form__header {
@@ -492,7 +447,7 @@ async function handleDelete(itemId: string) {
 
 .create-form__header h2 {
 	margin: 0;
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 }
 
 .create-form__close {
@@ -503,36 +458,34 @@ async function handleDelete(itemId: string) {
 	color: var(--ink-soft);
 }
 
-.create-form__close:hover {
-	color: var(--accent);
-}
-
 .create-form__error {
-	margin: 0.5rem 0;
-	font-size: 0.875rem;
+	margin: 0 0 1rem;
 	color: #b3261e;
-}
-
-.create-form__section {
-	margin: 1rem 0 0.5rem;
 	font-size: 0.875rem;
-	color: var(--ink-soft);
-	border-top: 1px solid var(--rule);
-	padding-top: 0.5rem;
 }
 
-.create-form__label {
-	display: block;
+.create-form__body {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+.create-form__field {
+	display: flex;
+	flex-direction: column;
+}
+
+.create-form__field label {
 	margin-bottom: 0.25rem;
-	font-size: 0.8125rem;
+	font-size: 0.875rem;
 	color: var(--ink-soft);
 }
 
 .create-form__input {
-	width: 100%;
-	padding: 0.375rem 0.5rem;
+	padding: 0.5rem 0.75rem;
 	font: inherit;
-	font-size: 0.8125rem;
+	font-size: 0.875rem;
 	background: var(--paper);
 	border: 1px solid var(--rule);
 	border-radius: 0.375rem;
@@ -544,11 +497,29 @@ async function handleDelete(itemId: string) {
 	outline-offset: 1px;
 }
 
-.create-form__submit {
-	width: 100%;
-	padding: 0.375rem 0.75rem;
+.create-form__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.5rem;
+}
+
+.create-form__cancel {
+	background: none;
+	border: none;
 	font: inherit;
-	font-size: 0.8125rem;
+	font-size: 0.875rem;
+	color: var(--ink-soft);
+	cursor: pointer;
+}
+
+.create-form__cancel:hover {
+	text-decoration: underline;
+}
+
+.create-form__submit {
+	padding: 0.5rem 1.25rem;
+	font: inherit;
+	font-weight: 600;
 	background: var(--accent);
 	color: var(--accent-ink);
 	border: none;
@@ -559,16 +530,5 @@ async function handleDelete(itemId: string) {
 .create-form__submit:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-	.items-view {
-		flex-direction: column;
-	}
-
-	.items-sidebar {
-		width: 100%;
-		position: static;
-	}
 }
 </style>

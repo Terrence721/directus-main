@@ -9,6 +9,8 @@ const page = ref(1);
 
 const searchInstance = ref<ReturnType<typeof useSearch> | null>(null);
 
+const resultCols = ['collection', 'id', 'title', 'status'];
+
 function doSearch() {
 	const q = query.value.trim();
 	if (!q) return;
@@ -74,12 +76,13 @@ onMounted(fetchCollections);
 						{{ query.trim() ? 'No results found.' : 'Enter a query to search.' }}
 					</td>
 				</tr>
-				<tr v-for="row in searchInstance?.results ?? []" :key="String((row as Record<string, unknown>)['id'] ?? Math.random())">
-					<td>{{ (row as Record<string, unknown>)['collection'] ?? '—' }}</td>
-					<td>{{ (row as Record<string, unknown>)['id'] ?? '—' }}</td>
-					<td>{{ (row as Record<string, unknown>)['title'] ?? '—' }}</td>
-					<td>{{ (row as Record<string, unknown>)['status'] ?? '—' }}</td>
-				</tr>
+				<template v-for="(row, idx) in (searchInstance?.results ?? [])" :key="String((row as Record<string, unknown>)['id'] ?? idx)">
+					<tr>
+						<template v-for="col in resultCols" :key="col">
+							<td>{{ (row as Record<string, unknown>)[col] ?? '—' }}</td>
+						</template>
+					</tr>
+				</template>
 			</tbody>
 		</table>
 
