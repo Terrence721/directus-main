@@ -10,6 +10,27 @@ const { push } = useRouter();
 
 const projectName = ref('');
 const open = ref(false);
+const darkMode = ref(false);
+
+onMounted(() => {
+	const stored = localStorage.getItem('darkMode');
+	if (stored !== null) {
+		darkMode.value = stored === 'true';
+	} else {
+		darkMode.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
+	}
+	updateTheme();
+});
+
+function updateTheme() {
+	document.documentElement.setAttribute('data-theme', darkMode.value ? 'dark' : 'light');
+	localStorage.setItem('darkMode', String(darkMode.value));
+}
+
+function toggleDarkMode() {
+	darkMode.value = !darkMode.value;
+	updateTheme();
+}
 
 onMounted(async () => {
 	app.startHydration();
@@ -51,6 +72,10 @@ async function handleLogout() {
 			<header class="header">
 				<button class="hamburger" aria-label="Toggle navigation" @click="open = !open">☰</button>
 				<div class="header__spacer"></div>
+				<button class="theme-toggle" :aria-pressed="darkMode" @click="toggleDarkMode">
+					<span class="theme-toggle__icon">{{ darkMode ? '☀️' : '🌙' }}</span>
+					<span>{{ darkMode ? 'Light' : 'Dark' }}</span>
+				</button>
 			</header>
 			<main class="main">
 				<p v-if="app.hydrating" class="hydration-loading">Loading…</p>
