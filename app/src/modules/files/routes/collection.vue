@@ -32,13 +32,14 @@ async function refreshList() {
 	listLoading.value = true;
 	listError.value = null;
 	try {
-		const token = session?.accessToken;
-		if (!token) return;
-		const resp = await fetch('http://localhost:8055/files', {
-			headers: { Authorization: `Bearer ${token}` },
+		if (!session?.accessToken) return;
+		const response = await fetch('/files', {
+			headers: {
+				Authorization: `Bearer ${session.accessToken}`,
+			},
 		});
-		if (!resp.ok) throw new Error(`Failed to list files: ${resp.status}`);
-		const result = (await resp.json()) as {
+		if (!response.ok) throw new Error(`Failed to load files (${response.status})`);
+		const result = (await response.json()) as {
 			data: Array<{ id: string; filename: string; mimeType: string; createdAt: number }>;
 		};
 		fileList.value = result.data ?? [];

@@ -1,4 +1,4 @@
-import { useServer } from './useServer.js';
+import { resolveApiBaseUrl, useServer } from './useServer.js';
 import { ref } from 'vue';
 
 /**
@@ -56,9 +56,8 @@ export function useFileUpload(
 			formData.append('collection', options.collection);
 		}
 
-		const serverInfo = server.info.value;
 		try {
-			const response = await fetch(`${serverInfo.projectLogoUrl || 'http://localhost:8055'}/assets`, {
+			const response = await fetch(`${resolveApiBaseUrl()}/assets`, {
 				method: 'POST',
 				body: formData,
 			});

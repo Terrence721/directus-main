@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { resolveApiBaseUrl } from './useServer.js';
 
 export interface CollectionField {
 	name: string;
@@ -24,7 +25,7 @@ export function useCollections() {
 		loading.value = true;
 		error.value = null;
 		try {
-			const resp = await fetch('http://localhost:8055/collections');
+			const resp = await fetch(`${resolveApiBaseUrl()}/collections`);
 			if (!resp.ok) throw new Error(`Failed to fetch collections: ${resp.status}`);
 			const result = await resp.json() as { data: CollectionInfo[] };
 			data.value = result.data ?? [];

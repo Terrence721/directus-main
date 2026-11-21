@@ -1,4 +1,4 @@
-import { useServer } from './useServer.js';
+import { useServer, resolveApiBaseUrl } from './useServer.js';
 import { onMounted, ref } from 'vue';
 
 /**
@@ -68,7 +68,7 @@ export function useSearch(
 			});
 
 			const response = await fetch(
-				`${server.info.value?.projectLogoUrl || 'http://localhost:8055'}/search?${params.toString()}`,
+				`${resolveApiBaseUrl()}/search?${params.toString()}`,
 			);
 
 			if (!response.ok) {
