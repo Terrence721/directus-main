@@ -1,6 +1,5 @@
 import type { ServerInfo } from '@directus/stores';
-
-const API_URL = 'http://localhost:8055';
+import { resolveApiBaseUrl } from '@directus/composables';
 
 /**
  * Fetches server configuration from api/. In local dev (`MODE === 'development'`) this hits
@@ -16,7 +15,7 @@ export async function fetchServerInfo(): Promise<ServerInfo> {
 }
 
 async function fetchServerInfoReal(): Promise<ServerInfo> {
-	const response = await fetch(`${API_URL}/server/info`);
+	const response = await fetch(`${resolveApiBaseUrl()}/server/info`);
 
 	if (!response.ok) {
 		throw new Error(`Failed to fetch server info: ${response.status}`);

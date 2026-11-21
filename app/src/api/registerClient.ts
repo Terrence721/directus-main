@@ -1,5 +1,6 @@
 import { InvalidCredentialsError } from '@directus/errors';
 import type { CurrentUser, Session } from '@directus/stores';
+import { resolveApiBaseUrl } from '@directus/composables';
 
 export interface RegisterData {
 	email: string;
@@ -14,8 +15,6 @@ interface RegisterResponse {
 	user: CurrentUser;
 }
 
-const API_URL = 'http://localhost:8055';
-
 /**
  * Registers a new account via api/ in dev mode, or simulates registration on GitHub Pages.
  */
@@ -27,7 +26,7 @@ export async function register(data: RegisterData): Promise<{ session: Session; 
 }
 
 async function registerReal(data: RegisterData): Promise<{ session: Session; user: CurrentUser }> {
-	const response = await fetch(`${API_URL}/users`, {
+	const response = await fetch(`${resolveApiBaseUrl()}/users`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(data),

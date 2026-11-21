@@ -1,5 +1,6 @@
 import { InvalidCredentialsError } from '@directus/errors';
 import type { Session } from '@directus/stores';
+import { resolveApiBaseUrl } from '@directus/composables';
 
 export interface LoginCredentials {
 	email: string;
@@ -8,7 +9,6 @@ export interface LoginCredentials {
 
 const DEMO_EMAIL = 'demo@directus-main.dev';
 const DEMO_PASSWORD = 'demo1234';
-const API_URL = 'http://localhost:8055';
 
 /**
  * Calls the real api/ server in local dev only (checked via MODE, not DEV - Vitest's test runs
@@ -20,7 +20,7 @@ export async function login(credentials: LoginCredentials): Promise<Session> {
 }
 
 async function loginReal(credentials: LoginCredentials): Promise<Session> {
-	const response = await fetch(`${API_URL}/auth/login`, {
+	const response = await fetch(`${resolveApiBaseUrl()}/auth/login`, {
 		method: 'POST',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify(credentials),
