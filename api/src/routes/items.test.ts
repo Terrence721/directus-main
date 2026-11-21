@@ -5,6 +5,7 @@ import { NotFoundError } from '@directus/errors';
 import { itemsRouter } from './items.js';
 
 const testApp = express();
+testApp.use(express.json());
 testApp.use('/', itemsRouter);
 
 describe('GET /items/:collection', () => {
@@ -53,5 +54,30 @@ describe('GET /items/:collection', () => {
 
 		expect(response.status).toBe(200);
 		expect(response.body.meta.pageSize).toBeLessThanOrEqual(100);
+	});
+});
+
+describe('POST /items/:collection', () => {
+	it('creates a new item with title and status', async () => {
+		const response = await request(testApp)
+			.post('/demo_items')
+			.send({ title: 'New item', status: 'published' });
+
+		expect(response.status).toBe(201);
+		expect(response.body.data).toMatchObject({
+			title: 'New item',
+			status: 'published',
+			collection: 'demo_items',
+			id: expect.any(String),
+		});
+	});
+
+	it('returns 404 for unknown collection', async () => {
+		const response = await request(testApp)
+			.post('/unknown')
+			.send({ title: 'test' });
+
+		expect(response.status).toBe(new NotFoundError().status);
+		expect(response.body.code).toBe('NOT_FOUND');
 	});
 });

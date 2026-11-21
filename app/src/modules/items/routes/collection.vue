@@ -15,7 +15,7 @@ let itemsInstance: ReturnType<typeof useItems> | null = null;
 
 // Pre-compute selected collection + its fields to avoid nested find() expressions in templates.
 const selectedCollection = computed(() =>
-	collections.value.find((c) => c.collection === collectionName.value),
+	collections.value?.find((c) => c.collection === collectionName.value),
 );
 const activeFields = computed(() => selectedCollection.value?.fields ?? []);
 const collectionLabel = computed(() => selectedCollection.value?.label ?? collectionName.value);
@@ -49,6 +49,35 @@ function rowKey(row: unknown, index: number): string {
 	const id = (row as Record<string, unknown>)['id'];
 	return typeof id === 'string' || typeof id === 'number' ? `id:${typeof id}:${id}` : `index:${index}`;
 }
+
+// Create item form
+const newItemForm = ref<Record<string, unknown>>({});
+const creating = ref(false);
+const createError = ref<Error | null>(null);
+
+function clearForm() {
+	newItemForm.value = {};
+	createError.value = null;
+}
+
+async function handleCreate() {
+	const instance = itemsInstance;
+	if (creating.value || instance === null) return;
+	creating.value = true;
+	createError.value = null;
+
+	try {
+		const created = await instance.createItem(newItemForm.value);
+		if (created) {
+			clearForm();
+			await instance.refresh();
+		}
+	} catch (err) {
+		createError.value = err instanceof Error ? err : new Error('Create failed');
+	} finally {
+		creating.value = false;
+	}
+}
 </script>
 
 <template>
@@ -67,6 +96,7 @@ function rowKey(row: unknown, index: number): string {
 						@click="collectionName = coll.collection"
 					>
 						{{ coll.label ?? coll.collection }}
+						<span class="coll-count">{{ coll.sampleCount }}</span>
 					</button>
 				</li>
 			</ul>
@@ -90,8 +120,61 @@ function rowKey(row: unknown, index: number): string {
 						placeholder="Filter…"
 						class="items-input"
 					/>
+					<button v-if="!creating" class="items-btn" @click="handleCreate">
+						{{ creating ? 'Creating…' : 'Create new' }}
+					</button>
 				</div>
 			</header>
+
+			<div v-if="itemRef" class="create-form">
+				<div class="create-form__header">
+					<h2>Create new item</h2>
+					<button class="create-form__close" @click="clearForm">✕</button>
+				</div>
+				<p v-if="createError" class="create-form__error">{{ createError.message }}</p>
+
+				<!-- title -->
+				<label>
+					Title
+					<input
+						v-model="newItemForm.title"
+						type="text"
+						placeholder="Enter title"
+						class="create-form__input"
+					/>
+				</label>
+
+				<!-- status -->
+				<label>
+					Status
+					<select v-model="newItemForm.status" class="create-form__input">
+						<option value="draft">Draft</option>
+						<option value="published">Published</option>
+					</select>
+				</label>
+
+				<!-- other fields -->
+				<div v-if="activeFields.length > 2">
+					<h3 class="create-form__section">Additional fields</h3>
+					<fieldset v-for="f in activeFields" :key="f.name">
+						<label>{{ f.name }}</label>
+						<input
+							v-model="newItemForm[f.name]"
+							type="text"
+							placeholder="Enter value"
+							class="create-form__input"
+						/>
+					</fieldset>
+				</div>
+
+				<button
+					class="create-form__submit"
+					:disabled="creating"
+					@click="handleCreate"
+				>
+					{{ creating ? 'Saving…' : 'Create' }}
+				</button>
+			</div>
 
 			<div v-if="itemRef?.loading" class="items-loading">Loading…</div>
 			<div v-else-if="itemRef?.error.value" class="items-error">{{ itemRef.error.value?.message }}</div>
@@ -176,11 +259,28 @@ function rowKey(row: unknown, index: number): string {
 	border: 0;
 	border-radius: 0.375rem;
 	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.coll-list__button:hover {
+	background: rgba(0,0,0,0.04);
+}
+
+.dark-mode .coll-list__button:hover {
+	background: rgba(255,255,255,0.05);
 }
 
 .coll-list__button--selected {
 	background: var(--accent);
 	color: var(--accent-ink);
+}
+
+.coll-count {
+	font-size: 0.75rem;
+	opacity: 0.7;
 }
 
 .items-main {
@@ -289,6 +389,92 @@ function rowKey(row: unknown, index: number): string {
 }
 
 .items-pagination button:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.create-form {
+	margin-top: 1.5rem;
+	padding: 1.5rem;
+	background: var(--paper-2);
+	border: 1px solid var(--rule);
+	border-radius: 0.5rem;
+}
+
+.create-form__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.create-form__header h2 {
+	margin: 0;
+	font-size: 1.25rem;
+}
+
+.create-form__close {
+	background: none;
+	border: none;
+	font-size: 1.25rem;
+	cursor: pointer;
+	color: var(--ink-soft);
+}
+
+.create-form__close:hover {
+	color: var(--accent);
+}
+
+.create-form__error {
+	margin: 0.5rem 0;
+	font-size: 0.875rem;
+	color: #b3261e;
+}
+
+.create-form__section {
+	margin: 1rem 0 0.5rem;
+	font-size: 0.875rem;
+	color: var(--ink-soft);
+	border-top: 1px solid var(--rule);
+	padding-top: 0.5rem;
+}
+
+.create-form__label {
+	display: block;
+	margin-bottom: 0.25rem;
+	font-size: 0.8125rem;
+	color: var(--ink-soft);
+}
+
+.create-form__input {
+	width: 100%;
+	padding: 0.375rem 0.5rem;
+	font: inherit;
+	font-size: 0.8125rem;
+	background: var(--paper);
+	border: 1px solid var(--rule);
+	border-radius: 0.375rem;
+	color: var(--ink);
+}
+
+.create-form__input:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 1px;
+}
+
+.create-form__submit {
+	width: 100%;
+	padding: 0.375rem 0.75rem;
+	font: inherit;
+	font-size: 0.8125rem;
+	background: var(--accent);
+	color: var(--accent-ink);
+	border: none;
+	border-radius: 0.375rem;
+	cursor: pointer;
+}
+
+.create-form__submit:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
 }

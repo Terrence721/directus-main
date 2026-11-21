@@ -4,7 +4,21 @@ import { ITEMS } from './demo-data.js';
 
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
-const VALID_FILTER_OPERATORS = ['_eq', '_ne', '_gt', '_gte', '_lt', '_lte', '_like', '_ilike', '_in', '_nin', '_between', '_is_null', '_is_not_null'];
+const VALID_FILTER_OPERATORS = [
+	'_eq',
+	'_ne',
+	'_gt',
+	'_gte',
+	'_lt',
+	'_lte',
+	'_like',
+	'_ilike',
+	'_in',
+	'_nin',
+	'_between',
+	'_is_null',
+	'_is_not_null',
+];
 
 function evaluateFilterFilter(itemValue: unknown, filterValue: string): boolean {
 	if (filterValue === null || filterValue === undefined) return true;
@@ -35,7 +49,7 @@ function evaluateFilterFilter(itemValue: unknown, filterValue: string): boolean 
 		case '_in':
 			return (value || '').split(',').some((v: string) => String(itemValue) === String(v));
 		case '_nin':
-			return !((value || '').split(',').some((v: string) => String(itemValue) === String(v)));
+			return !(value || '').split(',').some((v: string) => String(itemValue) === String(v));
 		case '_is_null':
 			return itemValue === null;
 		case '_is_not_null':
@@ -63,7 +77,7 @@ itemsRouter.get('/:collection', (req, res) => {
 	const limit = Number.isFinite(queryLimit) && queryLimit > 0 ? Math.min(queryLimit, MAX_LIMIT) : DEFAULT_LIMIT;
 
 	const page = parseInt(req.query.page as string, 10) || 1;
-	const sort = req.query.sort as string || '';
+	const sort = (req.query.sort as string) || '';
 	const fields = req.query.fields as string | string[] | undefined;
 
 	// Parse fields: can be comma-separated string or array
@@ -72,7 +86,10 @@ itemsRouter.get('/:collection', (req, res) => {
 		if (Array.isArray(fields)) {
 			fieldNames = fields as string[];
 		} else {
-			fieldNames = String(fields).split(',').map((f: string) => f.trim()).filter((f: string) => f);
+			fieldNames = String(fields)
+				.split(',')
+				.map((f: string) => f.trim())
+				.filter((f: string) => f);
 		}
 	}
 
@@ -82,15 +99,13 @@ itemsRouter.get('/:collection', (req, res) => {
 	let filteredData = data;
 	if (filters) {
 		// Remove pagination and sort params from filters
-		const filterKeys = Object.keys(filters).filter(key =>
-			!['limit', 'page', 'sort'].includes(key)
-		);
+		const filterKeys = Object.keys(filters).filter((key) => !['limit', 'page', 'sort'].includes(key));
 
-		filteredData = filteredData.filter(item => {
-			return filterKeys.every(key => {
+		filteredData = filteredData.filter((item) => {
+			return filterKeys.every((key) => {
 				const filterValue = filters[key];
 				// Check if filterValue has operator prefix (e.g., _eq, _like, _in)
-				if (typeof filterValue === 'string' && VALID_FILTER_OPERATORS.some(op => filterValue.startsWith(`_${op}`))) {
+				if (typeof filterValue === 'string' && VALID_FILTER_OPERATORS.some((op) => filterValue.startsWith(`_${op}`))) {
 					// Deep filter with operator: filter[field][_operator]=value
 					const fieldValue = (item as Record<string, unknown>)[key];
 					return evaluateFilterFilter(fieldValue, filterValue);
@@ -125,16 +140,17 @@ itemsRouter.get('/:collection', (req, res) => {
 	const pageData = sortedData.slice(start, end);
 
 	// Apply field selection
-	const resultData = fieldNames.length > 0
-		? pageData.map(item => {
-				const result: Record<string, unknown> = {};
-				fieldNames.forEach(field => {
-					const value = (item as Record<string, unknown>)[field];
-					if (value !== undefined) result[field] = value;
-				});
-				return result;
-			})
-		: pageData;
+	const resultData =
+		fieldNames.length > 0
+			? pageData.map((item) => {
+					const result: Record<string, unknown> = {};
+					fieldNames.forEach((field) => {
+						const value = (item as Record<string, unknown>)[field];
+						if (value !== undefined) result[field] = value;
+					});
+					return result;
+				})
+			: pageData;
 
 	res.json({
 		data: resultData,
@@ -145,4 +161,33 @@ itemsRouter.get('/:collection', (req, res) => {
 			lastPage: Math.ceil(total / limit),
 		},
 	});
+});
+
+// ---------------------------------------------------------------------------
+// POST /items/:collection — Create a new item
+// ---------------------------------------------------------------------------
+
+itemsRouter.post('/:collection', (req, res) => {
+	const collection = req.params.collection;
+	const data = ITEMS[collection];
+
+	if (!data) {
+		const error = new NotFoundError(`Collection "${collection}" not found.`);
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	// Simple object creation — just push into the array with a new ID
+	const body = req.body as Record<string, unknown>;
+	const newItem = {
+		id: `item-${Date.now()}`,
+		collection,
+		title: String(body.title ?? `Item ${data.length + 1}`),
+		...body,
+		status: body.status === 'published' ? ('published' as const) : ('draft' as const),
+	};
+
+	data.push(newItem);
+
+	res.status(201).json({ data: newItem });
 });

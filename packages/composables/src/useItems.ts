@@ -128,6 +128,39 @@ export function useItems(
 		return refresh();
 	}
 
+	/**
+	 * Create a new item in the collection.
+	 *
+	 * @param item - The item data to create
+	 * @returns The created item, or null on error
+	 */
+	async function createItem(item: Record<string, unknown>) {
+		if (!server.info.value) {
+			error.value = new Error('Server info not available');
+			return null;
+		}
+
+		try {
+			const serverInfo = server.info.value;
+			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const response = await fetch(`${baseUrl}/items/${collection}`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(item),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to create item: ${response.status}`);
+			}
+
+			const result = await response.json();
+			return result.data ?? result;
+		} catch (err) {
+			error.value = err instanceof Error ? err : new Error('Unknown error');
+			return null;
+		}
+	}
+
 	onMounted(() => {
 		fetchItems();
 	});
@@ -147,5 +180,6 @@ export function useItems(
 		setLimit,
 		setSort,
 		setFilters,
+		createItem,
 	};
 }
