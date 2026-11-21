@@ -61,6 +61,7 @@ async function handleLogout() {
 				<button class="nav-btn" @click="push('/search')"><span class="nav-btn__icon">⌕</span> Search</button>
 				<button class="nav-btn" @click="push('/files')"><span class="nav-btn__icon">▲</span> Files</button>
 				<button class="nav-btn" @click="push('/users')"><span class="nav-btn__icon">👤</span> Users</button>
+				<button class="nav-btn" @click="push('/activity')"><span class="nav-btn__icon">📋</span> Activity</button>
 			</nav>
 			<div class="sidebar__footer">
 				<button class="logout-btn" @click="handleLogout">Log out</button>

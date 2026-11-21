@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import { useAuth } from '@directus/composables';
+import { useAuth, resolveApiBaseUrl } from '@directus/composables';
 import { useUserStore } from '@directus/stores';
 
 interface UserInfo {
@@ -25,20 +25,17 @@ async function fetchUsers() {
 	loading.value = true;
 	error.value = null;
 	try {
-		const apiUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:8055';
-		const response = await fetch(`${apiUrl}/users?fields=id,first_name,last_name,email`, {
+		const apiUrl = resolveApiBaseUrl();
+		const response = await fetch(`${apiUrl}/users`, {
 			headers: { Authorization: `Bearer ${token}` },
 		});
-		if (!response.ok) throw new Error(`Failed to load users: ${response.status}`);
-
-		const result = (await response.json()) as {
-			data: Array<{ id: string; first_name?: string | null; last_name?: string | null; email: string }>;
-		};
-		users.value = result.data.map((user) => ({
-			id: user.id,
-			firstName: user.first_name,
-			lastName: user.last_name,
-			email: user.email,
+		if (!response.ok) throw new Error(`Failed to load users (${response.status})`);
+		const result = (await response.json()) as { data: Array<{ id: string; firstName?: string | null; lastName?: string | null; email: string }> };
+		users.value = result.data.map((u) => ({
+			id: u.id,
+			firstName: u.firstName ?? null,
+			lastName: u.lastName ?? null,
+			email: u.email,
 		}));
 	} catch (err) {
 		error.value = err instanceof Error ? err : new Error('Failed to load users');
@@ -49,17 +46,10 @@ async function fetchUsers() {
 
 watch(
 	() => accessToken.value,
-	(token) => {
-		if (token) {
-			// Re-create with new token — for simplicity we just re-fetch
-			fetchUsers();
-		}
-	},
+	(token) => { if (token) fetchUsers(); }
 );
 
-onMounted(() => {
-	if (accessToken.value) fetchUsers();
-});
+onMounted(() => { if (accessToken.value) fetchUsers(); });
 
 // Edit state
 const editingUserId = ref<string | null>(null);
@@ -85,22 +75,14 @@ async function handleSave() {
 	saving.value = true;
 	editError.value = null;
 	try {
-		const resp = await fetch(`${import.meta.env.VITE_API_URL ?? 'http://localhost:8055'}/users/me`, {
+		const resp = await fetch(`${resolveApiBaseUrl()}/users/me`, {
 			method: 'PATCH',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token}`,
-			},
+			headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
 			body: JSON.stringify(editForm.value),
 		});
-		if (!resp.ok) throw new Error(`Failed to update profile: ${resp.status}`);
+		if (!resp.ok) throw new Error(`Update failed (${resp.status})`);
 		const result = (await resp.json()) as { user: UserInfo & { avatarUrl?: string | null } };
-		userStore.setUser({
-			...result.user,
-			firstName: result.user.firstName ?? null,
-			lastName: result.user.lastName ?? null,
-			avatarUrl: result.user.avatarUrl ?? '',
-		});
+		userStore.setUser({ ...result.user, firstName: result.user.firstName ?? null, lastName: result.user.lastName ?? null, avatarUrl: result.user.avatarUrl ?? '' });
 		cancelEdit();
 		await fetchUsers();
 	} catch (err) {

@@ -29,7 +29,7 @@ async function handleSave() {
 	error.value = null;
 	success.value = false;
 	try {
-		const resp = await fetch(`${import.meta.env.VITE_API_URL ?? 'http://localhost:8055'}/users/me`, {
+		const response = await fetch('/users/me', {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
@@ -37,9 +37,16 @@ async function handleSave() {
 			},
 			body: JSON.stringify(form.value),
 		});
-		if (!resp.ok) throw new Error(`Failed to update profile: ${resp.status}`);
-		const result = (await resp.json()) as { user: NonNullable<typeof currentUser.value> };
-		userStore.setUser(result.user);
+		const result = (await response.json()) as {
+			data?: NonNullable<typeof currentUser.value>;
+			errors?: Array<{ message?: string }>;
+		};
+
+		if (!response.ok || !result.data) {
+			throw new Error(result.errors?.[0]?.message ?? 'Update failed');
+		}
+
+		userStore.setUser(result.data);
 		success.value = true;
 	} catch (err) {
 		error.value = err instanceof Error ? err : new Error('Update failed');

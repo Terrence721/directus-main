@@ -5,6 +5,8 @@ export { useSearch } from './useSearch.js';
 export { useFileUpload } from './useFileUpload.js';
 export { useCollections } from './useCollections.js';
 export { useUsers } from './useUsers.js';
+export { useActivity } from './useActivity.js';
+export { resolveApiBaseUrl } from './useServer.js';
 export type { CollectionInfo, CollectionField } from './useCollections.js';
 export { initSessionSync } from './useSessionSync.js';
 export { fetchServerInfo } from './serverClient.js';

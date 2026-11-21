@@ -6,6 +6,8 @@ import { serverRouter } from './routes/server.js';
 import { usersRouter } from './routes/users.js';
 import { filesRouter } from './routes/files.js';
 import { collectionsRouter } from './routes/collections.js';
+import { searchRouter } from './routes/search.js';
+import { activityRouter } from './routes/activity.js';
 import { requestLogger, rateLimit } from './middleware.js';
 
 const PORT = process.env['PORT'] ?? 8055;
@@ -32,6 +34,8 @@ app.use('/server', serverRouter);
 app.use('/users', usersRouter);
 app.use('/files', filesRouter);
 app.use('/collections', collectionsRouter);
+app.use('/search', searchRouter);
+app.use('/activity', activityRouter);
 
 if (process.env['NODE_ENV'] !== 'test') {
 	app.listen(PORT, () => {
