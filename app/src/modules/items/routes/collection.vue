@@ -55,9 +55,27 @@ const newItemForm = ref<Record<string, unknown>>({});
 const creating = ref(false);
 const createError = ref<Error | null>(null);
 
+// Edit item state
+const editingItemId = ref<string | null>(null);
+const editingForm = ref<Record<string, unknown>>({});
+const editingError = ref<Error | null>(null);
+
 function clearForm() {
 	newItemForm.value = {};
 	createError.value = null;
+}
+
+function startEdit(row: Record<string, unknown>) {
+	const id = row.id;
+	editingItemId.value = typeof id === 'string' || typeof id === 'number' ? String(id) : null;
+	editingForm.value = { ...row };
+	editingError.value = null;
+}
+
+function cancelEdit() {
+	editingItemId.value = null;
+	editingForm.value = {};
+	editingError.value = null;
 }
 
 async function handleCreate() {
@@ -77,6 +95,31 @@ async function handleCreate() {
 	} finally {
 		creating.value = false;
 	}
+}
+
+async function handleSaveEdit() {
+	const instance = itemsInstance;
+	if (!editingItemId.value || !instance || creating.value) return;
+	creating.value = true;
+	editingError.value = null;
+
+	try {
+		await instance.updateItem(editingItemId.value, editingForm.value);
+		cancelEdit();
+		await instance.refresh();
+	} catch (err) {
+		editingError.value = err instanceof Error ? err : new Error('Update failed');
+	} finally {
+		creating.value = false;
+	}
+}
+
+async function handleDelete(itemId: string) {
+	const instance = itemsInstance;
+	if (!instance) return;
+	if (!confirm('Are you sure you want to delete this item?')) return;
+	await instance.deleteItem(itemId);
+	await instance.refresh();
 }
 </script>
 
@@ -182,19 +225,58 @@ async function handleCreate() {
 				<thead>
 					<tr>
 						<th v-for="field in fields" :key="field">{{ field }}</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-if="itemRef?.data.value.length === 0">
-						<td :colspan="fields.length" style="text-align:center;color:var(--ink-soft)">No results.</td>
+						<td :colspan="fields.length + 1" style="text-align:center;color:var(--ink-soft)">No results.</td>
 					</tr>
-					<tr v-for="(row, index) in itemRef?.data.value" :key="rowKey(row, index)">
-						<td v-for="field in fields" :key="field">
-							{{ (row as Record<string, unknown>)[field] ?? '—' }}
+					<tr v-for="(row, index) in itemRef?.data.value" :key="rowKey(row, index)" :class="{ 'items-table--editing': editingItemId === (row as Record<string, unknown>)['id'] }">
+						<template v-for="field in fields" :key="field">
+							<td>{{ (row as Record<string, unknown>)[field] ?? '—' }}</td>
+						</template>
+						<td class="items-table__actions">
+							<button v-if="editingItemId !== (row as Record<string, unknown>)['id']" class="items-action-btn" @click="startEdit(row as Record<string, unknown>)">Edit</button>
+							<button class="items-action-btn items-action-btn--delete" @click="handleDelete((row as Record<string, unknown>)['id'] as string)">Delete</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
+
+			<!-- Inline edit form -->
+			<div v-if="editingItemId && itemRef" class="create-form">
+				<div class="create-form__header">
+					<h2>Edit item</h2>
+					<button class="create-form__close" @click="cancelEdit">✕</button>
+				</div>
+				<p v-if="editingError" class="create-form__error">{{ editingError.message }}</p>
+
+				<label>
+					Title
+					<input v-model="editingForm.title" type="text" class="create-form__input" />
+				</label>
+
+				<label>
+					Status
+					<select v-model="editingForm.status" class="create-form__input">
+						<option value="draft">Draft</option>
+						<option value="published">Published</option>
+					</select>
+				</label>
+
+				<div v-if="activeFields.length > 2">
+					<h3 class="create-form__section">Additional fields</h3>
+					<fieldset v-for="f in activeFields" :key="f.name">
+						<label>{{ f.name }}</label>
+						<input v-model="editingForm[f.name]" type="text" class="create-form__input" />
+					</fieldset>
+				</div>
+
+				<button class="create-form__submit" :disabled="creating" @click="handleSaveEdit">
+					{{ creating ? 'Saving…' : 'Save changes' }}
+				</button>
+			</div>
 
 			<footer v-if="itemRef" class="items-pagination">
 				<button :disabled="itemRef.page.value <= 1" @click="itemRef.setPage(itemRef.page.value - 1)">Prev</button>

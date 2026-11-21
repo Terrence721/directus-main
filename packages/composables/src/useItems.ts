@@ -161,6 +161,70 @@ export function useItems(
 		}
 	}
 
+	/**
+	 * Update an existing item by id.
+	 *
+	 * @param itemId - The id of the item to update
+	 * @param updates - Fields to update
+	 * @returns The updated item, or null on error
+	 */
+	async function updateItem(itemId: string, updates: Record<string, unknown>) {
+		if (!server.info.value) {
+			error.value = new Error('Server info not available');
+			return null;
+		}
+
+		try {
+			const serverInfo = server.info.value;
+			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const response = await fetch(`${baseUrl}/items/${collection}/${itemId}`, {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(updates),
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to update item: ${response.status}`);
+			}
+
+			const result = await response.json();
+			return result.data ?? result;
+		} catch (err) {
+			error.value = err instanceof Error ? err : new Error('Unknown error');
+			return null;
+		}
+	}
+
+	/**
+	 * Delete an item by id.
+	 *
+	 * @param itemId - The id of the item to delete
+	 * @returns true if deleted, false on error
+	 */
+	async function deleteItem(itemId: string): Promise<boolean> {
+		if (!server.info.value) {
+			error.value = new Error('Server info not available');
+			return false;
+		}
+
+		try {
+			const serverInfo = server.info.value;
+			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const response = await fetch(`${baseUrl}/items/${collection}/${itemId}`, {
+				method: 'DELETE',
+			});
+
+			if (!response.ok) {
+				throw new Error(`Failed to delete item: ${response.status}`);
+			}
+
+			return true;
+		} catch (err) {
+			error.value = err instanceof Error ? err : new Error('Unknown error');
+			return false;
+		}
+	}
+
 	onMounted(() => {
 		fetchItems();
 	});
@@ -181,5 +245,7 @@ export function useItems(
 		setSort,
 		setFilters,
 		createItem,
+		updateItem,
+		deleteItem,
 	};
 }

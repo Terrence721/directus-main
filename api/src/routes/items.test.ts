@@ -81,3 +81,42 @@ describe('POST /items/:collection', () => {
 		expect(response.body.code).toBe('NOT_FOUND');
 	});
 });
+
+describe('PATCH /items/:collection/:id', () => {
+	it('updates an existing item', async () => {
+		const response = await request(testApp)
+			.patch('/demo_items/1')
+			.send({ title: 'Updated item', status: 'published' });
+
+		expect(response.status).toBe(200);
+		expect(response.body.data.id).toBe('1');
+		expect(response.body.data.title).toBe('Updated item');
+	});
+
+	it('returns 404 for unknown item', async () => {
+		const response = await request(testApp)
+			.patch('/demo_items/nonexistent')
+			.send({ title: 'test' });
+
+		expect(response.status).toBe(new NotFoundError().status);
+		expect(response.body.code).toBe('NOT_FOUND');
+	});
+});
+
+describe('DELETE /items/:collection/:id', () => {
+	it('deletes an existing item', async () => {
+		const response = await request(testApp)
+			.delete('/demo_items/2');
+
+		expect(response.status).toBe(200);
+		expect(response.body.data.id).toBe('2');
+	});
+
+	it('returns 404 for unknown item', async () => {
+		const response = await request(testApp)
+			.delete('/demo_items/nonexistent');
+
+		expect(response.status).toBe(new NotFoundError().status);
+		expect(response.body.code).toBe('NOT_FOUND');
+	});
+});

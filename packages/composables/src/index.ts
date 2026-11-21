@@ -4,6 +4,7 @@ export { useItems } from './useItems.js';
 export { useSearch } from './useSearch.js';
 export { useFileUpload } from './useFileUpload.js';
 export { useCollections } from './useCollections.js';
+export { useUsers } from './useUsers.js';
 export type { CollectionInfo, CollectionField } from './useCollections.js';
 export { initSessionSync } from './useSessionSync.js';
 export { fetchServerInfo } from './serverClient.js';

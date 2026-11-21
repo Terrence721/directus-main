@@ -191,3 +191,56 @@ itemsRouter.post('/:collection', (req, res) => {
 
 	res.status(201).json({ data: newItem });
 });
+
+// ---------------------------------------------------------------------------
+// PATCH /items/:collection/:id — Update an existing item
+// ---------------------------------------------------------------------------
+
+itemsRouter.patch('/:collection/:id', (req, res) => {
+	const collection = req.params.collection;
+	const id = req.params.id;
+	const data = ITEMS[collection];
+
+	if (!data) {
+		const error = new NotFoundError(`Collection "${collection}" not found.`);
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	const index = data.findIndex((item) => item.id === id);
+	if (index === -1) {
+		const error = new NotFoundError(`Item "${id}" not found.`);
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	const body = req.body as Record<string, unknown>;
+	data[index] = { ...data[index], ...(body as Partial<(typeof data)[number]>) };
+	res.json({ data: data[index] });
+});
+
+// ---------------------------------------------------------------------------
+// DELETE /items/:collection/:id — Delete an item
+// ---------------------------------------------------------------------------
+
+itemsRouter.delete('/:collection/:id', (req, res) => {
+	const collection = req.params.collection;
+	const id = req.params.id;
+	const data = ITEMS[collection];
+
+	if (!data) {
+		const error = new NotFoundError(`Collection "${collection}" not found.`);
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	const index = data.findIndex((item) => item.id === id);
+	if (index === -1) {
+		const error = new NotFoundError(`Item "${id}" not found.`);
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	data.splice(index, 1);
+	res.json({ data: { id } });
+});

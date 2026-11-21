@@ -16,6 +16,17 @@ collectionsRouter.get('/', (_req, res) => {
 			],
 			sampleCount: 0,
 		},
+		{
+			collection: 'demo_pages',
+			label: 'Pages',
+			fields: [
+				{ name: 'id', type: 'string' },
+				{ name: 'title', type: 'string' },
+				{ name: 'status', type: 'string' },
+				{ name: 'content', type: 'string' },
+			],
+			sampleCount: 0,
+		},
 	];
 
 	// Populate sample counts from the live demo store

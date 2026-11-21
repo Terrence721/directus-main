@@ -32,6 +32,11 @@ export const ITEMS: Record<string, DemoItem[]> = {
 		{ id: '2', collection: 'demo_items', title: 'Second item', status: 'draft' },
 		{ id: '3', collection: 'demo_items', title: 'Third item', status: 'published' },
 	],
+	demo_pages: [
+		{ id: 'p1', collection: 'demo_pages', title: 'Home Page', status: 'published', content: 'Welcome to our site.' },
+		{ id: 'p2', collection: 'demo_pages', title: 'About Us', status: 'draft', content: 'Learn more about us.' },
+		{ id: 'p3', collection: 'demo_pages', title: 'Contact', status: 'published', content: 'Get in touch with us.' },
+	],
 };
 
 /** Look up a user by their ID (matching the accessToken returned at login). */
