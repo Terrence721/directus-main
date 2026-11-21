@@ -40,6 +40,113 @@ usersRouter.get('/me', (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// GET /users - List all users (with pagination)
+// ---------------------------------------------------------------------------
+
+usersRouter.get('/', (req, res) => {
+	const queryLimit = parseInt(req.query.limit as string, 10);
+	const limit = Number.isFinite(queryLimit) && queryLimit > 0 ? queryLimit : 20;
+	const queryPage = parseInt(req.query.page as string, 10);
+	const page = Number.isFinite(queryPage) && queryPage > 0 ? queryPage : 1;
+	const start = (page - 1) * limit;
+	const end = start + limit;
+
+	const pageUsers = USERS.slice(start, end).map((u) => ({
+		id: u.id,
+		email: u.email,
+		firstName: u.firstName,
+		lastName: u.lastName,
+		avatarUrl: u.avatarUrl,
+	}));
+
+	res.json({
+		data: pageUsers,
+		meta: {
+			totalCount: USERS.length,
+			page,
+			pageSize: limit,
+			lastPage: Math.ceil(USERS.length / limit),
+		},
+	});
+});
+
+// ---------------------------------------------------------------------------
+// GET /users/:id - Get specific user
+// ---------------------------------------------------------------------------
+
+usersRouter.get('/:id', (req, res) => {
+	const userId = req.params.id;
+	const user = USERS.find((u) => u.id === userId);
+
+	if (!user) {
+		const error = new NotFoundError(`User "${userId}" not found.`);
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	res.json({
+		data: {
+			id: user.id,
+			email: user.email,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			avatarUrl: user.avatarUrl,
+		},
+	});
+});
+
+// ---------------------------------------------------------------------------
+// DELETE /users/me - Delete current user account
+// ---------------------------------------------------------------------------
+
+usersRouter.delete('/me', (req, res) => {
+	const authHeader = req.headers['authorization'];
+	if (!authHeader?.startsWith('Bearer ')) {
+		const error = new InvalidCredentialsError();
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	const userId = authHeader.slice(7);
+	const userIndex = USERS.findIndex((u) => u.id === userId);
+	if (userIndex === -1) {
+		const error = new NotFoundError(`User "${userId}" not found.`);
+		res.status(error.status).json({ code: error.code, message: error.message });
+		return;
+	}
+
+	const [userToRemove] = USERS.splice(userIndex, 1);
+	if (userToRemove) {
+		usersByEmail.delete(slugify(userToRemove.email));
+	}
+
+	res.json({
+		data: { deleted: true },
+		message: 'User account deleted successfully',
+	});
+});
+
+// ---------------------------------------------------------------------------
+// GET /server/info - Server metadata endpoint
+// ---------------------------------------------------------------------------
+
+usersRouter.get('/server/info', (req, res) => {
+	res.json({
+		data: {
+			projectName: 'Directus Main Demo',
+			projectLogoUrl: null,
+			projectColor: '#563acc',
+			authProviders: [
+				{ name: 'Email / Password', driver: 'local' },
+				{ name: 'Google', driver: 'oauth2' },
+				{ name: 'GitHub', driver: 'oauth2' },
+			],
+			registrationEnabled: true,
+		},
+	});
+});
+
+// ---------------------------------------------------------------------------
 // PATCH /users/me - Update current user profile
 // ---------------------------------------------------------------------------
 

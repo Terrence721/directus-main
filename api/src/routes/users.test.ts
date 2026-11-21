@@ -161,3 +161,56 @@ describe('PATCH /users/me (profile update)', () => {
 		expect(second.body.user.email).toBe('second@example.com');
 	});
 });
+
+// ---------------------------------------------------------------------------
+// GET /users - List users endpoint
+// ---------------------------------------------------------------------------
+
+describe('GET /users (list users)', () => {
+	it('returns all users with pagination', async () => {
+		const response = await request(testApp).get('/');
+		expect(response.status).toBe(200);
+		expect(response.body.data).toBeDefined();
+		expect(Array.isArray(response.body.data)).toBe(true);
+		expect(response.body.meta).toBeDefined();
+	});
+});
+
+// ---------------------------------------------------------------------------
+// DELETE /users/me - Delete account endpoint
+// ---------------------------------------------------------------------------
+
+describe('DELETE /users/me (delete account)', () => {
+	it('deletes a registered user and returns success', async () => {
+		// First create a test user
+		const registerResponse = await request(testApp).post('/').send({
+			email: 'delete-test@example.com',
+			password: 'pass123',
+			firstName: 'Delete',
+			lastName: 'Me',
+		});
+		expect(registerResponse.status).toBe(201);
+		const accessToken = registerResponse.body.accessToken;
+
+		// Now delete the account
+		const response = await request(testApp)
+			.delete('/me')
+			.set('Authorization', `Bearer ${accessToken}`);
+
+		expect(response.status).toBe(200);
+		expect(response.body.data.deleted).toBe(true);
+	});
+});
+
+// ---------------------------------------------------------------------------
+// GET /server/info - Server info endpoint
+// ---------------------------------------------------------------------------
+
+describe('GET /server/info', () => {
+	it('returns server metadata', async () => {
+		const response = await request(testApp).get('/server/info');
+		expect(response.status).toBe(200);
+		expect(response.body.data).toBeDefined();
+		expect(response.body.data.projectName).toBe('Directus Main Demo');
+	});
+});
