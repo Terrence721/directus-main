@@ -16,8 +16,10 @@ const API_URL = 'http://localhost:8055';
  * deployed anywhere public yet, so the deployed GitHub Pages app keeps using loginSimulated.
  */
 export async function login(credentials: LoginCredentials): Promise<Session> {
-	// @ts-expect-error - import.meta.env is available at runtime via Vite
-	return import.meta.env.MODE === 'development' ? loginReal(credentials) : loginSimulated(credentials);
+	if (import.meta.env.MODE === 'development') {
+		return loginReal(credentials);
+	}
+	return loginSimulated(credentials);
 }
 
 async function loginReal(credentials: LoginCredentials): Promise<Session> {

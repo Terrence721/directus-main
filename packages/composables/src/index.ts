@@ -1,5 +1,8 @@
 export { useAuth } from './useAuth.js';
 export { useRouter } from './useRouter.js';
+export { useItems } from './useItems.js';
+export { useSearch } from './useSearch.js';
+export { useFileUpload } from './useFileUpload.js';
 export { fetchServerInfo } from './serverClient.js';
 export { login } from './authClient.js';
 export { register } from './registerClient.js';

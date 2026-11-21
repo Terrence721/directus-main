@@ -23,6 +23,7 @@ export interface DemoItem {
 	collection: string;
 	title: string;
 	status: 'published' | 'draft';
+	[key: string]: string | number | boolean | null | undefined;
 }
 
 export const ITEMS: Record<string, DemoItem[]> = {
