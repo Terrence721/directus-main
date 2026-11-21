@@ -4,6 +4,8 @@ import { authRouter } from './routes/auth.js';
 import { itemsRouter } from './routes/items.js';
 import { serverRouter } from './routes/server.js';
 import { usersRouter } from './routes/users.js';
+import { filesRouter } from './routes/files.js';
+import { requestLogger, rateLimit } from './middleware.js';
 
 const PORT = process.env['PORT'] ?? 8055;
 
@@ -14,6 +16,10 @@ export const app = express();
 // allowlist and no real security boundary to protect here.
 app.use(cors());
 app.use(express.json());
+app.use(requestLogger);
+
+// Rate limit all endpoints to 100 requests per minute per IP
+app.use(rateLimit(100, 60_000));
 
 app.get('/health', (_req, res) => {
 	res.json({ status: 'ok' });
@@ -23,6 +29,7 @@ app.use('/auth', authRouter);
 app.use('/items', itemsRouter);
 app.use('/server', serverRouter);
 app.use('/users', usersRouter);
+app.use('/files', filesRouter);
 
 if (process.env['NODE_ENV'] !== 'test') {
 	app.listen(PORT, () => {
