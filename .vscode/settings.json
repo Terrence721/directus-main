@@ -29,6 +29,7 @@
 		"icontains",
 		"longenough",
 		"newpass",
-		"slugified"
+		"slugified",
+		"wrongpass"
 	]
 }

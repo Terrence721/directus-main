@@ -6,6 +6,7 @@ export default defineConfig({
 	test: {
 		environment: 'happy-dom',
 		include: ['src/**/*.test.ts'],
+		setupFiles: ['<rootDir>/app/vitest.setup.ts'],
 		coverage: {
 			provider: 'v8',
 			include: ['src/**/*.ts', 'src/**/*.vue'],

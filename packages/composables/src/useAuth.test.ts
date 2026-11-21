@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
-import { useAuth } from './useAuth.js';
+import { useAuth } from './useAuth.ts';
 
 beforeEach(() => {
 	setActivePinia(createPinia());

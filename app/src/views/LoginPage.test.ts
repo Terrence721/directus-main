@@ -1,5 +1,5 @@
 import { useAuthStore } from '@directus/stores';
-import { enableAutoUnmount, mount } from '@vue/test-utils';
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { router } from '../router.js';
@@ -19,7 +19,9 @@ describe('LoginPage', () => {
 		await wrapper.find('input[type="email"]').setValue('demo@directus-main.dev');
 		await wrapper.find('input[type="password"]').setValue('demo1234');
 		await wrapper.find('form').trigger('submit');
+		await flushPromises();
 
+		await vi.waitFor(() => expect(useAuthStore().loggedIn).toBe(true));
 		await vi.waitFor(() => expect(router.currentRoute.value.path).toBe('/'));
 		expect(useAuthStore().loggedIn).toBe(true);
 	});
@@ -30,6 +32,7 @@ describe('LoginPage', () => {
 		await wrapper.find('input[type="email"]').setValue('wrong@example.com');
 		await wrapper.find('input[type="password"]').setValue('wrongpass');
 		await wrapper.find('form').trigger('submit');
+		await flushPromises();
 
 		await vi.waitFor(() => expect(wrapper.find('[role="alert"]').text()).toBe('Invalid user credentials.'));
 		expect(router.currentRoute.value.path).toBe('/login');
