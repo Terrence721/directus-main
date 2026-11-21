@@ -6,7 +6,7 @@ import { onMounted, ref } from 'vue';
  * Handles loading states, errors, and auto-refresh on server info changes.
  *
  * @param collection - The collection name to fetch items from
- * @param options - Optional configuration (limit, page, filters, sort)
+ * @param options - Optional configuration (limit, page, filters, sort, fields)
  *
  * @example
  * import { useItems } from '@directus/composables';
@@ -14,7 +14,7 @@ import { onMounted, ref } from 'vue';
  * const { data, loading, error, refresh } = useItems('posts', {
  *   limit: 10,
  *   page: 1,
- *   filters: { status: 'published' },
+ *   fields: ['id', 'title'],
  *   sort: '-date_published'
  * });
  */
@@ -25,6 +25,7 @@ export function useItems(
 		page?: number;
 		filters?: Record<string, unknown>;
 		sort?: string;
+		fields?: string[];
 	} = {},
 ) {
 	const server = useServer();
@@ -36,6 +37,7 @@ export function useItems(
 	const page = ref(options.page ?? 1);
 	const limit = ref(options.limit ?? 20);
 	const sort = ref(options.sort ?? '');
+	const fields = ref<string[]>(options.fields ?? []);
 	const filters = ref(options.filters ?? {});
 
 	async function fetchItems() {
@@ -53,14 +55,22 @@ export function useItems(
 			if (limit.value) params.append('limit', limit.value.toString());
 			if (page.value) params.append('page', page.value.toString());
 			if (sort.value) params.append('sort', sort.value);
-			Object.entries(filters.value).forEach(([key, value]) => {
-				params.append(`filter[${key}]`, String(value));
-			});
+
+			// Field selection
+			if (fields.value.length > 0) {
+				params.append('fields', fields.value.join(','));
+			}
+
+			// Filters: apply as direct query params (API supports both raw and filter[] forms)
+			for (const [key, value] of Object.entries(filters.value)) {
+				if (value !== undefined && value !== null && value !== '') {
+					params.append(key, String(value));
+				}
+			}
 
 			const serverInfo = server.info.value;
-			const response = await fetch(
-				`${serverInfo.projectLogoUrl || 'http://localhost:8055'}/items/${collection}?${params.toString()}`,
-			);
+			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const response = await fetch(`${baseUrl}/items/${collection}?${params.toString()}`);
 
 			if (!response.ok) {
 				throw new Error(`Failed to fetch items: ${response.status}`);
@@ -130,6 +140,7 @@ export function useItems(
 		page,
 		limit,
 		sort,
+		fields,
 		filters,
 		refresh,
 		setPage,

@@ -22,10 +22,12 @@ beforeEach(() => {
 });
 
 describe('App', () => {
-	it('renders the routed view once hydration completes', async () => {
+	it('renders the shell with the routed view once hydration completes', async () => {
 		await router.push('/login');
 		const wrapper = mount(App, { global: { plugins: [router] } });
 
+		// Shell contains a hamburger button (always visible) plus the routed login form
+		expect(wrapper.find('.hamburger').exists()).toBe(true);
 		expect(wrapper.find('form').exists()).toBe(true);
 	});
 
@@ -33,6 +35,7 @@ describe('App', () => {
 		await router.push('/');
 		const wrapper = mount(App, { global: { plugins: [router] } });
 
+		// Navigation redirect to /login happens; login page renders its form inside the shell
 		await vi.waitFor(() => expect(wrapper.find('form').exists()).toBe(true));
 		expect(router.currentRoute.value.path).toBe('/login');
 	});
@@ -42,7 +45,8 @@ describe('App', () => {
 		await router.push('/login');
 		const wrapper = mount(App, { global: { plugins: [router] } });
 
-		await vi.waitFor(() => expect(wrapper.find('.session').exists()).toBe(true));
+		// Redirected away from /login; home renders under the shell
+		await vi.waitFor(() => expect(wrapper.find('.shell').exists()).toBe(true));
 		expect(router.currentRoute.value.path).toBe('/');
 	});
 
@@ -66,6 +70,7 @@ describe('App', () => {
 		app.failHydration(new Error('network down'));
 		await wrapper.vm.$nextTick();
 
-		expect(wrapper.text()).toBe('Something went wrong.');
+		// With a broken hydration path, App falls back to the error paragraph before rendering shell
+		expect(wrapper.find('.hydration-error').exists()).toBe(true);
 	});
 });

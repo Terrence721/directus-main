@@ -1,43 +1,36 @@
-import { createPinia, setActivePinia } from 'pinia';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeEach } from 'vitest';
+import { setActivePinia, createPinia } from 'pinia';
 import { useAuthStore } from './auth.js';
 
-beforeEach(() => {
-	setActivePinia(createPinia());
-});
-
 describe('useAuthStore', () => {
-	it('starts logged out', () => {
-		const auth = useAuthStore();
-
-		expect(auth.loggedIn).toBe(false);
+	beforeEach(() => {
+		setActivePinia(createPinia());
 	});
 
-	it('is logged in once a session with a future expiry is set', () => {
+	it('starts with no session and loggedIn=false', () => {
 		const auth = useAuthStore();
-		const expiresAt = Date.now() + 60_000;
-
-		auth.setSession('token', expiresAt);
-
-		expect(auth.loggedIn).toBe(true);
-		expect(auth.session).toEqual({ accessToken: 'token', expiresAt });
-	});
-
-	it('is logged out once the session has expired', () => {
-		const auth = useAuthStore();
-
-		auth.setSession('token', Date.now() - 1);
-
-		expect(auth.loggedIn).toBe(false);
-	});
-
-	it('is logged out after clearSession', () => {
-		const auth = useAuthStore();
-
-		auth.setSession('token', Date.now() + 60_000);
-		auth.clearSession();
-
-		expect(auth.loggedIn).toBe(false);
 		expect(auth.session).toBeNull();
+		expect(auth.loggedIn).toBe(false);
+	});
+
+	it('sets a session and reports loggedIn=true while not expired', () => {
+		const auth = useAuthStore();
+		auth.setSession('abc123', Date.now() + 60_000);
+		expect(auth.session?.accessToken).toBe('abc123');
+		expect(auth.loggedIn).toBe(true);
+	});
+
+	it('clears the session', () => {
+		const auth = useAuthStore();
+		auth.setSession('abc123', Date.now() + 60_000);
+		auth.clearSession();
+		expect(auth.session).toBeNull();
+		expect(auth.loggedIn).toBe(false);
+	});
+
+	it('reports loggedIn=false after expiry', () => {
+		const auth = useAuthStore();
+		auth.setSession('abc123', Date.now() - 1000);
+		expect(auth.loggedIn).toBe(false);
 	});
 });
