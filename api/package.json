@@ -11,7 +11,7 @@
 	},
 	"dependencies": {
 		"@directus/errors": "workspace:*",
-		"cors": "catalog:",
+		"cors": "^2.8.6",
 		"express": "catalog:"
 	},
 	"devDependencies": {
