@@ -5,6 +5,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { router } from '../router.js';
 import LoginPage from './LoginPage.vue';
 
+vi.mock('@directus/composables', async () => {
+	const actual = await vi.importActual<object>('@directus/composables');
+	return {
+		...actual,
+		useRouter: () => ({
+			router,
+			route: router.currentRoute,
+			push: router.push.bind(router),
+			replace: router.replace.bind(router),
+			back: router.back.bind(router),
+		}),
+	};
+});
+
 enableAutoUnmount(afterEach);
 
 beforeEach(async () => {
