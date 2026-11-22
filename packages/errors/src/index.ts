@@ -4,3 +4,4 @@ export { ForbiddenError } from './errors/forbidden.js';
 export type { ForbiddenErrorExtensions } from './errors/forbidden.js';
 export { InvalidCredentialsError } from './errors/invalid-credentials.js';
 export { NotFoundError } from './errors/not-found.js';
+export { UnauthorizedError } from './errors/unauthorized.js';

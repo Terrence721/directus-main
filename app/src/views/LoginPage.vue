@@ -2,6 +2,10 @@
 import { useAuth, useRouter, login, type LoginCredentials } from '@directus/composables';
 import LoginForm from '../components/LoginForm.vue';
 
+defineProps<{
+	logoutReason?: string | null;
+}>();
+
 const { setSession } = useAuth();
 const { push } = useRouter();
 

@@ -26,11 +26,11 @@ export const router = createRouter({
 	]),
 });
 
-router.beforeEach((to) => {
+router.beforeEach((to, from) => {
 	const auth = useAuthStore();
 
 	if (to.meta.requiresAuth && !auth.loggedIn) {
-		return { name: 'login' };
+		return { name: 'login', query: { reason: 'session_expired' } };
 	}
 
 	if (to.name === 'login' && auth.loggedIn) {
@@ -39,5 +39,9 @@ router.beforeEach((to) => {
 
 	if (to.name === 'register' && auth.loggedIn) {
 		return { name: 'home' };
+	}
+
+	if (from.query.reason && !to.query.reason) {
+		return { query: { reason: undefined } };
 	}
 });
