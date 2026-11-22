@@ -98,7 +98,7 @@ onMounted(refreshList);
 
 <style scoped>
 .files-view {
-	max-width: 800px;
+	max-inline-size: 800px;
 }
 
 h1 {
@@ -138,13 +138,14 @@ h1 {
 .upload-progress,
 .upload-success,
 .upload-error {
-	margin-top: 0.75rem;
+	margin-block-start: 0.75rem;
 	font-size: 0.875rem;
 }
 
 .upload-success {
 	color: var(--accent);
 }
+
 .upload-error {
 	color: #b3261e;
 }
@@ -161,8 +162,8 @@ h1 {
 }
 
 .files-table {
-	width: 100%;
-	margin-top: 1rem;
+	inline-size: 100%;
+	margin-block-start: 1rem;
 	border-collapse: collapse;
 	font-size: 0.875rem;
 }
@@ -171,7 +172,7 @@ h1 {
 .files-table td {
 	padding: 0.5rem 0.75rem;
 	text-align: start;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 }
 
 .files-table th {

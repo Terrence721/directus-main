@@ -94,7 +94,7 @@ async function handleDelete() {
 
 <style scoped>
 .detail-view {
-	max-width: 800px;
+	max-inline-size: 800px;
 }
 
 .back-btn {
@@ -105,8 +105,9 @@ async function handleDelete() {
 	font-size: 0.9375rem;
 	cursor: pointer;
 	padding: 0;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
+
 .back-btn:hover {
 	text-decoration: underline;
 }
@@ -118,6 +119,7 @@ async function handleDelete() {
 	text-align: center;
 	color: var(--ink-soft);
 }
+
 .detail-error {
 	color: #b3261e;
 }
@@ -128,6 +130,7 @@ async function handleDelete() {
 	border-radius: 0.5rem;
 	padding: 1.5rem;
 }
+
 .detail-card h1 {
 	margin: 0 0 1rem;
 	font-size: 1.5rem;
@@ -136,7 +139,7 @@ async function handleDelete() {
 .detail-meta {
 	display: flex;
 	gap: 1.5rem;
-	margin-bottom: 1.5rem;
+	margin-block-end: 1.5rem;
 	font-size: 0.875rem;
 	color: var(--ink-soft);
 }
@@ -145,10 +148,11 @@ async function handleDelete() {
 	display: flex;
 	gap: 1rem;
 	padding: 0.75rem 0;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 }
+
 .detail-field:last-child {
-	border-bottom: none;
+	border-block-end: none;
 }
 
 .detail-field-label {
@@ -157,6 +161,7 @@ async function handleDelete() {
 	color: var(--ink-soft);
 	font-size: 0.875rem;
 }
+
 .detail-field-value {
 	flex: 1;
 	color: var(--ink);
@@ -166,9 +171,9 @@ async function handleDelete() {
 .detail-actions {
 	display: flex;
 	gap: 0.75rem;
-	margin-top: 1.5rem;
-	padding-top: 1.5rem;
-	border-top: 1px solid var(--rule);
+	margin-block-start: 1.5rem;
+	padding-block-start: 1.5rem;
+	border-block-start: 1px solid var(--rule);
 }
 
 .btn {
@@ -181,17 +186,21 @@ async function handleDelete() {
 	background: var(--paper);
 	color: var(--ink);
 }
+
 .btn-edit {
 	background: var(--accent);
 	color: var(--accent-ink);
 	border-color: var(--accent);
 }
+
 .btn-delete {
 	color: #b3261e;
 }
+
 .btn-delete:hover {
 	background: #fee2e2;
 }
+
 .dark-mode .btn-delete:hover,
 [data-theme='dark'] .btn-delete:hover {
 	background: #7f1d1d;

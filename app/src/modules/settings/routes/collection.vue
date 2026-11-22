@@ -89,7 +89,7 @@ async function handleSave() {
 
 <style scoped>
 .settings-view {
-	max-width: 560px;
+	max-inline-size: 560px;
 }
 
 .settings-view h1 {
@@ -130,7 +130,7 @@ async function handleSave() {
 	display: flex;
 	flex-direction: column;
 	gap: 0.75rem;
-	margin-bottom: 1.25rem;
+	margin-block-end: 1.25rem;
 }
 
 .settings-fields label {

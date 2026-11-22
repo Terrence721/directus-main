@@ -50,8 +50,9 @@ onMounted(() => {
 
 <style scoped>
 .activity-view {
-	max-width: 900px;
+	max-inline-size: 900px;
 }
+
 .activity-view h1 {
 	margin: 0 0 1.5rem;
 	font-size: 1.5rem;
@@ -64,21 +65,24 @@ onMounted(() => {
 	font-size: 0.9375rem;
 	padding: 2rem 0;
 }
+
 .activity-error {
 	color: #b3261e;
 }
 
 .activity-table {
-	width: 100%;
+	inline-size: 100%;
 	border-collapse: collapse;
 	font-size: 0.875rem;
 }
+
 .activity-table th,
 .activity-table td {
 	padding: 0.625rem 0.75rem;
 	text-align: start;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 }
+
 .activity-table th {
 	font-weight: 600;
 	color: var(--ink-soft);
@@ -87,6 +91,7 @@ onMounted(() => {
 	letter-spacing: 0.04em;
 	background: var(--paper-2);
 }
+
 .activity-table tr:hover td {
 	background: var(--paper-2);
 }
@@ -99,28 +104,34 @@ onMounted(() => {
 	font-weight: 600;
 	text-transform: capitalize;
 }
+
 .action-create {
 	background: #dcfce7;
 	color: #166534;
 }
+
 .action-update {
 	background: #dbeafe;
 	color: #1e40af;
 }
+
 .action-delete {
 	background: #fee2e2;
 	color: #991b1b;
 }
+
 .dark-mode .action-create,
 [data-theme='dark'] .action-create {
 	background: #166534;
 	color: #dcfce7;
 }
+
 .dark-mode .action-update,
 [data-theme='dark'] .action-update {
 	background: #1e40af;
 	color: #dbeafe;
 }
+
 .dark-mode .action-delete,
 [data-theme='dark'] .action-delete {
 	background: #991b1b;

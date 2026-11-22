@@ -21,7 +21,7 @@ defineEmits<{ click: [] }>();
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.5rem 0.75rem;
 	background: none;
 	border: none;

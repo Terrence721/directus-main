@@ -81,12 +81,12 @@ async function handleLogout() {
 <style scoped>
 .layout {
 	display: flex;
-	min-height: 100vh;
+	min-block-size: 100vh;
 	position: relative;
 }
 
 .sidebar {
-	width: 180px;
+	inline-size: 180px;
 	flex-shrink: 0;
 	background: var(--ink);
 	color: var(--paper);
@@ -103,7 +103,7 @@ async function handleLogout() {
 	padding: 1.25rem 1rem;
 	font-weight: 700;
 	font-size: 0.9375rem;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	border-block-end: 1px solid rgb(255 255 255 / 8%);
 	letter-spacing: 0.02em;
 }
 
@@ -132,7 +132,7 @@ async function handleLogout() {
 }
 
 .nav-btn:hover {
-	background: rgba(255, 255, 255, 0.08);
+	background: rgb(255 255 255 / 8%);
 }
 
 .nav-btn__icon {
@@ -142,14 +142,14 @@ async function handleLogout() {
 
 .sidebar__footer {
 	padding: 1rem;
-	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	border-block-start: 1px solid rgb(255 255 255 / 8%);
 }
 
 .logout-btn {
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.5rem;
 	background: transparent;
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	border: 1px solid rgb(255 255 255 / 20%);
 	color: inherit;
 	font: inherit;
 	font-size: 0.8125rem;
@@ -159,7 +159,7 @@ async function handleLogout() {
 }
 
 .logout-btn:hover {
-	background: rgba(255, 255, 255, 0.08);
+	background: rgb(255 255 255 / 8%);
 }
 
 .shell {
@@ -167,7 +167,7 @@ async function handleLogout() {
 	display: flex;
 	flex-direction: column;
 	margin-inline-start: 180px;
-	width: calc(100% - 180px);
+	inline-size: calc(100% - 180px);
 }
 
 .header {
@@ -175,10 +175,10 @@ async function handleLogout() {
 	align-items: center;
 	padding: 0.75rem 1.25rem;
 	background: var(--paper-2);
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 	gap: 1rem;
 	position: sticky;
-	top: 0;
+	inset-block-start: 0;
 	z-index: 50;
 }
 
@@ -202,7 +202,7 @@ async function handleLogout() {
 	overflow-y: auto;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
 	.sidebar {
 		transform: translateX(-100%);
 	}
@@ -213,7 +213,7 @@ async function handleLogout() {
 
 	.shell {
 		margin-inline-start: 0;
-		width: 100%;
+		inline-size: 100%;
 	}
 
 	.hamburger {

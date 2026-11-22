@@ -279,13 +279,13 @@ function nextPage() {
 <style scoped>
 .content-browser {
 	display: flex;
-	min-height: calc(100vh - 60px);
+	min-block-size: calc(100vh - 60px);
 }
 
 .sidebar {
-	width: 260px;
+	inline-size: 260px;
 	background: var(--paper-2);
-	border-right: 1px solid var(--rule);
+	border-inline-end: 1px solid var(--rule);
 	padding: 1rem;
 	flex-shrink: 0;
 	overflow-y: auto;
@@ -295,7 +295,7 @@ function nextPage() {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 .sidebar__header h2 {
@@ -315,18 +315,18 @@ function nextPage() {
 
 .nav-item,
 .nav-group {
-	margin-bottom: 0.25rem;
+	margin-block-end: 0.25rem;
 }
 
 .nav-btn {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.5rem 0.75rem;
 	background: none;
 	border: none;
-	text-align: left;
+	text-align: start;
 	cursor: pointer;
 	border-radius: 4px;
 	color: var(--ink);
@@ -347,7 +347,7 @@ function nextPage() {
 }
 
 .nav-btn--nested {
-	padding-left: 1.5rem;
+	padding-inline-start: 1.5rem;
 	font-size: 0.8125rem;
 }
 
@@ -363,11 +363,11 @@ function nextPage() {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.5rem 0.75rem;
 	background: none;
 	border: none;
-	text-align: left;
+	text-align: start;
 	cursor: pointer;
 	font-weight: 600;
 	font-size: 0.8125rem;
@@ -375,7 +375,7 @@ function nextPage() {
 }
 
 .nav-group-items {
-	margin-left: 0.5rem;
+	margin-inline-start: 0.5rem;
 }
 
 .nav-chevron {
@@ -404,7 +404,7 @@ function nextPage() {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 1.5rem;
+	margin-block-end: 1.5rem;
 	gap: 1rem;
 	flex-wrap: wrap;
 }
@@ -425,7 +425,7 @@ function nextPage() {
 	border: 1px solid var(--rule);
 	border-radius: 4px;
 	font-size: 0.875rem;
-	min-width: 200px;
+	min-inline-size: 200px;
 }
 
 .sort-select {
@@ -456,7 +456,7 @@ function nextPage() {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-height: 200px;
+	min-block-size: 200px;
 	color: var(--ink-soft);
 }
 
@@ -471,11 +471,11 @@ function nextPage() {
 	padding: 1rem;
 	background: var(--error-bg);
 	border-radius: 8px;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 .error button {
-	margin-top: 0.5rem;
+	margin-block-start: 0.5rem;
 	padding: 0.375rem 0.75rem;
 	background: var(--accent);
 	color: var(--accent-ink);
@@ -485,16 +485,16 @@ function nextPage() {
 }
 
 .items-table {
-	width: 100%;
+	inline-size: 100%;
 	border-collapse: collapse;
 	font-size: 0.875rem;
 }
 
 .items-table th {
-	text-align: left;
+	text-align: start;
 	padding: 0.75rem;
 	background: var(--paper-2);
-	border-bottom: 2px solid var(--rule);
+	border-block-end: 2px solid var(--rule);
 	font-weight: 600;
 	color: var(--ink-soft);
 }
@@ -510,7 +510,7 @@ function nextPage() {
 
 .items-table td {
 	padding: 0.75rem;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 	cursor: pointer;
 }
 
@@ -533,7 +533,7 @@ function nextPage() {
 	justify-content: center;
 	align-items: center;
 	gap: 1rem;
-	margin-top: 1.5rem;
+	margin-block-start: 1.5rem;
 	padding: 1rem;
 }
 

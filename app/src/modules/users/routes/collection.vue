@@ -175,14 +175,14 @@ function rowKey(row: UserInfo, index: number): string {
 
 <style scoped>
 .users-view {
-	max-width: 800px;
+	max-inline-size: 800px;
 }
 
 .users-header {
 	display: flex;
 	align-items: center;
 	gap: 1rem;
-	margin-bottom: 1.5rem;
+	margin-block-end: 1.5rem;
 }
 
 .users-header h1 {
@@ -201,7 +201,7 @@ function rowKey(row: UserInfo, index: number): string {
 }
 
 .users-table {
-	width: 100%;
+	inline-size: 100%;
 	border-collapse: collapse;
 	font-size: 0.875rem;
 }
@@ -210,7 +210,7 @@ function rowKey(row: UserInfo, index: number): string {
 .users-table td {
 	padding: 0.625rem 0.75rem;
 	text-align: start;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 }
 
 .users-table th {

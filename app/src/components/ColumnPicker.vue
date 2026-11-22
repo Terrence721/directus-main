@@ -34,12 +34,12 @@ function toggleAll() {
 
 <template>
 	<div class="field-picker">
-		<button class="field-picker__toggle" @click="showPanel = !showPanel" type="button">
+		<button class="field-picker__toggle" type="button" @click="showPanel = !showPanel">
 			Columns · {{ modelValue.length }}
 		</button>
 
 		<div v-if="showPanel" class="field-picker__panel">
-			<button class="field-picker__select-all" @click="toggleAll" type="button">
+			<button class="field-picker__select-all" type="button" @click="toggleAll">
 				{{ availableFields.length > 0 ? 'Select all' : 'Deselect all' }}
 			</button>
 			<div class="field-list">
@@ -74,26 +74,26 @@ function toggleAll() {
 
 .field-picker__panel {
 	position: absolute;
-	top: calc(100% + 0.25rem);
-	left: 0;
+	inset-block-start: calc(100% + 0.25rem);
+	inset-inline-start: 0;
 	background: var(--paper);
 	border: 1px solid var(--rule);
 	border-radius: 0.375rem;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
 	z-index: 10;
-	min-width: 160px;
-	max-height: 240px;
+	min-inline-size: 160px;
+	max-block-size: 240px;
 	overflow-y: auto;
 	padding: 0.5rem 0;
 }
 
 .field-picker__select-all {
 	display: block;
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.375rem 0.75rem;
 	background: none;
 	border: none;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 	font: inherit;
 	font-size: 0.75rem;
 	color: var(--accent);

@@ -103,8 +103,9 @@ onMounted(fetchCollections);
 
 <style scoped>
 .search-view {
-	max-width: 900px;
+	max-inline-size: 900px;
 }
+
 h1 {
 	margin: 0 0 1.5rem;
 	font-size: 1.5rem;
@@ -113,8 +114,9 @@ h1 {
 .search-form {
 	display: flex;
 	gap: 0.5rem;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
+
 .search-input {
 	flex: 1;
 	padding: 0.625rem 0.75rem;
@@ -125,10 +127,12 @@ h1 {
 	border-radius: 0.375rem;
 	color: var(--ink);
 }
+
 .search-input:focus-visible {
 	outline: 2px solid var(--accent);
 	outline-offset: 1px;
 }
+
 .search-form button {
 	padding: 0.625rem 1.25rem;
 	font: inherit;
@@ -139,10 +143,12 @@ h1 {
 	border-radius: 0.375rem;
 	cursor: pointer;
 }
+
 .search-form button:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;
 }
+
 .clear-btn {
 	background: var(--paper-2);
 	color: var(--ink);
@@ -153,8 +159,9 @@ h1 {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 1rem;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
+
 .coll-filter {
 	display: flex;
 	align-items: center;
@@ -169,21 +176,24 @@ h1 {
 	text-align: center;
 	color: var(--ink-soft);
 }
+
 .search-error {
 	color: #b3261e;
 }
 
 .search-table {
-	width: 100%;
+	inline-size: 100%;
 	border-collapse: collapse;
 	font-size: 0.875rem;
 }
+
 .search-table th,
 .search-table td {
 	padding: 0.5rem 0.75rem;
 	text-align: start;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 }
+
 .search-table th {
 	font-weight: 600;
 	color: var(--ink-soft);
@@ -192,6 +202,7 @@ h1 {
 	letter-spacing: 0.04em;
 	background: var(--paper-2);
 }
+
 .search-table tr:hover td {
 	background: var(--paper-2);
 }
@@ -201,9 +212,10 @@ h1 {
 	align-items: center;
 	justify-content: center;
 	gap: 1rem;
-	margin-top: 1rem;
+	margin-block-start: 1rem;
 	font-size: 0.875rem;
 }
+
 .search-pagination button {
 	padding: 0.375rem 0.75rem;
 	font: inherit;
@@ -212,6 +224,7 @@ h1 {
 	border-radius: 0.375rem;
 	cursor: pointer;
 }
+
 .search-pagination button:disabled {
 	opacity: 0.5;
 	cursor: not-allowed;

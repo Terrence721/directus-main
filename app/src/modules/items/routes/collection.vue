@@ -266,16 +266,16 @@ async function handleDelete(id: string) {
 }
 
 .items-sidebar {
-	width: 200px;
+	inline-size: 200px;
 	flex-shrink: 0;
 	background: var(--paper-2);
 	border: 1px solid var(--rule);
 	border-radius: 0.5rem;
 	padding: 1rem;
 	position: sticky;
-	top: 0;
-	height: fit-content;
-	max-height: calc(100vh - 6rem);
+	inset-block-start: 0;
+	block-size: fit-content;
+	max-block-size: calc(100vh - 6rem);
 	overflow-y: auto;
 }
 
@@ -313,7 +313,7 @@ async function handleDelete(id: string) {
 }
 
 .coll-item:hover {
-	background: rgba(0, 0, 0, 0.04);
+	background: rgb(0 0 0 / 4%);
 }
 
 .coll-item.active {
@@ -331,7 +331,7 @@ async function handleDelete(id: string) {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 .items-header h1 {
@@ -352,7 +352,7 @@ async function handleDelete(id: string) {
 }
 
 .items-table {
-	width: 100%;
+	inline-size: 100%;
 	border-collapse: collapse;
 	font-size: 0.875rem;
 }
@@ -361,7 +361,7 @@ async function handleDelete(id: string) {
 .items-table td {
 	padding: 0.5rem 0.75rem;
 	text-align: start;
-	border-bottom: 1px solid var(--rule);
+	border-block-end: 1px solid var(--rule);
 }
 
 .items-table th {
@@ -378,7 +378,7 @@ async function handleDelete(id: string) {
 }
 
 .items-table__actions {
-	width: 120px;
+	inline-size: 120px;
 	text-align: center;
 }
 
@@ -422,7 +422,7 @@ async function handleDelete(id: string) {
 	align-items: center;
 	justify-content: center;
 	gap: 1rem;
-	margin-top: 1rem;
+	margin-block-start: 1rem;
 	font-size: 0.875rem;
 }
 
@@ -445,14 +445,14 @@ async function handleDelete(id: string) {
 	border: 1px solid var(--rule);
 	border-radius: 0.5rem;
 	padding: 1.5rem;
-	margin-top: 1.5rem;
+	margin-block-start: 1.5rem;
 }
 
 .create-form__header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 .create-form__header h2 {
@@ -478,7 +478,7 @@ async function handleDelete(id: string) {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 1rem;
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 .create-form__field {
@@ -487,7 +487,7 @@ async function handleDelete(id: string) {
 }
 
 .create-form__field label {
-	margin-bottom: 0.25rem;
+	margin-block-end: 0.25rem;
 	font-size: 0.875rem;
 	color: var(--ink-soft);
 }

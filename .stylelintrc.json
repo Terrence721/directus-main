@@ -9,6 +9,9 @@
 	],
 	"rules": {
 		"csstools/use-logical": true,
-		"value-keyword-case": ["lower", { "ignoreProperties": ["font-family", "/^--/"] }]
+		"value-keyword-case": ["lower", { "ignoreProperties": ["font-family", "/^--/"] }],
+		"selector-class-pattern": null,
+		"declaration-block-single-line-max-declarations": null,
+		"no-descending-specificity": null
 	}
 }

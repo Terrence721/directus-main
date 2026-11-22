@@ -25,7 +25,7 @@ function goToRegister() {
 
 <style scoped>
 .link {
-	margin-top: 1rem;
+	margin-block-start: 1rem;
 	text-align: center;
 	font-size: 0.875rem;
 	color: var(--ink-soft);

@@ -118,7 +118,7 @@ function deleteItem() {
 
 <style scoped>
 .detail-page {
-	max-width: 800px;
+	max-inline-size: 800px;
 	margin: 0 auto;
 	padding: 2rem;
 }
@@ -127,7 +127,7 @@ function deleteItem() {
 	display: flex;
 	align-items: center;
 	gap: 1rem;
-	margin-bottom: 2rem;
+	margin-block-end: 2rem;
 }
 
 .btn-back {
@@ -139,7 +139,7 @@ function deleteItem() {
 }
 
 .detail-actions {
-	margin-left: auto;
+	margin-inline-start: auto;
 }
 
 .btn-delete {
@@ -152,20 +152,20 @@ function deleteItem() {
 }
 
 .field-group {
-	margin-bottom: 1rem;
+	margin-block-end: 1rem;
 }
 
 .field-label {
 	display: block;
 	font-weight: 600;
-	margin-bottom: 0.25rem;
+	margin-block-end: 0.25rem;
 	color: var(--ink-soft);
 	font-size: 0.875rem;
 }
 
 .field-input,
 .field-textarea {
-	width: 100%;
+	inline-size: 100%;
 	padding: 0.5rem;
 	border: 1px solid var(--rule);
 	border-radius: 4px;
@@ -174,7 +174,7 @@ function deleteItem() {
 }
 
 .field-textarea {
-	min-height: 100px;
+	min-block-size: 100px;
 	resize: vertical;
 }
 
@@ -185,7 +185,7 @@ function deleteItem() {
 }
 
 .error button {
-	margin-top: 0.5rem;
+	margin-block-start: 0.5rem;
 	padding: 0.5rem 1rem;
 	background: var(--accent);
 	color: var(--accent-ink);
