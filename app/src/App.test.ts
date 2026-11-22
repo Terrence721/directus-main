@@ -4,21 +4,14 @@ import { createPinia, setActivePinia } from 'pinia';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App.vue';
 import { router } from './router.js';
+import * as composables from '@directus/composables';
 
-vi.mock('./api/serverClient.js', () => ({
-	fetchServerInfo: vi.fn().mockResolvedValue({
-		projectName: 'Directus Main Demo',
-		projectLogoUrl: null,
-		projectColor: '#563acc',
-		authProviders: [{ name: 'Email / Password', driver: 'local' }],
-		registrationEnabled: true,
-	}),
-}));
-
+// Mock the entire @directus/composables module so we control fetchServerInfo per-test
 vi.mock('@directus/composables', async () => {
 	const actual = await vi.importActual<object>('@directus/composables');
 	return {
 		...actual,
+		fetchServerInfo: vi.fn(),
 		useRouter: () => ({
 			router,
 			route: router.currentRoute,
@@ -33,6 +26,15 @@ enableAutoUnmount(afterEach);
 
 beforeEach(() => {
 	setActivePinia(createPinia());
+	vi.clearAllMocks();
+	// Default: server returns valid info
+	vi.mocked(composables.fetchServerInfo).mockResolvedValue({
+		projectName: 'Directus Main Demo',
+		projectLogoUrl: null,
+		projectColor: '#563acc',
+		authProviders: [{ name: 'Email / Password', driver: 'local' }],
+		registrationEnabled: true,
+	});
 });
 
 describe('App', () => {
@@ -78,13 +80,18 @@ describe('App', () => {
 
 	it('shows an error message if hydration fails after mount', async () => {
 		const app = useAppStore();
+		// Override: server call will fail for this test
+		vi.mocked(composables.fetchServerInfo).mockRejectedValue(new Error('network down'));
+		useAuthStore().setSession('token', Date.now() + 60_000);
 		await router.push('/login');
 		const wrapper = mount(App, { global: { plugins: [router] } });
 
-		app.failHydration(new Error('network down'));
-		await wrapper.vm.$nextTick();
-
-		// With a broken hydration path, App falls back to the error paragraph before rendering shell
-		expect(wrapper.find('.hydration-error').exists()).toBe(true);
+		// With a broken hydration path, hydrate() leaves the store in error state
+		// (does not call completeHydration), so .hydration-error renders instead of RouterView
+		await vi.waitFor(() => {
+			expect(app.hydrationError).not.toBeNull();
+			expect(app.hydrated).toBe(false);
+			expect(wrapper.find('.hydration-error').exists()).toBe(true);
+		});
 	});
 });

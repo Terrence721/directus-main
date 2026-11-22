@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useAppStore, useAuthStore, useServerStore } from '@directus/stores';
-import { fetchServerInfo, useRouter } from '@directus/composables';
+import { useAuthStore } from '@directus/stores';
+import { useRouter } from '@directus/composables';
+import { hydrate, projectName, useHydrationState } from './hydrate.js';
 
 const auth = useAuthStore();
-const server = useServerStore();
-const app = useAppStore();
 const { push } = useRouter();
+const { hydrating, hydrationError } = useHydrationState();
 
-const projectName = ref('');
 const open = ref(false);
 const darkMode = ref(false);
 
@@ -22,6 +21,10 @@ onMounted(() => {
 	updateTheme();
 });
 
+onMounted(async () => {
+	await hydrate();
+});
+
 function updateTheme() {
 	document.documentElement.setAttribute('data-theme', darkMode.value ? 'dark' : 'light');
 	localStorage.setItem('darkMode', String(darkMode.value));
@@ -31,18 +34,6 @@ function toggleDarkMode() {
 	darkMode.value = !darkMode.value;
 	updateTheme();
 }
-
-onMounted(async () => {
-	app.startHydration();
-	try {
-		const info = await fetchServerInfo();
-		server.setInfo(info);
-		projectName.value = info.projectName;
-	} catch (err) {
-		app.failHydration(err instanceof Error ? err : new Error(String(err)));
-	}
-	app.completeHydration();
-});
 
 async function handleLogout() {
 	auth.clearSession();
@@ -79,8 +70,8 @@ async function handleLogout() {
 				</button>
 			</header>
 			<main class="main">
-				<p v-if="app.hydrating" class="hydration-loading">Loading…</p>
-				<p v-else-if="app.hydrationError" class="hydration-error">Something went wrong.</p>
+				<p v-if="hydrating" class="hydration-loading">Loading…</p>
+				<p v-else-if="hydrationError" class="hydration-error">Something went wrong.</p>
 				<RouterView v-else />
 			</main>
 		</div>
