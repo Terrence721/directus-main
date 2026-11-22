@@ -21,7 +21,13 @@ beforeEach(() => {
 
 describe('hydrate', () => {
 	it('marks complete when the server returns info', async () => {
-		const info = { projectName: 'Demo', projectLogoUrl: null, projectColor: '#563acc', authProviders: [], registrationEnabled: true };
+		const info = {
+			projectName: 'Demo',
+			projectLogoUrl: null,
+			projectColor: '#563acc',
+			authProviders: [],
+			registrationEnabled: true,
+		};
 		vi.mocked(composables.fetchServerInfo).mockResolvedValue(info);
 
 		useAuthStore().setSession('token', Date.now() + 60_000);
