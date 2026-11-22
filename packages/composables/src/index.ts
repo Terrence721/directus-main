@@ -14,3 +14,4 @@ export { login } from './authClient.js';
 export { register } from './registerClient.js';
 export type { LoginCredentials } from './authClient.js';
 export type { RegisterData } from './registerClient.js';
+export { useDeploymentNavigation } from './useDeploymentNavigation.js';

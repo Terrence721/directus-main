@@ -10,7 +10,7 @@ defineEmits<{ click: [] }>();
 </script>
 
 <template>
-	<button class="coll-group" :class="{ 'coll-group--active': selected }" @click="$emit('click')" type="button">
+	<button type="button" class="coll-group" :class="{ 'coll-group--active': selected }" @click="$emit('click')">
 		<span class="coll-group__name">{{ collection.label }}</span>
 		<span class="coll-group__count">{{ collection.sampleCount }}</span>
 	</button>

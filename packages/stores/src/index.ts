@@ -6,3 +6,5 @@ export { useServerStore } from './server.js';
 export type { AuthProvider, ServerInfo } from './server.js';
 export { useAppStore } from './app.js';
 export type { HydrationStatus } from './app.js';
+export { useInsightsStore } from './insights.js';
+export type { Dashboard, Panel } from './insights.js';
