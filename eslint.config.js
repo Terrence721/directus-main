@@ -3,16 +3,16 @@ import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescrip
 import { flatConfigs as importXFlatConfigs } from 'eslint-plugin-import-x';
 import vue from 'eslint-plugin-vue';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
+import { config, configs, parser } from 'typescript-eslint';
 import vueParser from 'vue-eslint-parser';
 import prettier from 'eslint-config-prettier';
 
-export default tseslint.config(
+export default config(
 	{
 		ignores: ['**/dist/**', '**/node_modules/**', '**/coverage/**', '.yarn/**'],
 	},
 	js.configs.recommended,
-	...tseslint.configs.recommended,
+	...configs.recommended,
 	...vue.configs['flat/recommended'],
 	importXFlatConfigs.recommended,
 	{
@@ -24,6 +24,7 @@ export default tseslint.config(
 		},
 		settings: {
 			'import-x/resolver-next': [createTypeScriptImportResolver()],
+			'import-x/typescript': ['.vue'],
 		},
 	},
 	{
@@ -31,7 +32,7 @@ export default tseslint.config(
 		languageOptions: {
 			parser: vueParser,
 			parserOptions: {
-				parser: tseslint.parser,
+				parser,
 			},
 		},
 		rules: {
