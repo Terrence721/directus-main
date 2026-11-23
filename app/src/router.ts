@@ -41,7 +41,10 @@ router.beforeEach((to, from) => {
 		return { name: 'home' };
 	}
 
-	if (from.query.reason && !to.query.reason) {
+	// Clear the reason query param only when re-entering the login page,
+	// not when navigating away from it — otherwise logging in triggers an
+	// infinite redirect loop (from.query.reason stays set on the login page).
+	if (to.name === 'login' && from.query.reason && !to.query.reason) {
 		return { query: { reason: undefined } };
 	}
 });

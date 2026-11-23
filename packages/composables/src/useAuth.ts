@@ -1,4 +1,5 @@
 import { useAuthStore } from '@directus/stores';
+import { computed } from 'vue';
 
 /**
  * Composable that provides a minimal, type-safe API around the Pinia auth store.
@@ -15,9 +16,9 @@ export function useAuth() {
 
 	return {
 		/** Returns true if a valid session is present (not null and not expired). */
-		loggedIn: auth.loggedIn,
+		loggedIn: computed(() => auth.loggedIn),
 		/** The current session, or null when logged out. */
-		session: auth.session,
+		session: computed(() => auth.session),
 		/** Sets the session in the store. */
 		setSession: auth.setSession,
 		/** Clears the session from the store. */

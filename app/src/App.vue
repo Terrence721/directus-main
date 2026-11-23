@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@directus/stores';
-import { useRouter } from '@directus/composables';
+import { useRouter, initSessionSync } from '@directus/composables';
 import { hydrate, projectName, useHydrationState } from './hydrate.js';
 
 const auth = useAuthStore();
@@ -10,6 +10,8 @@ const { hydrating, hydrationError } = useHydrationState();
 
 const open = ref(false);
 const darkMode = ref(false);
+
+initSessionSync();
 
 onMounted(() => {
 	const stored = localStorage.getItem('darkMode');
