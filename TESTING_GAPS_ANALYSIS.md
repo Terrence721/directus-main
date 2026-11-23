@@ -116,11 +116,16 @@ Only `useAuth.ts` and `authClient.ts` have tests. **11 of 14 source files are un
 
 ## API Layer — Testing Gaps
 
-| File                          |
-| ----------------------------- |
-| `api/src/routes/demo-data.ts` |
-| `api/src/routes/activity.ts`  |
-| `api/src/routes/search.ts`    |
+### Covered Items (Tests Exist ✅)
+
+- `api/src/routes/demo-data.ts` — demo-data.test.ts (13 tests)
+- `api/src/routes/search.ts` — search.test.ts (13 tests)
+
+### Still Untested
+
+| File                         |
+| ---------------------------- |
+| `api/src/routes/activity.ts` |
 
 ---
 
@@ -128,7 +133,7 @@ Only `useAuth.ts` and `authClient.ts` have tests. **11 of 14 source files are un
 
 1. **`packages/composables/src/useRouter.ts`** — Provides `push`, `replace`, `back` used throughout app. High value, low risk, easy to mock.
 2. **`packages/composables/src/useSessionSync.ts`** — Cross-tab session sync via StorageEvent listeners.
-3. **`api/src/routes/demo-data.ts`** — Seeded demo users / credentials.
+3. **`api/src/routes/activity.ts`** — Activity logging endpoints.
 
 ---
 
