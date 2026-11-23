@@ -10,8 +10,8 @@ beforeEach(() => {
 describe('useAuth', () => {
 	it('provides the auth store state', () => {
 		const { loggedIn, session, setSession, clearSession } = useAuth();
-		expect(loggedIn).toBe(false);
-		expect(session).toBeNull();
+		expect(loggedIn.value).toBe(false);
+		expect(session.value).toBeNull();
 		expect(setSession).toBeTypeOf('function');
 		expect(clearSession).toBeTypeOf('function');
 	});
