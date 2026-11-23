@@ -16,22 +16,22 @@ These files directly affect app behavior and were recently modified (bug fixes f
 
 ### Untested Source Files
 
-| File | Risk Level | Notes |
-| ------ | ------------ | ------- |
-| `app/src/main.ts` | **HIGH** | App entry point: Pinia + router + mount. Contains boot sequence. **Recently edited** — removed `initSessionPersistence()`. No test covers the boot sequence or session behavior. |
-| `app/src/router.ts` | **HIGH** | Route guards: `beforeEach` auth logic. **Recently edited** — fixed infinite redirect loop on login. No tests for auth redirects, `session_expired` reason param, or route transitions. |
-| `app/src/components/ItemsFinder.vue` | LOW | UI component |
-| `app/src/components/ColumnPicker.vue` | LOW | UI component |
-| `app/src/components/CollectionSelector.vue` | LOW | UI component |
+| File                                        | Risk Level | Notes                                                                                                                                                                                  |
+| ------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/src/main.ts`                           | **HIGH**   | App entry point: Pinia + router + mount. Contains boot sequence. **Recently edited** — removed `initSessionPersistence()`. No test covers the boot sequence or session behavior.       |
+| `app/src/router.ts`                         | **HIGH**   | Route guards: `beforeEach` auth logic. **Recently edited** — fixed infinite redirect loop on login. No tests for auth redirects, `session_expired` reason param, or route transitions. |
+| `app/src/components/ItemsFinder.vue`        | LOW        | UI component                                                                                                                                                                           |
+| `app/src/components/ColumnPicker.vue`       | LOW        | UI component                                                                                                                                                                           |
+| `app/src/components/CollectionSelector.vue` | LOW        | UI component                                                                                                                                                                           |
 
 ### Untested App Module Composables
 
-| File |
-| ------ |
+| File                                                             |
+| ---------------------------------------------------------------- |
 | `app/src/modules/content/composables/use-collections-manager.ts` |
-| `app/src/modules/content/composables/use-navigation.ts` |
-| `app/src/modules/visual/composables/use-collections-manager.ts` |
-| `app/src/modules/visual/composables/use-navigation.ts` |
+| `app/src/modules/content/composables/use-navigation.ts`          |
+| `app/src/modules/visual/composables/use-collections-manager.ts`  |
+| `app/src/modules/visual/composables/use-navigation.ts`           |
 
 ---
 
@@ -39,22 +39,22 @@ These files directly affect app behavior and were recently modified (bug fixes f
 
 Only `useAuth.ts` has a test (`useAuth.test.ts`). **13 of 14 source files are untested:**
 
-| File |
-| ------ |
-| `packages/composables/src/useRouter.ts` |
-| `packages/composables/src/serverClient.ts` |
-| `packages/composables/src/authClient.ts` |
-| `packages/composables/src/useSessionSync.ts` |
-| `packages/composables/src/useServer.ts` |
-| `packages/composables/src/useFileUpload.ts` |
-| `packages/composables/src/useItems.ts` |
-| `packages/composables/src/useUsers.ts` |
-| `packages/composables/src/useActivity.ts` |
-| `packages/composables/src/useCollections.ts` |
-| `packages/composables/src/useSearch.ts` |
+| File                                                  |
+| ----------------------------------------------------- |
+| `packages/composables/src/useRouter.ts`               |
+| `packages/composables/src/serverClient.ts`            |
+| `packages/composables/src/authClient.ts`              |
+| `packages/composables/src/useSessionSync.ts`          |
+| `packages/composables/src/useServer.ts`               |
+| `packages/composables/src/useFileUpload.ts`           |
+| `packages/composables/src/useItems.ts`                |
+| `packages/composables/src/useUsers.ts`                |
+| `packages/composables/src/useActivity.ts`             |
+| `packages/composables/src/useCollections.ts`          |
+| `packages/composables/src/useSearch.ts`               |
 | `packages/composables/src/useDeploymentNavigation.ts` |
-| `packages/composables/src/registerClient.ts` |
-| `packages/composables/src/index.ts` |
+| `packages/composables/src/registerClient.ts`          |
+| `packages/composables/src/index.ts`                   |
 
 **Highest priority:** `authClient.ts` — contains real vs. simulated login logic. Critical for the login flow that was recently fixed.
 
@@ -62,62 +62,62 @@ Only `useAuth.ts` has a test (`useAuth.test.ts`). **13 of 14 source files are un
 
 ## `@directus/stores` Package — Testing Gaps
 
-| File |
-|------|
-| `packages/stores/src/index.ts` |
+| File                              |
+| --------------------------------- |
+| `packages/stores/src/index.ts`    |
 | `packages/stores/src/insights.ts` |
 
 ---
 
 ## `@directus/errors` Package — Testing Gaps
 
-| File |
-| ------ |
-| `packages/errors/src/create-error.ts` |
+| File                                       |
+| ------------------------------------------ |
+| `packages/errors/src/create-error.ts`      |
 | `packages/errors/src/is-directus-error.ts` |
-| `packages/errors/src/index.ts` |
+| `packages/errors/src/index.ts`             |
 
 ---
 
 ## `@directus/constants` Package — Testing Gaps
 
-| File |
-|------|
+| File                              |
+| --------------------------------- |
 | `packages/constants/src/index.ts` |
 
 ---
 
 ## `@directus/system-data` Package — Testing Gaps
 
-| File |
-|------|
+| File                                |
+| ----------------------------------- |
 | `packages/system-data/src/index.ts` |
 
 ---
 
 ## `@directus/utils` Package — Testing Gaps
 
-| File |
-|------|
+| File                          |
+| ----------------------------- |
 | `packages/utils/src/index.ts` |
 
 ---
 
 ## `@directus/validation` Package — Testing Gaps
 
-| File |
-|------|
+| File                               |
+| ---------------------------------- |
 | `packages/validation/src/index.ts` |
 
 ---
 
 ## API Layer — Testing Gaps
 
-| File |
-| ------ |
+| File                          |
+| ----------------------------- |
 | `api/src/routes/demo-data.ts` |
-| `api/src/routes/activity.ts` |
-| `api/src/routes/search.ts` |
+| `api/src/routes/activity.ts`  |
+| `api/src/routes/search.ts`    |
 
 ---
 
