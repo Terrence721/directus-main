@@ -4,9 +4,9 @@ Generated from analysis of all source files vs. corresponding test files.
 
 ## Summary
 
-- **63 test files** exist across the repository (+2 new).
+- **64 test files** exist across the repository (+3 new).
 - Many core packages are well-covered (stores, errors, constants, utils, validation, system-data, API routes).
-- **Critical gaps remain** in `@directus/composables` (9 of 14 source files untested after recent coverage additions).
+- **Critical gaps remain** in `@directus/composables` (8 of 14 source files untested after recent coverage additions).
 - Covered HIGH-risk items: `app/src/main.ts`, `app/src/router.ts`, `packages/composables/src/authClient.ts`.
 
 ---
@@ -47,12 +47,12 @@ Only `useAuth.ts` and `authClient.ts` have tests. **11 of 14 source files are un
 | File                                                  | Status     |
 | ----------------------------------------------------- | ---------- |
 | `packages/composables/src/useRouter.ts`               | Covered ✅ |
-| `packages/composables/src/serverClient.ts`            | Untested   |
+| `packages/composables/src/serverClient.ts`            | Covered ✅ |
 | `packages/composables/src/useSessionSync.ts`          | Covered ✅ |
 | `packages/composables/src/useServer.ts`               | Covered ✅ |
 | `packages/composables/src/useFileUpload.ts`           | Covered ✅ |
 | `packages/composables/src/useItems.ts`                | Covered ✅ |
-| `packages/composables/src/useUsers.ts`                | Untested   |
+| `packages/composables/src/useUsers.ts`                | Covered ✅ |
 | `packages/composables/src/useActivity.ts`             | Untested   |
 | `packages/composables/src/useCollections.ts`          | Untested   |
 | `packages/composables/src/useSearch.ts`               | Untested   |
@@ -60,7 +60,7 @@ Only `useAuth.ts` and `authClient.ts` have tests. **11 of 14 source files are un
 | `packages/composables/src/registerClient.ts`          | Untested   |
 | `packages/composables/src/index.ts`                   | Untested   |
 
-**Highest priority now:** `useRouter.ts` — provides `push`, `replace`, `back` used throughout app. Next: `useSessionSync.ts` for cross-tab session sync.
+**Highest priority now:** `packages/composables/src/useActivity.ts` — Activity logging endpoints used throughout app. Next: `packages/composables/src/useCollections.ts` for collection data management.
 
 ---
 
@@ -145,7 +145,7 @@ Only `useAuth.ts` and `authClient.ts` have tests. **11 of 14 source files are un
 - App: App.vue, hydrate.ts, sessionPersistence.ts
 - App modules: defineModule, routerPass, routing, modules/index
 - Router: router.test.ts (beforeEach guard behavior)
-- Composables: useAuth.test.ts, authClient.test.ts, useRouter.test.ts, useSessionSync.test.ts, useServer.test.ts, useFileUpload.test.ts, useItems.test.ts
+- Composables: useAuth.test.ts, authClient.test.ts, useRouter.test.ts, useSessionSync.test.ts, useServer.test.ts, useFileUpload.test.ts, useItems.test.ts, useUsers.test.ts
 - Stores: auth, user, server, app
 - Errors: forbidden, invalid-credentials, not-found, unauthorized
 - Constants: auth, permissions
