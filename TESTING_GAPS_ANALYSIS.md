@@ -35,7 +35,6 @@ These files directly affect app behavior and were recently modified (bug fixes f
 | File                                                             |
 | ---------------------------------------------------------------- |
 | `app/src/modules/content/composables/use-collections-manager.ts` |
-| `app/src/modules/content/composables/use-navigation.ts`          |
 | `app/src/modules/visual/composables/use-collections-manager.ts`  |
 | `app/src/modules/visual/composables/use-navigation.ts`           |
 
