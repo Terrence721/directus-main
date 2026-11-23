@@ -24,21 +24,19 @@ describe('authClient.login', () => {
 	});
 
 	it('throws InvalidCredentialsError when email is incorrect', async () => {
-		await expect(
-			login({ email: 'wrong@example.com', password: DEMO_PASSWORD }),
-		).rejects.toThrow(InvalidCredentialsError);
+		await expect(login({ email: 'wrong@example.com', password: DEMO_PASSWORD })).rejects.toThrow(
+			InvalidCredentialsError,
+		);
 	});
 
 	it('throws InvalidCredentialsError when password is incorrect', async () => {
-		await expect(
-			login({ email: DEMO_EMAIL, password: 'wrongpassword' }),
-		).rejects.toThrow(InvalidCredentialsError);
+		await expect(login({ email: DEMO_EMAIL, password: 'wrongpassword' })).rejects.toThrow(InvalidCredentialsError);
 	});
 
 	it('throws InvalidCredentialsError when both credentials are wrong', async () => {
-		await expect(
-			login({ email: 'wrong@example.com', password: 'wrongpassword' }),
-		).rejects.toThrow(InvalidCredentialsError);
+		await expect(login({ email: 'wrong@example.com', password: 'wrongpassword' })).rejects.toThrow(
+			InvalidCredentialsError,
+		);
 	});
 
 	it('sets expiresAt at least 1 hour in the future', async () => {
