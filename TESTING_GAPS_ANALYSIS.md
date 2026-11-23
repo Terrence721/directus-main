@@ -17,11 +17,11 @@ These files directly affect app behavior and were recently modified (bug fixes f
 
 ### Untested Source Files
 
-| File                                        | Risk Level | Notes                                                                                                                                         |
-| ------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `app/src/components/ItemsFinder.vue`        | LOW        | UI component                                                                                                                                  |
-| `app/src/components/ColumnPicker.vue`       | LOW        | UI component                                                                                                                                  |
-| `app/src/components/CollectionSelector.vue` | LOW        | UI component                                                                                                                                  |
+| File                                        | Risk Level | Notes        |
+| ------------------------------------------- | ---------- | ------------ |
+| `app/src/components/ItemsFinder.vue`        | LOW        | UI component |
+| `app/src/components/ColumnPicker.vue`       | LOW        | UI component |
+| `app/src/components/CollectionSelector.vue` | LOW        | UI component |
 
 ### Covered Items (Tests Exist ✅)
 
