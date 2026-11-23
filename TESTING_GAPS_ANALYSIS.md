@@ -17,16 +17,18 @@ These files directly affect app behavior and were recently modified (bug fixes f
 
 ### Untested Source Files
 
-| File                                        | Risk Level | Notes        |
-| ------------------------------------------- | ---------- | ------------ |
-| `app/src/components/ItemsFinder.vue`        | LOW        | UI component |
-| `app/src/components/ColumnPicker.vue`       | LOW        | UI component |
-| `app/src/components/CollectionSelector.vue` | LOW        | UI component |
+| File                                  | Risk Level | Notes        |
+| ------------------------------------- | ---------- | ------------ |
+| `app/src/components/ItemsFinder.vue`  | LOW        | UI component |
+| `app/src/components/ColumnPicker.vue` | LOW        | UI component |
 
 ### Covered Items (Tests Exist ✅)
 
 - `app/src/main.ts` — main.test.ts (bootstrap smoke test)
 - `app/src/router.ts` — router.test.ts (beforeEach guard behavior)
+- `app/src/components/CollectionSelector.vue` — CollectionSelector.test.ts (5 tests)
+- `app/src/components/ColumnPicker.vue` — ColumnPicker.test.ts (5 tests)
+- `app/src/components/ItemsFinder.vue` — ItemsFinder.test.ts (3 tests)
 
 ### Untested App Module Composables
 
