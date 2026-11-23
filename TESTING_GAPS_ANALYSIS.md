@@ -44,21 +44,21 @@ These files directly affect app behavior and were recently modified (bug fixes f
 
 Only `useAuth.ts` and `authClient.ts` have tests. **11 of 14 source files are untested:**
 
-| File                                                  | Status          |
-| ----------------------------------------------------- | --------------- |
-| `packages/composables/src/useRouter.ts`               | Covered ✅      |
-| `packages/composables/src/serverClient.ts`            | Untested        |
-| `packages/composables/src/useSessionSync.ts`          | Covered ✅      |
-| `packages/composables/src/useServer.ts`               | Covered ✅      |
-| `packages/composables/src/useFileUpload.ts`           | Covered ✅      |
-| `packages/composables/src/useItems.ts`                | Covered ✅      |
-| `packages/composables/src/useUsers.ts`                | Untested        |
-| `packages/composables/src/useActivity.ts`             | Untested        |
-| `packages/composables/src/useCollections.ts`          | Untested        |
-| `packages/composables/src/useSearch.ts`               | Untested        |
-| `packages/composables/src/useDeploymentNavigation.ts` | Untested        |
-| `packages/composables/src/registerClient.ts`          | Untested        |
-| `packages/composables/src/index.ts`                   | Untested        |
+| File                                                  | Status     |
+| ----------------------------------------------------- | ---------- |
+| `packages/composables/src/useRouter.ts`               | Covered ✅ |
+| `packages/composables/src/serverClient.ts`            | Untested   |
+| `packages/composables/src/useSessionSync.ts`          | Covered ✅ |
+| `packages/composables/src/useServer.ts`               | Covered ✅ |
+| `packages/composables/src/useFileUpload.ts`           | Covered ✅ |
+| `packages/composables/src/useItems.ts`                | Covered ✅ |
+| `packages/composables/src/useUsers.ts`                | Untested   |
+| `packages/composables/src/useActivity.ts`             | Untested   |
+| `packages/composables/src/useCollections.ts`          | Untested   |
+| `packages/composables/src/useSearch.ts`               | Untested   |
+| `packages/composables/src/useDeploymentNavigation.ts` | Untested   |
+| `packages/composables/src/registerClient.ts`          | Untested   |
+| `packages/composables/src/index.ts`                   | Untested   |
 
 **Highest priority now:** `useRouter.ts` — provides `push`, `replace`, `back` used throughout app. Next: `useSessionSync.ts` for cross-tab session sync.
 
