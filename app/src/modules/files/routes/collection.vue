@@ -32,10 +32,10 @@ async function refreshList() {
 	listLoading.value = true;
 	listError.value = null;
 	try {
-		if (!session?.accessToken) return;
+		if (!session.value?.accessToken) return;
 		const response = await fetch('/files', {
 			headers: {
-				Authorization: `Bearer ${session.accessToken}`,
+				Authorization: `Bearer ${session.value.accessToken}`,
 			},
 		});
 		if (!response.ok) throw new Error(`Failed to load files (${response.status})`);

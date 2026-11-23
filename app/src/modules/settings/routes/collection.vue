@@ -3,9 +3,9 @@ import { ref, computed, onMounted } from 'vue';
 import { useAuth } from '@directus/composables';
 import { useUserStore } from '@directus/stores';
 
-const auth = useAuth();
+const { session } = useAuth();
 const userStore = useUserStore();
-const accessToken = computed(() => auth.session?.accessToken ?? null);
+const accessToken = computed(() => session.value?.accessToken ?? null);
 const currentUser = computed(() => userStore.user);
 
 const form = ref({ firstName: '', lastName: '', email: '' });

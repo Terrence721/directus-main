@@ -10,9 +10,9 @@ interface UserInfo {
 	email: string;
 }
 
-const auth = useAuth();
+const { session } = useAuth();
 const userStore = useUserStore();
-const accessToken = computed(() => auth.session?.accessToken ?? null);
+const accessToken = computed(() => session.value?.accessToken ?? null);
 
 const users = ref<UserInfo[]>([]);
 const loading = ref(false);

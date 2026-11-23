@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useAuth, useActivity } from '@directus/composables';
 
-const auth = useAuth();
-const accessToken = ref(auth.session?.accessToken ?? null);
+const { session } = useAuth();
+const accessToken = computed(() => session.value?.accessToken ?? null);
 
 const { data: entries, loading, error, fetchActivity } = useActivity(accessToken.value);
 
