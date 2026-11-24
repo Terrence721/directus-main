@@ -1,26 +1,34 @@
 import { describe, expect, it } from 'vitest';
 import ItemsModule from './index.js';
-import ItemBrowser from './routes/collection.vue';
-import ItemDetail from './routes/detail.vue';
+import ItemsCollection from './routes/collection.vue';
+import ItemsDetail from './routes/detail.vue';
 
 describe('Items Module', () => {
 	it('exports a module with correct properties', () => {
 		expect(ItemsModule.id).toBe('items');
 		expect(ItemsModule.name).toBe('Items');
-		expect(ItemsModule.icon).toBe('☰');
+		expect(ItemsModule.icon).toBe('layers');
 	});
 
-	it('defines two routes: collection browser and item detail', () => {
+	it('defines all expected routes', () => {
+		const expectedRoutes = ['items-collection', 'items-detail'];
+
 		expect(ItemsModule.routes).toHaveLength(2);
+		ItemsModule.routes.forEach((route, i) => {
+			expect(route.name).toBe(expectedRoutes[i]);
+		});
+	});
 
-		// Collection browser
-		const browserRoute = ItemsModule.routes.find((r) => r.name === 'index')!;
-		expect(browserRoute.path).toBe('');
-		expect(browserRoute.component).toBe(ItemBrowser);
+	it('points collection route to Collection component', () => {
+		const collectionRoute = ItemsModule.routes.find((r) => r.name === 'items-collection')!;
+		expect(collectionRoute.component).toBe(ItemsCollection);
+		expect(collectionRoute.path).toBe('');
+	});
 
-		// Item detail
-		const detailRoute = ItemsModule.routes.find((r) => r.name === 'detail')!;
-		expect(detailRoute.path).toBe(':id');
-		expect(detailRoute.component).toBe(ItemDetail);
+	it('points detail route to Detail component with dynamic path and props', () => {
+		const detailRoute = ItemsModule.routes.find((r) => r.name === 'items-detail')!;
+		expect(detailRoute.component).toBe(ItemsDetail);
+		expect(detailRoute.path).toBe(':collection/:id');
+		expect(detailRoute.props).toBe(true);
 	});
 });
