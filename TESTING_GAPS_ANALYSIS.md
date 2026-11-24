@@ -19,7 +19,6 @@ These files directly affect app behavior and were recently modified (bug fixes f
 
 | File                                  | Risk Level | Notes        |
 | ------------------------------------- | ---------- | ------------ |
-| `app/src/components/ItemsFinder.vue`  | LOW        | UI component |
 | `app/src/components/ColumnPicker.vue` | LOW        | UI component |
 
 ### Covered Items (Tests Exist ✅)
@@ -133,9 +132,8 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 ## Recommended Priority Order
 
-1. `app/src/components/ItemsFinder.vue` — LOW risk UI component (optional)
-2. `app/src/components/ColumnPicker.vue` — LOW risk UI component (optional)
-3. Package-level index files (`stores`, `errors`, `constants`, `system-data`, `utils`, `validation`) — low-value targets per prior analysis.
+1. `app/src/components/ColumnPicker.vue` — LOW risk UI component (optional)
+2. Package-level index files (`stores`, `errors`, `constants`, `system-data`, `utils`, `validation`) — low-value targets per prior analysis.
 
 ---
 
