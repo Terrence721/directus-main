@@ -127,7 +127,7 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 ### Still Untested
 
 | File |
-| --- |
+| ---- |
 
 ---
 
