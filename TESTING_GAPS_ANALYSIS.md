@@ -65,10 +65,16 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 ## `@directus/stores` Package — Testing Gaps
 
-| File                              |
-| --------------------------------- |
-| `packages/stores/src/index.ts`    |
-| `packages/stores/src/insights.ts` |
+**All source files now have test coverage:**
+
+| File                              | Status     | Tests |
+| --------------------------------- | ---------- | ----- |
+| `packages/stores/src/index.ts`    | N/A ✅     | —     |
+| `packages/stores/src/insights.ts` | Covered ✅ | 13    |
+| `packages/stores/src/auth.ts`     | Covered ✅ | 4     |
+| `packages/stores/src/user.ts`     | Covered ✅ | 5     |
+| `packages/stores/src/app.ts`      | Covered ✅ | 12    |
+| `packages/stores/src/server.ts`   | Covered ✅ | 8     |
 
 ---
 
