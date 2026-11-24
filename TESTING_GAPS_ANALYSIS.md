@@ -90,9 +90,11 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 ## `@directus/constants` Package — Testing Gaps
 
-| File                              |
-| --------------------------------- |
-| `packages/constants/src/index.ts` |
+**All source files now have test coverage:**
+
+| File                              | Status | Tests |
+| --------------------------------- | ------ | ----- |
+| `packages/constants/src/index.ts` | N/A ✅ | —     |
 
 ---
 
