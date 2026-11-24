@@ -80,11 +80,13 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 ## `@directus/errors` Package — Testing Gaps
 
-| File                                       |
-| ------------------------------------------ |
-| `packages/errors/src/create-error.ts`      |
-| `packages/errors/src/is-directus-error.ts` |
-| `packages/errors/src/index.ts`             |
+**All source files now have test coverage:**
+
+| File                                       | Status     | Tests |
+| ------------------------------------------ | ---------- | ----- |
+| `packages/errors/src/index.ts`             | N/A ✅     | —     |
+| `packages/errors/src/create-error.ts`      | Covered ✅ | 9     |
+| `packages/errors/src/is-directus-error.ts` | Covered ✅ | —     |
 
 ---
 
