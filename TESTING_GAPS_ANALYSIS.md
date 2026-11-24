@@ -4,7 +4,7 @@ Generated from analysis of all source files vs. corresponding test files.
 
 ## Summary
 
-- **73 test files** exist across the repository (+9 new since baseline).
+- **76 test files** exist across the repository (+12 new since baseline).
 - Many core packages are well-covered (stores, errors, constants, utils, validation, system-data, API routes).
 - **All `@directus/composables` source files now have tests** (14/14 covered).
 - Covered HIGH-risk items: `app/src/main.ts`, `app/src/router.ts`, `packages/composables/src/authClient.ts`.
@@ -30,13 +30,13 @@ These files directly affect app behavior and were recently modified (bug fixes f
 - `app/src/components/ColumnPicker.vue` — ColumnPicker.test.ts (5 tests)
 - `app/src/components/ItemsFinder.vue` — ItemsFinder.test.ts (3 tests)
 
-### Untested App Module Composables
+### Covered App Module Composables
 
-| File                                                             |
-| ---------------------------------------------------------------- |
-| `app/src/modules/content/composables/use-collections-manager.ts` |
-| `app/src/modules/visual/composables/use-collections-manager.ts`  |
-| `app/src/modules/visual/composables/use-navigation.ts`           |
+| File                                                             | Tests |
+| ---------------------------------------------------------------- | ----- |
+| `app/src/modules/content/composables/use-collections-manager.ts` | 8     |
+| `app/src/modules/visual/composables/use-collections-manager.ts`  | 8     |
+| `app/src/modules/visual/composables/use-navigation.ts`           | 6     |
 
 ---
 
@@ -133,10 +133,10 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 ## Recommended Priority Order
 
-1. **`app/src/modules/content/composables/use-collections-manager.ts`** — App module composable
-2. **`app/src/modules/visual/composables/use-collections-manager.ts`** — App module composable
-3. **`app/src/modules/visual/composables/use-navigation.ts`** — App module composable
-4. **`api/src/routes/activity.ts`** — API route
+1. **`api/src/routes/activity.ts`** — API route (last remaining gap in tested routes)
+2. `app/src/components/ItemsFinder.vue` — LOW risk UI component (optional)
+3. `app/src/components/ColumnPicker.vue` — LOW risk UI component (optional)
+4. Package-level index files (`stores`, `errors`, `constants`, `system-data`, `utils`, `validation`) — low-value targets per prior analysis.
 
 ---
 
@@ -148,6 +148,7 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 - App modules: defineModule, routerPass, routing, modules/index
 - Router: router.test.ts (beforeEach guard behavior)
 - Composables: useAuth.test.ts, authClient.test.ts, useRouter.test.ts, useSessionSync.test.ts, useServer.test.ts, useFileUpload.test.ts, useItems.test.ts, useUsers.test.ts, useActivity.test.ts, useCollections.test.ts, useSearch.test.ts, useDeploymentNavigation.test.ts, registerClient.test.ts
+- App modules: app/src/modules/content/composables/use-collections-manager.test.ts (8 tests), app/src/modules/visual/composables/use-collections-manager.test.ts (8 tests), app/src/modules/visual/composables/use-navigation.test.ts (6 tests)
 - Stores: auth, user, server, app
 - Errors: forbidden, invalid-credentials, not-found, unauthorized
 - Constants: auth, permissions
