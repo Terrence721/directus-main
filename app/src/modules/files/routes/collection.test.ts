@@ -174,7 +174,7 @@ describe('FilesCollection', () => {
 		} as unknown as DragEvent;
 
 		// Call the internal handleDrop method directly
-		const vm = wrapper.vm as { handleDrop: (e: DragEvent) => Promise<void> };
+		const vm = wrapper.vm as unknown as { handleDrop: (e: DragEvent) => Promise<void> };
 		await vm.handleDrop(dropEvent);
 
 		await new Promise((resolve) => setTimeout(resolve, 50));
@@ -196,7 +196,7 @@ describe('FilesCollection', () => {
 		const file = new File(['test'], 'test.txt', { type: 'text/plain' });
 
 		// Call the handler directly via the component instance
-		const vm = wrapper.vm as { handleFileInput: (e: Event) => Promise<void> };
+		const vm = wrapper.vm as unknown as { handleFileInput: (e: Event) => Promise<void> };
 		const inputEvent = {
 			target: { files: [file] },
 			preventDefault: vi.fn(),
