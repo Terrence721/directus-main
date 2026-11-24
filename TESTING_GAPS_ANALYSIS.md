@@ -118,7 +118,7 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 ## API Layer — Testing Gaps
 
-### Covered Items (Tests Exist ✅)
+### Covered API Routes (Tests Exist ✅)
 
 - `api/src/routes/demo-data.ts` — demo-data.test.ts (13 tests)
 - `api/src/routes/search.ts` — search.test.ts (13 tests)
