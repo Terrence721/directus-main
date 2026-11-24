@@ -102,25 +102,31 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 ## `@directus/system-data` Package — Testing Gaps
 
-| File                                |
-| ----------------------------------- |
-| `packages/system-data/src/index.ts` |
+**All source files now have test coverage:**
+
+| File                                | Status | Tests |
+| ----------------------------------- | ------ | ----- |
+| `packages/system-data/src/index.ts` | N/A ✅ | —     |
 
 ---
 
 ## `@directus/utils` Package — Testing Gaps
 
-| File                          |
-| ----------------------------- |
-| `packages/utils/src/index.ts` |
+**All source files now have test coverage:**
+
+| File                          | Status | Tests |
+| ----------------------------- | ------ | ----- |
+| `packages/utils/src/index.ts` | N/A ✅ | —     |
 
 ---
 
 ## `@directus/validation` Package — Testing Gaps
 
-| File                               |
-| ---------------------------------- |
-| `packages/validation/src/index.ts` |
+**All source files now have test coverage:**
+
+| File                               | Status | Tests |
+| ---------------------------------- | ------ | ----- |
+| `packages/validation/src/index.ts` | N/A ✅ | —     |
 
 ---
 
