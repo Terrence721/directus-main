@@ -38,10 +38,10 @@ describe('useCollectionsManager', () => {
 
 	describe('fetchCollections', () => {
 		it('fetches collections from API', async () => {
-			const mockCollections: CollectionInfo[] = [
+			const mockCollections = [
 				{ collection: 'posts', label: 'Posts', fields: [{ name: 'title', type: 'string' }], sampleCount: 42 },
 				{ collection: 'users', label: 'Users', fields: [{ name: 'email', type: 'string' }], sampleCount: 100 },
-			];
+			] as CollectionInfo[];
 
 			vi.mocked(globalThis.fetch).mockResolvedValue(
 				new Response(JSON.stringify({ data: mockCollections }), {
@@ -100,7 +100,7 @@ describe('useCollectionsManager', () => {
 			vi.mocked(globalThis.fetch).mockResolvedValue(new Response(null, { status: 500 }));
 
 			const { useCollectionsManager } = await import('./use-collections-manager');
-			const { fetchCollections, collections, loading, error } = useCollectionsManager();
+			const { fetchCollections, loading, error } = useCollectionsManager();
 			await expect(fetchCollections()).rejects.toThrow('Failed to load collections (500)');
 
 			expect(loading.value).toBe(false);
