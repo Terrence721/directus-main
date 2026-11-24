@@ -41,7 +41,7 @@ describe('useCollectionsManager', () => {
 			const mockCollections = [
 				{ collection: 'posts', label: 'Posts', fields: [{ name: 'title', type: 'string' }], sampleCount: 42 },
 				{ collection: 'users', label: 'Users', fields: [{ name: 'email', type: 'string' }], sampleCount: 100 },
-			] as CollectionInfo[];
+			] as unknown as CollectionInfo[];
 
 			vi.mocked(globalThis.fetch).mockResolvedValue(
 				new Response(JSON.stringify({ data: mockCollections }), {
@@ -135,7 +135,8 @@ describe('useCollectionsManager', () => {
 
 	describe('flatCollections', () => {
 		it('flattens nested collections excluding singletons', async () => {
-			const mockCollections: CollectionInfo[] = [
+			// CollectionNode extends CollectionInfo with meta and children
+			const mockCollections = [
 				{
 					collection: 'posts',
 					label: 'Posts',
