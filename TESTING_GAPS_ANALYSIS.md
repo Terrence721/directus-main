@@ -122,21 +122,20 @@ Total: **99 tests** across 13 test files (index.ts is a barrel export, no tests 
 
 - `api/src/routes/demo-data.ts` — demo-data.test.ts (13 tests)
 - `api/src/routes/search.ts` — search.test.ts (13 tests)
+- `api/src/routes/activity.ts` — activity.test.ts (13 tests)
 
 ### Still Untested
 
-| File                         |
-| ---------------------------- |
-| `api/src/routes/activity.ts` |
+| File |
+| --- |
 
 ---
 
 ## Recommended Priority Order
 
-1. **`api/src/routes/activity.ts`** — API route (last remaining gap in tested routes)
-2. `app/src/components/ItemsFinder.vue` — LOW risk UI component (optional)
-3. `app/src/components/ColumnPicker.vue` — LOW risk UI component (optional)
-4. Package-level index files (`stores`, `errors`, `constants`, `system-data`, `utils`, `validation`) — low-value targets per prior analysis.
+1. `app/src/components/ItemsFinder.vue` — LOW risk UI component (optional)
+2. `app/src/components/ColumnPicker.vue` — LOW risk UI component (optional)
+3. Package-level index files (`stores`, `errors`, `constants`, `system-data`, `utils`, `validation`) — low-value targets per prior analysis.
 
 ---
 
