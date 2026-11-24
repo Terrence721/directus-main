@@ -17,36 +17,36 @@ These files directly affect app behavior and were recently modified (bug fixes f
 
 ### Untested Source Files
 
-| File | Risk Level | Notes |
-| ---- | ---------- | ----- |
-| `app/src/modules/activity/index.ts` | MEDIUM | Module entry point |
-| `app/src/modules/activity/routes/collection.vue` | MEDIUM | Activity collection view |
-| `app/src/modules/content/routes/collection.vue` | MEDIUM | Content collection browser |
-| `app/src/modules/content/routes/detail.vue` | MEDIUM | Item detail view |
-| `app/src/modules/deployment/index.ts` | MEDIUM | Deployment module entry |
-| `app/src/modules/deployment/routes/overview.vue` | MEDIUM | Deployment overview |
-| `app/src/modules/deployment/routes/provider/dashboard.vue` | MEDIUM | Provider dashboard |
-| `app/src/modules/deployment/routes/provider/run.vue` | MEDIUM | Provider run view |
-| `app/src/modules/deployment/routes/provider/runs.vue` | MEDIUM | Provider runs list |
-| `app/src/modules/deployment/routes/provider/settings.vue` | MEDIUM | Provider settings |
-| `app/src/modules/deployment/routes/provider/setup-drawer.vue` | MEDIUM | Setup drawer component |
-| `app/src/modules/files/index.ts` | MEDIUM | Files module entry |
-| `app/src/modules/files/routes/collection.vue` | MEDIUM | Files collection browser |
-| `app/src/modules/insights/index.ts` | MEDIUM | Insights module entry |
-| `app/src/modules/insights/routes/dashboard.vue` | MEDIUM | Dashboard view |
-| `app/src/modules/insights/routes/overview.vue` | MEDIUM | Overview view |
-| `app/src/modules/insights/routes/panel-configuration.vue` | MEDIUM | Panel config view |
-| `app/src/modules/items/index.ts` | MEDIUM | Items module entry |
-| `app/src/modules/items/routes/collection.vue` | MEDIUM | Items collection browser |
-| `app/src/modules/items/routes/detail.vue` | MEDIUM | Item detail view |
-| `app/src/modules/search/index.ts` | MEDIUM | Search module entry |
-| `app/src/modules/search/routes/collection.vue` | MEDIUM | Search collection browser |
-| `app/src/modules/settings/index.ts` | MEDIUM | Settings module entry |
-| `app/src/modules/settings/routes/collection.vue` | MEDIUM | Settings collection browser |
-| `app/src/modules/users/index.ts` | MEDIUM | Users module entry |
-| `app/src/modules/users/routes/collection.vue` | MEDIUM | Users collection browser |
-| `app/src/modules/visual/routes/collection.vue` | MEDIUM | Visual collection browser |
-| `app/src/modules/visual/routes/detail.vue` | MEDIUM | Visual detail view |
+| File                                                          | Risk Level | Notes                       |
+| ------------------------------------------------------------- | ---------- | --------------------------- |
+| `app/src/modules/activity/index.ts`                           | MEDIUM     | Module entry point          |
+| `app/src/modules/activity/routes/collection.vue`              | MEDIUM     | Activity collection view    |
+| `app/src/modules/content/routes/collection.vue`               | MEDIUM     | Content collection browser  |
+| `app/src/modules/content/routes/detail.vue`                   | MEDIUM     | Item detail view            |
+| `app/src/modules/deployment/index.ts`                         | MEDIUM     | Deployment module entry     |
+| `app/src/modules/deployment/routes/overview.vue`              | MEDIUM     | Deployment overview         |
+| `app/src/modules/deployment/routes/provider/dashboard.vue`    | MEDIUM     | Provider dashboard          |
+| `app/src/modules/deployment/routes/provider/run.vue`          | MEDIUM     | Provider run view           |
+| `app/src/modules/deployment/routes/provider/runs.vue`         | MEDIUM     | Provider runs list          |
+| `app/src/modules/deployment/routes/provider/settings.vue`     | MEDIUM     | Provider settings           |
+| `app/src/modules/deployment/routes/provider/setup-drawer.vue` | MEDIUM     | Setup drawer component      |
+| `app/src/modules/files/index.ts`                              | MEDIUM     | Files module entry          |
+| `app/src/modules/files/routes/collection.vue`                 | MEDIUM     | Files collection browser    |
+| `app/src/modules/insights/index.ts`                           | MEDIUM     | Insights module entry       |
+| `app/src/modules/insights/routes/dashboard.vue`               | MEDIUM     | Dashboard view              |
+| `app/src/modules/insights/routes/overview.vue`                | MEDIUM     | Overview view               |
+| `app/src/modules/insights/routes/panel-configuration.vue`     | MEDIUM     | Panel config view           |
+| `app/src/modules/items/index.ts`                              | MEDIUM     | Items module entry          |
+| `app/src/modules/items/routes/collection.vue`                 | MEDIUM     | Items collection browser    |
+| `app/src/modules/items/routes/detail.vue`                     | MEDIUM     | Item detail view            |
+| `app/src/modules/search/index.ts`                             | MEDIUM     | Search module entry         |
+| `app/src/modules/search/routes/collection.vue`                | MEDIUM     | Search collection browser   |
+| `app/src/modules/settings/index.ts`                           | MEDIUM     | Settings module entry       |
+| `app/src/modules/settings/routes/collection.vue`              | MEDIUM     | Settings collection browser |
+| `app/src/modules/users/index.ts`                              | MEDIUM     | Users module entry          |
+| `app/src/modules/users/routes/collection.vue`                 | MEDIUM     | Users collection browser    |
+| `app/src/modules/visual/routes/collection.vue`                | MEDIUM     | Visual collection browser   |
+| `app/src/modules/visual/routes/detail.vue`                    | MEDIUM     | Visual detail view          |
 
 ### Covered Items (Tests Exist ✅)
 
