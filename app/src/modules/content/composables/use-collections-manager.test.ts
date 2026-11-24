@@ -110,9 +110,7 @@ describe('useCollectionsManager', () => {
 		});
 
 		it('reuses cache on subsequent calls', async () => {
-			const mockCollections: CollectionInfo[] = [
-				{ collection: 'posts', label: 'Posts', fields: [], sampleCount: 42 },
-			];
+			const mockCollections: CollectionInfo[] = [{ collection: 'posts', label: 'Posts', fields: [], sampleCount: 42 }];
 
 			vi.mocked(globalThis.fetch).mockResolvedValue(
 				new Response(JSON.stringify({ data: mockCollections }), {
