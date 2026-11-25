@@ -6,7 +6,7 @@ import { useUserStore } from '@directus/stores';
 const { session } = useAuth();
 const userStore = useUserStore();
 const accessToken = computed(() => session.value?.accessToken ?? null);
-const currentUser = computed(() => userStore.user);
+const currentUser = computed(() => userStore.user.value);
 
 const form = ref({ firstName: '', lastName: '', email: '' });
 const saving = ref(false);
