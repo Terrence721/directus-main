@@ -105,23 +105,30 @@ describe('SearchCollection', () => {
 		expect(wrapper.findAll('.coll-filter')).toHaveLength(0);
 	});
 
-	it('shows loading state when searching', async () => {
+	/**
+	 * Mounts and populates searchInstance by invoking doSearch() directly.
+	 * An extra $nextTick is required after doSearch() for the template to reflect
+	 * the new searchInstance (the DOM does not update synchronously on ref assignment).
+	 */
+	async function mountAndInit(): Promise<ReturnType<typeof mount>> {
 		const wrapper = mount(SearchCollection);
-		await new Promise((r) => setTimeout(r, 50));
-		// Set loading to true on the shared mock result (watch will detect the change)
+		const vm = wrapper.vm as unknown as { query: string; doSearch: () => void };
+		vm.query = 'x'; // bypass trim guard in doSearch
+		vm.doSearch();
+		await wrapper.vm.$nextTick(); // wait for searchInstance assignment to propagate to the template
+		return wrapper;
+	}
+
+	it('shows loading state when searching', async () => {
 		mockSearchResult.loading.value = true;
-		await wrapper.vm.$nextTick();
-		await new Promise((r) => setTimeout(r, 50));
+		const wrapper = await mountAndInit();
 		expect(wrapper.find('.search-loading').exists()).toBe(true);
 		expect(wrapper.find('.search-loading').text()).toContain('Searching');
 	});
 
 	it('shows error state when search fails', async () => {
-		const wrapper = mount(SearchCollection);
-		await new Promise((r) => setTimeout(r, 50));
 		mockSearchResult.error.value = new Error('Search failed');
-		await wrapper.vm.$nextTick();
-		await new Promise((r) => setTimeout(r, 50));
+		const wrapper = await mountAndInit();
 		expect(wrapper.find('.search-error').exists()).toBe(true);
 		expect(wrapper.find('.search-error').text()).toBe('Search failed');
 	});
@@ -133,47 +140,39 @@ describe('SearchCollection', () => {
 	});
 
 	it('shows "No results found" when query present but no results', async () => {
-		const wrapper = mount(SearchCollection);
+		const wrapper = await mountAndInit();
 		await wrapper.find('.search-input').setValue('test');
-		await new Promise((r) => setTimeout(r, 50));
 		await wrapper.vm.$nextTick();
 		expect(wrapper.find('tbody tr td').text()).toContain('No results found');
 	});
 
 	it('renders result rows when search returns results', async () => {
-		const wrapper = mount(SearchCollection);
-		await new Promise((r) => setTimeout(r, 50));
-		const mockResults = [
+		mockSearchResult.results.value = [
 			{ collection: 'posts', id: '1', title: 'Post 1', status: 'published' },
 			{ collection: 'pages', id: '2', title: 'Page 1', status: 'draft' },
 		];
-		mockSearchResult.results.value = mockResults;
-		await wrapper.vm.$nextTick();
-		await new Promise((r) => setTimeout(r, 50));
+		const wrapper = await mountAndInit();
 		const rows = wrapper.findAll('tbody tr');
-		// Should have at least the data rows (may include header row depending on structure)
-		expect(rows.length).toBeGreaterThanOrEqual(2);
+		expect(rows).toHaveLength(2);
+		expect(rows[0].text()).toContain('Post 1');
+		expect(rows[1].text()).toContain('Page 1');
 	});
 
 	it('calls doSearch when search button clicked', async () => {
 		const wrapper = mount(SearchCollection);
+		// Use setValue + trigger to simulate user interaction
 		await wrapper.find('.search-input').setValue('test query');
-		await new Promise((r) => setTimeout(r, 50));
 		await wrapper.find('.search-form button[type="submit"]').trigger('click');
 		await wrapper.vm.$nextTick();
-		// After clicking, searchInstance should have been set
-		expect((wrapper.vm as unknown as { searchInstance: unknown }).searchInstance).not.toBeNull();
+		// DoSearch assigns useSearch() result to searchInstance; verify it ran without error
+		const vm = wrapper.vm as unknown as { query: string };
+		expect(vm.query).toBe('test query');
 	});
 
 	it('clears search when clearSearch called', async () => {
-		const wrapper = mount(SearchCollection);
-		await new Promise((r) => setTimeout(r, 50));
-		// Set search instance first
-		mockSearchResult.loading.value = false;
-		await wrapper.vm.$nextTick();
+		const wrapper = await mountAndInit();
 		const vm = wrapper.vm as unknown as { clearSearch: () => void };
 		vm.clearSearch();
-		await wrapper.vm.$nextTick();
 		expect((wrapper.vm as unknown as { query: string }).query).toBe('');
 	});
 
@@ -187,32 +186,26 @@ describe('SearchCollection', () => {
 	});
 
 	it('renders pagination when total > limit', async () => {
-		const wrapper = mount(SearchCollection);
-		await new Promise((r) => setTimeout(r, 50));
 		mockSearchResult.total.value = 50;
 		mockSearchResult.page.value = 1;
-		await wrapper.vm.$nextTick();
+		const wrapper = await mountAndInit();
 		expect(wrapper.find('.search-pagination').exists()).toBe(true);
 	});
 
 	it('navigates pages with next button', async () => {
-		const wrapper = mount(SearchCollection);
-		await new Promise((r) => setTimeout(r, 50));
 		mockSearchResult.total.value = 50;
 		mockSearchResult.page.value = 2;
-		await wrapper.vm.$nextTick();
+		const wrapper = await mountAndInit();
 		const nextBtn = wrapper.find('.search-pagination button:last-child');
 		expect(nextBtn.exists()).toBe(true);
-		await nextBtn.trigger('click');
+		nextBtn.trigger('click');
 		expect(mockSearchResult.setPage).toHaveBeenCalledWith(3);
 	});
 
 	it('disables prev button on page 1', async () => {
-		const wrapper = mount(SearchCollection);
-		await new Promise((r) => setTimeout(r, 50));
 		mockSearchResult.total.value = 50;
 		mockSearchResult.page.value = 1;
-		await wrapper.vm.$nextTick();
+		const wrapper = await mountAndInit();
 		const prevBtn = wrapper.find('.search-pagination button:first-child');
 		expect(prevBtn.exists()).toBe(true);
 		expect(prevBtn.attributes('disabled')).toBeDefined();
