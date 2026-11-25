@@ -10,7 +10,7 @@ const mockCurrentUser: Ref<Record<string, unknown> | null> = ref(null);
 const mockSetUser = vi.fn();
 
 vi.mock('@directus/stores', async () => {
-	const actual = await vi.importActual<typeof import('@directus/stores')>('@directus/stores');
+	const actual = await vi.importActual<object>('@directus/stores');
 	return {
 		...actual,
 		useUserStore: () => ({ user: mockCurrentUser, setUser: mockSetUser, clearUser: vi.fn() }),
