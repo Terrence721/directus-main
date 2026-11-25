@@ -259,8 +259,7 @@ describe('SettingsCollection', () => {
 			}
 		).mockResolvedValueOnce({
 			ok: true,
-			json: () =>
-				Promise.resolve({ data: { id: 'u1', firstName: 'Hank', lastName: null, email: 'hank@example.com' } }),
+			json: () => Promise.resolve({ data: { id: 'u1', firstName: 'Hank', lastName: null, email: 'hank@example.com' } }),
 		} as Response);
 
 		const S = await importSettings();
@@ -325,8 +324,7 @@ describe('SettingsCollection', () => {
 			}
 		).mockResolvedValueOnce({
 			ok: true,
-			json: () =>
-				Promise.resolve({ data: { id: 'u1', firstName: 'Jack', lastName: null, email: 'jack@example.com' } }),
+			json: () => Promise.resolve({ data: { id: 'u1', firstName: 'Jack', lastName: null, email: 'jack@example.com' } }),
 		} as Response);
 		await wrapper.find('.settings-save').trigger('click');
 		await wrapper.vm.$nextTick();
