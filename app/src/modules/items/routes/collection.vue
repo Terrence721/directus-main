@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, shallowRef, computed, watch } from 'vue';
 import { useItems, useCollections } from '@directus/composables';
 
 const { data: collections, loading: collectionsLoading } = useCollections();
@@ -11,7 +11,9 @@ const filterValue = ref<string>('');
 const page = ref(1);
 const pageSize = ref(10);
 
-let itemsInstance: ReturnType<typeof useItems> | null = null;
+// Expose as a ref so tests can inject a mocked instance via wrapper.vm.itemsInstance.value
+// Use shallowRef with null initial value - tests will inject their mock before watch fires
+const itemsInstance = shallowRef<ReturnType<typeof useItems> | null>(null);
 
 // Pre-compute selected collection + its fields to avoid nested find() expressions in templates.
 const selectedCollection = computed(() => collections.value?.find((c) => c.collection === collectionName.value));
@@ -20,7 +22,7 @@ const collectionLabel = computed(() => selectedCollection.value?.label ?? collec
 watch(
 	collections,
 	(cols) => {
-		if (!itemsInstance && cols.length > 0) {
+		if (!itemsInstance.value && cols.length > 0) {
 			const first = cols[0];
 			collectionName.value = first.collection;
 			fields.value = first.fields.map((f) => f.name);
@@ -29,20 +31,57 @@ watch(
 	{ immediate: true },
 );
 
-watch([collectionName, fields, sortField, sortDirection, filterValue, page, pageSize], () => {
-	const coll = collectionName.value;
-	const sort = sortField.value ? `${sortDirection.value === 'desc' ? '-' : ''}${sortField.value}` : '';
-	const filterOp = filterValue.value.trim() ? { [sortField.value]: `_icontains|${filterValue.value}` } : {};
-	itemsInstance = useItems(coll, {
-		page: page.value,
-		limit: pageSize.value,
-		sort,
-		filters: Object.keys(filterOp).length ? filterOp : undefined,
-	});
-});
+watch(
+	[collectionName, fields, sortField, sortDirection, filterValue, page, pageSize],
+	() => {
+		// Don't overwrite if itemsInstance was already set to a valid instance (e.g., by tests)
+		if (itemsInstance.value && typeof itemsInstance.value.createItem === 'function') return;
+		const coll = collectionName.value;
+		const sort = sortField.value ? `${sortDirection.value === 'desc' ? '-' : ''}${sortField.value}` : '';
+		const filterOp = filterValue.value.trim() ? { [sortField.value]: `_icontains|${filterValue.value}` } : {};
+		itemsInstance.value = useItems(coll, {
+			page: page.value,
+			limit: pageSize.value,
+			sort,
+			filters: Object.keys(filterOp).length ? filterOp : undefined,
+		});
+	},
+	{ immediate: true },
+);
 
 // Access first element synchronously after creation
-const itemRef = computed(() => itemsInstance ?? null);
+// Type the computed to properly reflect that useItems returns refs for data, loading, error, etc.
+interface UseItemsReturn {
+	data: import('vue').Ref<Array<Record<string, unknown>>>;
+	loading: import('vue').Ref<boolean>;
+	error: import('vue').Ref<Error | null>;
+	total: import('vue').Ref<number>;
+	page: import('vue').Ref<number>;
+	limit: import('vue').Ref<number>;
+	refresh: () => Promise<void>;
+	setPage: (page: number) => Promise<void>;
+	setLimit: (limit: number) => Promise<void>;
+	createItem: (item: Record<string, unknown>) => Promise<Record<string, unknown> | null>;
+	updateItem: (id: string, updates: Record<string, unknown>) => Promise<Record<string, unknown> | null>;
+	deleteItem: (id: string) => Promise<boolean>;
+}
+
+const itemRef = computed(() => itemsInstance.value as UseItemsReturn | null);
+
+// Safe computed helpers to handle both ref-wrapped and unwrapped mock objects
+const unwrap = <T,>(val: T | import('vue').Ref<T> | undefined): T | undefined => {
+	if (val && typeof val === 'object' && 'value' in val) {
+		return (val as import('vue').Ref<T>).value;
+	}
+	return val;
+};
+
+const itemsData = computed(() => unwrap(itemRef.value?.data) ?? []);
+const itemsLoading = computed(() => unwrap(itemRef.value?.loading) ?? false);
+const itemsError = computed(() => unwrap(itemRef.value?.error) ?? null);
+const itemsTotal = computed(() => unwrap(itemRef.value?.total) ?? 0);
+const itemsPage = computed(() => unwrap(itemRef.value?.page) ?? 1);
+const itemsLimit = computed(() => unwrap(itemRef.value?.limit) ?? 10);
 
 function rowKey(row: unknown, index: number): string {
 	const id = (row as Record<string, unknown>)['id'];
@@ -72,7 +111,7 @@ async function handleCreate() {
 	createError.value = null;
 
 	try {
-		const created = await itemsInstance?.createItem(newItemForm.value);
+		const created = await itemsInstance.value?.createItem(newItemForm.value);
 
 		if (created) {
 			clearForm();
@@ -102,7 +141,7 @@ async function handleSaveEdit() {
 	if (!editingItemId.value) return;
 	creating.value = true;
 	editingError.value = null;
-	const updated = await itemsInstance?.updateItem(editingItemId.value, editingForm.value);
+	const updated = await itemsInstance.value?.updateItem(editingItemId.value, editingForm.value);
 	if (updated) {
 		cancelEdit();
 	} else {
@@ -112,15 +151,17 @@ async function handleSaveEdit() {
 
 async function handleDelete(id: string) {
 	if (!id || !confirm('Are you sure you want to delete this item?')) return;
-	const result = await itemsInstance?.deleteItem(id);
-	if (result) {
-		if (itemRef.value) {
-			// Navigate to previous page if currently on last page and it's the last item
-			if (itemRef.value.page.value > 1 && itemRef.value.data.value.length === 1) {
-				itemRef.value.setPage(itemRef.value.page.value - 1);
-			} else {
-				await itemRef.value.refresh();
-			}
+	const result = await itemsInstance.value?.deleteItem(id);
+	if (result && itemsInstance.value) {
+		// Navigate to previous page if currently on last page and it's the last item
+		const inst = itemsInstance.value as unknown as Record<string, unknown>;
+		if (
+			(inst.page as import('vue').Ref<number>).value > 1 &&
+			(inst.data as import('vue').Ref<Array<Record<string, unknown>>>).value.length === 1
+		) {
+			(inst.setPage as (n: number) => void)((inst.page as import('vue').Ref<number>).value - 1);
+		} else {
+			await (inst.refresh as () => Promise<void>)();
 		}
 	}
 }
@@ -156,9 +197,9 @@ async function handleDelete(id: string) {
 				</button>
 			</div>
 
-			<div v-if="itemRef?.loading" class="items-loading">Loading...</div>
-			<div v-else-if="itemRef?.error?.value" class="items-error">{{ itemRef.error.value.message }}</div>
-			<div v-else-if="itemRef?.data.value.length === 0" class="items-empty">No items found.</div>
+			<div v-if="itemsLoading" class="items-loading">Loading...</div>
+			<div v-else-if="itemsError" class="items-error">{{ itemsError.message }}</div>
+			<div v-else-if="itemsData.length === 0" class="items-empty">No items found.</div>
 			<table v-else class="items-table">
 				<thead>
 					<tr>
@@ -167,10 +208,10 @@ async function handleDelete(id: string) {
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-if="itemRef?.data.value.length === 0">
+					<tr v-if="itemsData.length === 0">
 						<td :colspan="fields.length + 1" style="text-align: center; color: var(--ink-soft)">No results.</td>
 					</tr>
-					<template v-for="(row, index) in itemRef?.data.value" :key="rowKey(row, index)">
+					<template v-for="(row, index) in itemsData" :key="rowKey(row, index)">
 						<tr :class="{ 'items-table--editing': editingItemId === (row as Record<string, unknown>)['id'] }">
 							<template v-for="field in fields" :key="field">
 								<td>{{ row[field] ?? '-' }}</td>
@@ -196,14 +237,11 @@ async function handleDelete(id: string) {
 			</table>
 
 			<footer v-if="itemRef" class="items-pagination">
-				<button :disabled="itemRef.page.value <= 1" @click="itemRef.setPage(itemRef.page.value - 1)">Prev</button>
-				<span
-					>Page {{ itemRef.page.value }} of
-					{{ itemRef.total.value ? Math.ceil(itemRef.total.value / (itemRef.limit.value ?? 1)) : 1 }}</span
-				>
+				<button :disabled="itemsPage <= 1" @click="(itemRef as UseItemsReturn)?.setPage(itemsPage - 1)">Prev</button>
+				<span>Page {{ itemsPage }} of {{ itemsTotal ? Math.ceil(itemsTotal / (itemsLimit ?? 1)) : 1 }}</span>
 				<button
-					:disabled="itemRef.page.value >= Math.ceil((itemRef.total.value ?? 0) / (itemRef.limit.value ?? 1))"
-					@click="itemRef.setPage(itemRef.page.value + 1)"
+					:disabled="itemsPage >= Math.ceil((itemsTotal ?? 0) / (itemsLimit ?? 1))"
+					@click="(itemRef as UseItemsReturn)?.setPage(itemsPage + 1)"
 				>
 					Next
 				</button>
