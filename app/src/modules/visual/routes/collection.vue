@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { resolveApiBaseUrl } from '@directus/composables';
 import { useCollectionsManager } from '../composables/use-collections-manager';
 import { useNavigation } from '../composables/use-navigation';
 
@@ -76,7 +77,7 @@ async function fetchItems() {
 	itemError.value = null;
 
 	try {
-		const baseUrl = window.location.protocol + '//' + window.location.host;
+		const baseUrl = resolveApiBaseUrl();
 		const params = new URLSearchParams({
 			page: String(page.value),
 			limit: String(pageSize.value),

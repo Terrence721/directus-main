@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useAuth } from '@directus/composables';
+import { useAuth, resolveApiBaseUrl } from '@directus/composables';
 import { useUserStore } from '@directus/stores';
 
 const { session } = useAuth();
@@ -29,7 +29,7 @@ async function handleSave() {
 	error.value = null;
 	success.value = false;
 	try {
-		const response = await fetch('/users/me', {
+		const response = await fetch(`${resolveApiBaseUrl()}/users/me`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',
