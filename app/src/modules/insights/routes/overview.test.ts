@@ -1,8 +1,7 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { ref } from 'vue';
-import { flushPromises } from '@vue/test-utils';
 
 // Top-level mocks
 interface Dashboard {
@@ -19,7 +18,7 @@ vi.mock('@directus/stores', async () => {
 		...actual,
 		useInsightsStore: () => ({
 			// The component does: dashboards.value = insightsStore.dashboards as unknown as Dashboard[]
-			// So insightsStore.dashboards needs to be the actual array, not a ref
+			// So insightsStore.dashboards must be the actual array, not a ref
 			dashboards: mockDashboards.value,
 			hydrate: vi.fn().mockResolvedValue(undefined),
 		}),
@@ -112,10 +111,6 @@ describe('InsightsOverview', () => {
 		await wrapper.vm.$nextTick();
 
 		// The component should now have the dashboards from the store
-		console.log('HTML:', wrapper.html());
-		console.log('Component dashboards:', (wrapper.vm as any).dashboards);
-		console.log('Found dashboard items:', wrapper.findAll('.dashboard-item').length);
-
 		const dashboardItems = wrapper.findAll('.dashboard-item');
 		expect(dashboardItems).toHaveLength(2);
 		expect(dashboardItems[0].text()).toContain('Dashboard 1');
@@ -138,7 +133,7 @@ describe('InsightsOverview', () => {
 
 		const dashboardItem = wrapper.find('.dashboard-item');
 		if (dashboardItem.exists()) {
-			await dashboardItem.element.click();
+			await dashboardItem.trigger('click');
 			await wrapper.vm.$nextTick();
 		}
 

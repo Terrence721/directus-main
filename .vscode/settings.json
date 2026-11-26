@@ -30,6 +30,7 @@
 		"longenough",
 		"newpass",
 		"slugified",
+		"unstub",
 		"wrongpass"
 	]
 }
