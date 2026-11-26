@@ -15,10 +15,7 @@ if (import.meta.env.MODE !== 'development') {
 	// through an in-memory stand-in that mirrors api/src/routes/* so the demo
 	// app keeps working after login.
 	const originalFetch = window.fetch.bind(window);
-	window.fetch = async (
-		input: RequestInfo | URL,
-		init?: RequestInit,
-	): Promise<Response> => {
+	window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
 		const urlStr = input instanceof Request ? input.url : String(input);
 		if (urlStr.includes('localhost:8055')) {
 			const path = urlStr.replace('http://localhost:8055', '');

@@ -180,12 +180,9 @@ export function handleSimulatedRequest(path: string, init: RequestInit = {}): Si
 
 	if (root === 'collections') {
 		if (!second) {
-			return respond(
-				200,
-				{
-					data: COLLECTIONS.map((c) => ({ ...c, sampleCount: (items[c.collection] ?? []).length })),
-				},
-			);
+			return respond(200, {
+				data: COLLECTIONS.map((c) => ({ ...c, sampleCount: (items[c.collection] ?? []).length })),
+			});
 		}
 		const found = COLLECTIONS.find((c) => c.collection === second);
 		if (!found) return error(404, 'NOT_FOUND', `Collection "${second}" not found.`);
@@ -303,9 +300,7 @@ export function handleSimulatedRequest(path: string, init: RequestInit = {}): Si
 		for (const [collectionName, rows] of Object.entries(items)) {
 			if (selected.length > 0 && !selected.includes(collectionName)) continue;
 			for (const row of rows) {
-				const matches = Object.values(row).some(
-					(v) => typeof v === 'string' && v.toLowerCase().includes(q),
-				);
+				const matches = Object.values(row).some((v) => typeof v === 'string' && v.toLowerCase().includes(q));
 				if (matches) hits.push({ collection: collectionName, ...row });
 			}
 		}
