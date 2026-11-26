@@ -1,33 +1,71 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, flushPromises } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-const routerPushSpy = vi.fn();
-const fetchMock = vi.fn();
+import { ref } from 'vue';
 
-// Mock fetch globally BEFORE any mocks
-window.fetch = fetchMock as typeof window.fetch;
+const routeParams = ref<Record<string, string>>({ collection: 'posts', id: '123' });
+const routerPushSpy = vi.fn();
+
+vi.mock('vue-router', () => ({
+	useRoute: () => ({ params: routeParams.value }),
+	useRouter: () => ({ push: routerPushSpy }),
+}));
 
 vi.mock('@directus/composables', async () => {
 	const actual = await vi.importActual<object>('@directus/composables');
-	return {
-		...actual,
-		resolveApiBaseUrl: vi.fn().mockReturnValue('http://localhost:8055'),
-	};
+	return { ...actual, resolveApiBaseUrl: () => 'http://localhost:8055' };
 });
 
-vi.mock('vue-router', () => ({
-	useRoute: () => ({
-		params: { collection: 'posts', id: '123' },
-	}),
-	useRouter: () => ({ push: routerPushSpy }),
-}));
+const mockFields = [
+	{ name: 'title', type: 'string' },
+	{ name: 'views', type: 'integer' },
+	{ name: 'published_at', type: 'timestamp' },
+	{ name: 'meta', type: 'json' },
+];
+
+let currentItem: Record<string, unknown> = {
+	id: '123',
+	title: 'Hello',
+	views: 9,
+	published_at: '2024-01-01T00:00:00Z',
+	meta: { tag: 'a' },
+};
+let itemsFail = false;
+const patchCalls: { url: string; body?: string }[] = [];
+const deleteCalls: string[] = [];
+
+window.fetch = vi.fn((input: RequestInfo | URL, init?: RequestInit) => {
+	const url = String(input);
+	const method = (init?.method ?? 'GET').toUpperCase();
+	if (url.includes('/collections/')) {
+		return Promise.resolve({ ok: true, json: async () => ({ data: { fields: mockFields } }) });
+	}
+	if (url.includes('/items/')) {
+		if (method === 'PATCH') {
+			patchCalls.push({ url, body: init?.body });
+			return Promise.resolve({ ok: true, json: async () => ({}) });
+		}
+		if (method === 'DELETE') {
+			deleteCalls.push(url);
+			return Promise.resolve({ ok: true, json: async () => ({}) });
+		}
+		if (itemsFail) {
+			return Promise.resolve({ ok: false, status: 404, json: async () => ({}) });
+		}
+		return Promise.resolve({ ok: true, json: async () => ({ data: currentItem }) });
+	}
+	return Promise.resolve({ ok: true, json: async () => ({}) });
+});
 
 beforeEach(() => {
 	vi.resetModules();
 	vi.clearAllMocks();
 	setActivePinia(createPinia());
-	routerPushSpy.mockClear();
-	fetchMock.mockClear();
+	routeParams.value = { collection: 'posts', id: '123' };
+	currentItem = { id: '123', title: 'Hello', views: 9, published_at: '2024-01-01T00:00:00Z', meta: { tag: 'a' } };
+	itemsFail = false;
+	patchCalls.length = 0;
+	deleteCalls.length = 0;
 });
 
 afterEach(() => {
@@ -45,149 +83,138 @@ describe('ContentDetail', () => {
 		expect(wrapper.exists()).toBe(true);
 	});
 
-	it('shows loading state when component loading prop is true', async () => {
+	it('loads the item and fields, rendering inputs and textareas by field type', async () => {
 		const ContentDetail = await importContentDetail();
 		const wrapper = mount(ContentDetail);
-		const wrapperVm = wrapper.vm as unknown as { loading: boolean };
-		wrapperVm.loading = true;
-		await wrapper.vm.$nextTick();
+		await flushPromises();
 
-		expect(wrapper.find('.loading').exists()).toBe(true);
-		expect(wrapper.find('.loading').text()).toContain('Loading...');
-	});
+		expect(window.fetch).toHaveBeenCalledWith('http://localhost:8055/items/posts/123');
+		expect(window.fetch).toHaveBeenCalledWith('http://localhost:8055/collections/posts');
 
-	it('shows error state when 404 fetch fails', async () => {
-		// Mock fetch to return 404 - component uses "Item not found" message
-		fetchMock
-			.mockResolvedValueOnce({
-				ok: false,
-				status: 404,
-				json: async () => ({}),
-			})
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({ data: { fields: [] } }),
-			});
-
-		const ContentDetail = await importContentDetail();
-		const wrapper = mount(ContentDetail);
-		await wrapper.vm.$nextTick();
-
-		// Wait for onMounted to complete and component to set error
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		await wrapper.vm.$nextTick();
-
-		// Component catches 404 and sets error to "Item not found"
-		expect(wrapper.find('.error').exists()).toBe(true);
-		expect(wrapper.find('.error').text()).toContain('Item not found');
-		expect(wrapper.find('.error button').exists()).toBe(true);
-	});
-
-	it('renders detail page header when data is available', async () => {
-		// Mock fetch to return proper data for the item and fields
-		fetchMock
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({ data: { id: '123', title: 'Test Item', content: 'Test content' } }),
-			})
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({
-					data: {
-						fields: [
-							{ name: 'title', type: 'string' },
-							{ name: 'content', type: 'text' },
-						],
-					},
-				}),
-			});
-
-		const ContentDetail = await importContentDetail();
-		const wrapper = mount(ContentDetail);
-		await wrapper.vm.$nextTick();
-
-		// Wait for onMounted to complete and component to update
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		await wrapper.vm.$nextTick();
-
-		// The detail-page should be rendered now
 		expect(wrapper.find('.detail-page').exists()).toBe(true);
-		// The page has a header with back and delete buttons
-		expect(wrapper.find('.detail-header').exists()).toBe(true);
-		expect(wrapper.find('.btn-back').exists()).toBe(true);
-		expect(wrapper.find('.btn-delete').exists()).toBe(true);
+		expect(wrapper.find('.detail-header h1').text()).toBe('123');
+
+		// string + integer + timestamp fields render as inputs; json renders as a textarea
+		const inputs = wrapper.findAll('.field-group input');
+		expect(inputs).toHaveLength(3);
+		expect((inputs[0].element as HTMLInputElement).value).toBe('Hello');
+		expect((inputs[1].element as HTMLInputElement).value).toBe('9');
+		expect(inputs[2].attributes('type')).toBe('datetime-local');
+
+		const textareas = wrapper.findAll('.field-group textarea');
+		expect(textareas).toHaveLength(1);
+		// formatFieldValue stringifies non-string values compactly
+		expect((textareas[0].element as HTMLTextAreaElement).value).toBe(JSON.stringify({ tag: 'a' }));
 	});
 
-	it('goes back when back button clicked', async () => {
-		// Mock fetch to return proper data for the item and fields
-		fetchMock
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({ data: { id: '123', title: 'Test Item', content: 'Test content' } }),
-			})
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({
-					data: {
-						fields: [
-							{ name: 'title', type: 'string' },
-							{ name: 'content', type: 'text' },
-						],
-					},
-				}),
-			});
-
+	it('renders empty inputs for null or missing field values', async () => {
+		currentItem = { id: '123', title: null, views: undefined };
 		const ContentDetail = await importContentDetail();
 		const wrapper = mount(ContentDetail);
-		await wrapper.vm.$nextTick();
+		await flushPromises();
 
-		// Wait for component to render the detail page
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		await wrapper.vm.$nextTick();
+		const inputs = wrapper.findAll('.field-group input');
+		expect((inputs[0].element as HTMLInputElement).value).toBe('');
+		expect((inputs[1].element as HTMLInputElement).value).toBe('');
+	});
 
-		const backBtn = wrapper.find('.btn-back');
-		await backBtn.trigger('click');
+	it('shows the error state on item fetch failure and recovers via retry', async () => {
+		itemsFail = true;
+		const ContentDetail = await importContentDetail();
+		const wrapper = mount(ContentDetail);
+		await flushPromises();
 
+		expect(wrapper.find('.error').exists()).toBe(true);
+		expect(wrapper.find('.error p').text()).toBe('Item not found');
+
+		itemsFail = false;
+		await wrapper.find('.error button').trigger('click');
+		await flushPromises();
+
+		expect(wrapper.find('.detail-page').exists()).toBe(true);
+	});
+
+	it('saves a field on blur with a PATCH request', async () => {
+		const ContentDetail = await importContentDetail();
+		const wrapper = mount(ContentDetail);
+		await flushPromises();
+
+		const titleInput = wrapper.findAll('.field-group input')[0];
+		await titleInput.setValue('World');
+		await titleInput.trigger('blur');
+		await flushPromises();
+
+		expect(patchCalls).toHaveLength(1);
+		expect(patchCalls[0].url).toBe('http://localhost:8055/items/posts/123');
+		expect(JSON.parse(patchCalls[0].body!)).toEqual({ title: 'World' });
+	});
+
+	it('saves a json field typed into the textarea on blur', async () => {
+		const ContentDetail = await importContentDetail();
+		const wrapper = mount(ContentDetail);
+		await flushPromises();
+
+		const textarea = wrapper.find('.field-group textarea');
+		await textarea.setValue('{"tag":"b"}');
+		await textarea.trigger('blur');
+		await flushPromises();
+
+		expect(patchCalls).toHaveLength(1);
+		expect(JSON.parse(patchCalls[0].body!)).toEqual({ meta: '{"tag":"b"}' });
+	});
+
+	it('navigates back to the collection when the back button is clicked', async () => {
+		const ContentDetail = await importContentDetail();
+		const wrapper = mount(ContentDetail);
+		await flushPromises();
+
+		await wrapper.find('.btn-back').trigger('click');
 		expect(routerPushSpy).toHaveBeenCalledWith('/content/posts');
 	});
 
-	it('deletes item when delete button clicked', async () => {
-		// Mock fetch to return proper data for the item and fields
-		fetchMock
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({ data: { id: '123', title: 'Test Item', content: 'Test content' } }),
-			})
-			.mockResolvedValueOnce({
-				ok: true,
-				json: async () => ({
-					data: {
-						fields: [
-							{ name: 'title', type: 'string' },
-							{ name: 'content', type: 'text' },
-						],
-					},
-				}),
-			})
-			// DELETE request
-			.mockResolvedValueOnce({
-				ok: true,
-			});
-
+	it('deletes the item when confirmed', async () => {
+		vi.stubGlobal(
+			'confirm',
+			vi.fn(() => true),
+		);
 		const ContentDetail = await importContentDetail();
 		const wrapper = mount(ContentDetail);
-		await wrapper.vm.$nextTick();
+		await flushPromises();
 
-		// Wait for component to render the detail page
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		await wrapper.vm.$nextTick();
+		await wrapper.find('.btn-delete').trigger('click');
+		await flushPromises();
 
-		// Mock confirm
-		window.confirm = vi.fn().mockReturnValue(true);
-
-		const deleteBtn = wrapper.find('.btn-delete');
-		await deleteBtn.trigger('click');
-
+		expect(deleteCalls).toEqual(['http://localhost:8055/items/posts/123']);
 		expect(routerPushSpy).toHaveBeenCalledWith('/content/posts');
+	});
+
+	it('does not delete when the confirmation is declined', async () => {
+		vi.stubGlobal(
+			'confirm',
+			vi.fn(() => false),
+		);
+		const ContentDetail = await importContentDetail();
+		const wrapper = mount(ContentDetail);
+		await flushPromises();
+
+		await wrapper.find('.btn-delete').trigger('click');
+		await flushPromises();
+
+		expect(deleteCalls).toHaveLength(0);
+		expect(routerPushSpy).not.toHaveBeenCalled();
+	});
+
+	it('skips loading entirely when the route params are empty', async () => {
+		routeParams.value = { collection: '', id: '' };
+		const ContentDetail = await importContentDetail();
+		const wrapper = mount(ContentDetail);
+		await flushPromises();
+
+		// No item or collection fetch happens without params
+		const fetchMock = window.fetch as unknown as { mock: { calls: unknown[][] } };
+		expect(fetchMock.mock.calls.some((call) => String(call[0]).includes('/items/'))).toBe(false);
+		// The page still renders with the fallback header
+		expect(wrapper.find('.detail-page').exists()).toBe(true);
+		expect(wrapper.find('.detail-header h1').text()).toBe('Editing');
 	});
 });
