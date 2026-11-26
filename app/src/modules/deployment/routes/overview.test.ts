@@ -3,7 +3,8 @@ import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { ref } from 'vue';
 
-// Top-level mocks
+const routerPushSpy = vi.fn();
+
 vi.mock('@directus/composables', async () => {
 	const actual = await vi.importActual<object>('@directus/composables');
 	return {
@@ -15,35 +16,40 @@ vi.mock('@directus/composables', async () => {
 	};
 });
 
+vi.mock('vue-router', () => ({
+	useRouter: () => ({ push: routerPushSpy }),
+}));
+
 beforeEach(() => {
 	vi.resetModules();
 	vi.clearAllMocks();
 	setActivePinia(createPinia());
+	routerPushSpy.mockClear();
 });
 
 afterEach(() => {
 	vi.unstubAllGlobals();
 });
 
-async function importOverview(): Promise<(typeof import('./overview.vue'))['default']> {
+async function importDeploymentOverview(): Promise<(typeof import('./overview.vue'))['default']> {
 	return (await import('./overview.vue')).default;
 }
 
 describe('DeploymentOverview', () => {
 	it('mounts without crashing', async () => {
-		const DeploymentOverview = await importOverview();
+		const DeploymentOverview = await importDeploymentOverview();
 		const wrapper = mount(DeploymentOverview);
 		expect(wrapper.exists()).toBe(true);
 	});
 
 	it('renders deployments heading', async () => {
-		const DeploymentOverview = await importOverview();
+		const DeploymentOverview = await importDeploymentOverview();
 		const wrapper = mount(DeploymentOverview);
 		expect(wrapper.find('h1').text()).toBe('Deployments');
 	});
 
 	it('shows loading state when loading', async () => {
-		const DeploymentOverview = await importOverview();
+		const DeploymentOverview = await importDeploymentOverview();
 		const wrapper = mount(DeploymentOverview);
 		const wrapperVm = wrapper.vm as unknown as { loading: boolean };
 		wrapperVm.loading = true;
@@ -54,7 +60,7 @@ describe('DeploymentOverview', () => {
 	});
 
 	it('shows provider list when providers exist', async () => {
-		const DeploymentOverview = await importOverview();
+		const DeploymentOverview = await importDeploymentOverview();
 		const wrapper = mount(DeploymentOverview);
 		const wrapperVm = wrapper.vm as unknown as {
 			providers: Array<{ provider: string; configured: boolean }>;
@@ -64,8 +70,7 @@ describe('DeploymentOverview', () => {
 			{ provider: 'github', configured: true },
 			{ provider: 'gitlab', configured: false },
 		];
-		await wrapper.vm.$nextTick();
-		await new Promise((resolve) => setTimeout(resolve, 0));
+		wrapperVm.loading = false;
 		await wrapper.vm.$nextTick();
 
 		const providerItems = wrapper.findAll('.provider-item');
@@ -77,7 +82,7 @@ describe('DeploymentOverview', () => {
 	});
 
 	it('shows add provider button', async () => {
-		const DeploymentOverview = await importOverview();
+		const DeploymentOverview = await importDeploymentOverview();
 		const wrapper = mount(DeploymentOverview);
 		await wrapper.vm.$nextTick();
 
@@ -87,7 +92,7 @@ describe('DeploymentOverview', () => {
 	});
 
 	it('sets selectedProvider when add provider button clicked', async () => {
-		const DeploymentOverview = await importOverview();
+		const DeploymentOverview = await importDeploymentOverview();
 		const wrapper = mount(DeploymentOverview);
 		const wrapperVm = wrapper.vm as unknown as { selectedProvider: string | null };
 
@@ -95,6 +100,7 @@ describe('DeploymentOverview', () => {
 
 		const addBtn = wrapper.find('button');
 		await addBtn.element.click();
+
 		expect(wrapperVm.selectedProvider).toBe('github');
 	});
 });
