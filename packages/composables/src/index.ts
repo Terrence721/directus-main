@@ -12,6 +12,7 @@ export { initSessionSync } from './useSessionSync.js';
 export { fetchServerInfo } from './serverClient.js';
 export { login } from './authClient.js';
 export { register } from './registerClient.js';
+export { handleSimulatedRequest, resetSimulatedApi } from './simulatedApi.js';
 export type { LoginCredentials } from './authClient.js';
 export type { RegisterData } from './registerClient.js';
 export { useDeploymentNavigation } from './useDeploymentNavigation.js';
