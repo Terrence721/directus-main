@@ -1,6 +1,6 @@
 # Testing Gaps Analysis
 
-_Last updated: 2026-11-26 — all previously identified gaps closed, worst-coverage files reinforced._
+_Last updated: 2026-11-26 — all previously identified gaps closed; detail views and panel configuration reinforced._
 
 ## Status: Complete ✅
 
@@ -12,24 +12,28 @@ in the app workspace.
 
 | Metric     | Before | After  |
 | ---------- | ------ | ------ |
-| Statements | 80.4%  | 91.62% |
-| Branches   | 75.29% | 85%    |
-| Functions  | 65.6%  | 84.39% |
-| Lines      | 82.01% | 92.72% |
+| Statements | 80.4%  | 95.12% |
+| Branches   | 75.29% | 87.64% |
+| Functions  | 65.6%  | 90.07% |
+| Lines      | 82.01% | 96.04% |
 
-The four lowest-coverage route files were reinforced in this pass:
+Two reinforcement passes were applied:
 
-| File                          | Stmts | Funcs |
-| ----------------------------- | ----- | ----- |
-| content/routes/collection.vue | 97%   | 97%   |
-| items/routes/collection.vue   | 95%   | 93%   |
-| visual/routes/collection.vue  | 94%   | 88%   |
-| insights/routes/dashboard.vue | 100%  | 100%  |
+**Pass 1 — collection browsers** (insights/dashboard, visual/collection,
+content/collection, items/collection): statement coverage 80.4% → 91.62%.
 
-Branch/function coverage still lags statement coverage on a few files;
-the remaining gaps are `detail.vue` views (items, content) and
-`insights/panel-configuration.vue`, which exercise larger async data
-flows.
+**Pass 2 — detail views** (content/detail, items/detail) and
+**insights/panel-configuration**: statement coverage 91.62% → 95.12%.
+
+| File                                    | Stmts | Branch | Funcs |
+| --------------------------------------- | ----- | ------ | ----- |
+| content/routes/detail.vue               | 98.2% | 83.3%  | 100%  |
+| items/routes/detail.vue                 | 97.8% | 93.8%  | 100%  |
+| insights/routes/panel-configuration.vue | 98.0% | 90.5%  | 100%  |
+
+Remaining low-coverage spots: `visual/routes/detail.vue` (86.7% stmts, 80%
+funcs) and `insights/routes/overview.vue` (93.8% stmts). Branch coverage
+overall (87.64%) now tracks statement coverage closely.
 
 ## Coverage
 
