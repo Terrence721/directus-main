@@ -2,7 +2,7 @@ import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import App from './App.vue';
 import { router } from './router.js';
-import { handleSimulatedRequest, resetSimulatedApi } from '@directus/composables';
+import { handleSimulatedRequest } from '@directus/composables';
 import './style.css';
 
 const app = createApp(App);
