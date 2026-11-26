@@ -256,6 +256,7 @@ async function handleDelete(id: string) {
 			<button class="create-form__close" @click="clearForm">✕</button>
 		</div>
 		<p v-if="createError" class="create-form__error">{{ createError.message }}</p>
+		<p v-else-if="fields.length === 0" class="create-form__hint">No collection is available yet.</p>
 
 		<form class="create-form__body" @submit.prevent="handleCreate">
 			<div v-for="field in fields" :key="field" class="create-form__field">
@@ -265,8 +266,8 @@ async function handleDelete(id: string) {
 
 			<div class="create-form__actions">
 				<button class="create-form__cancel" @click="clearForm">Cancel</button>
-				<button class="create-form__submit" :disabled="creating" @click="handleCreate">
-					{{ creating ? 'Saving…' : 'Create' }}
+				<button class="create-form__submit" :disabled="creatingItem || fields.length === 0" @click="handleCreate">
+					{{ creatingItem ? 'Saving…' : 'Create' }}
 				</button>
 			</div>
 		</form>
@@ -509,6 +510,12 @@ async function handleDelete(id: string) {
 .create-form__error {
 	margin: 0 0 1rem;
 	color: #b3261e;
+	font-size: 0.875rem;
+}
+
+.create-form__hint {
+	margin: 0 0 1rem;
+	color: var(--ink-soft);
 	font-size: 0.875rem;
 }
 
