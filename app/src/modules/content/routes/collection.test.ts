@@ -1,62 +1,125 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
-import ContentCollection from './collection.vue';
+import { ref, computed } from 'vue';
 
-// Mock vue-router
-const mockRouter = {
-	push: vi.fn(),
-	replace: vi.fn(),
-	back: vi.fn(),
-	currentRoute: { value: { path: '/' } },
-};
+const mockFlatCollections = ref<Array<{ collection: string; label: string; meta?: { group?: string } }>>([]);
+const mockLoading = ref(false);
+const mockFetchCollections = vi.fn();
+const routerPushSpy = vi.fn();
 
-vi.mock('vue-router', () => ({
-	useRouter: () => mockRouter,
-	useRoute: () => ({}),
-}));
-
-// Mock the composables
-vi.mock('../composables/use-collections-manager.js', () => ({
-	useCollectionsManager: vi.fn(() => ({
-		flatCollections: { value: [] },
-		loading: false,
-		fetchCollections: vi.fn(),
-	})),
-}));
-
-vi.mock('../composables/use-navigation.js', () => ({
-	useNavigation: vi.fn(() => ({
-		activeCollection: { value: null },
-		collapsedGroups: new Set(),
-		toggleGroup: vi.fn(),
-	})),
-}));
-
-beforeEach(() => {
-	vi.clearAllMocks();
-	setActivePinia(createPinia());
+vi.mock('../composables/use-collections-manager.js', async () => {
+  const actual = await vi.importActual<typeof import('../composables/use-collections-manager.js')>('../composables/use-collections-manager.js');
+  return {
+    ...actual,
+    useCollectionsManager: () => ({
+      flatCollections: computed(() => mockFlatCollections.value),
+      loading: mockLoading,
+      error: ref(null),
+      fetchCollections: mockFetchCollections,
+    }),
+  };
 });
 
+vi.mock('../composables/use-navigation.js', async () => {
+  const actual = await vi.importActual<typeof import('../composables/use-navigation.js')>('../composables/use-navigation.js');
+  return {
+    ...actual,
+    useNavigation: () => ({
+      activeCollection: ref<string>(''),
+      collapsedGroups: ref(new Set<string>()),
+      toggleGroup: vi.fn(),
+    }),
+  };
+});
+
+vi.mock('vue-router', () => ({
+  useRouter: () => ({ push: routerPushSpy }),
+}));
+
+import ContentCollection from './collection.vue';
+
+beforeEach(() => {
+  vi.resetModules();
+  vi.clearAllMocks();
+  setActivePinia(createPinia());
+  mockFlatCollections.value = [];
+  mockLoading.value = false;
+  mockFetchCollections.mockClear();
+  routerPushSpy.mockClear();
+
+  // Mock fetch globally to prevent real network calls
+  window.fetch = vi.fn().mockResolvedValue({
+    ok: true,
+    json: async () => ({ data: [] }),
+  });
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
+
+async function importContentCollection(): Promise<(typeof import('./collection.vue'))['default']> {
+  return (await import('./collection.vue')).default;
+}
+
 describe('ContentCollection', () => {
-	it('mounts without crashing', () => {
-		const wrapper = mount(ContentCollection);
-		expect(wrapper.exists()).toBe(true);
-	});
+  it('mounts without crashing', async () => {
+    const ContentCollection = await importContentCollection();
+    const wrapper = mount(ContentCollection);
+    expect(wrapper.exists()).toBe(true);
+  });
 
-	it('renders basic structure', () => {
-		const wrapper = mount(ContentCollection);
-		expect(wrapper.find('.content-browser').exists()).toBe(true);
-	});
+  it('renders sidebar with collections heading', async () => {
+    const ContentCollection = await importContentCollection();
+    const wrapper = mount(ContentCollection);
+    expect(wrapper.find('.sidebar__header h2').text()).toBe('Collections');
+  });
 
-	it('calls router.push when navigating to detail', async () => {
-		const wrapper = mount(ContentCollection);
-		// Simulate clicking edit button if exists
-		const buttons = wrapper.findAll('button');
-		for (const btn of buttons) {
-			await btn.trigger('click');
-		}
-		// Should not throw
-		expect(mockRouter.push).toBeDefined();
-	});
+  it('shows loading state when fetching collections', async () => {
+    mockLoading.value = true;
+    const ContentCollection = await importContentCollection();
+    const wrapper = mount(ContentCollection);
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find('.btn-refresh').attributes('disabled')).toBeDefined();
+    expect(wrapper.find('.btn-refresh').text()).toContain('Loading');
+  });
+
+  it('shows empty state when no collections', async () => {
+    mockLoading.value = false;
+    const ContentCollection = await importContentCollection();
+    const wrapper = mount(ContentCollection);
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find('.empty-state').exists()).toBe(true);
+    expect(wrapper.find('.empty-state').text()).toContain('No collections yet');
+  });
+
+  it('renders collections in sidebar', async () => {
+    mockFlatCollections.value = [
+      { collection: 'posts', label: 'Posts' },
+      { collection: 'authors', label: 'Authors' },
+    ];
+    const ContentCollection = await importContentCollection();
+    const wrapper = mount(ContentCollection);
+    await wrapper.vm.$nextTick();
+
+    const navItems = wrapper.findAll('.nav-item');
+    expect(navItems).toHaveLength(2);
+    expect(navItems[0].text()).toContain('Posts');
+    expect(navItems[1].text()).toContain('Authors');
+  });
+
+  it('navigates to collection items when sidebar item clicked', async () => {
+    mockFlatCollections.value = [{ collection: 'posts', label: 'Posts' }];
+    const ContentCollection = await importContentCollection();
+    const wrapper = mount(ContentCollection);
+    await wrapper.vm.$nextTick();
+
+    const navBtn = wrapper.find('.nav-btn');
+    await navBtn.element.click();
+
+    expect(routerPushSpy).toHaveBeenCalledWith('/#/content/posts');
+  });
 });
