@@ -1,23 +1,23 @@
 # Testing Gaps Analysis
 
-_Last updated: 2026-11-26 — all previously identified gaps closed; detail views and panel configuration reinforced._
+_Last updated: 2026-11-26 — all previously identified gaps closed; detail views, panel configuration, and visual detail reinforced._
 
 ## Status: Complete ✅
 
 All route components, composables, module entry points, and error utilities
-have corresponding test files. **340 tests passing** across 51 test files
+have corresponding test files. **343 tests passing** across 51 test files
 in the app workspace.
 
 ## Measured coverage (app workspace, `test:coverage`)
 
 | Metric     | Before | After  |
 | ---------- | ------ | ------ |
-| Statements | 80.4%  | 95.12% |
-| Branches   | 75.29% | 87.64% |
-| Functions  | 65.6%  | 90.07% |
-| Lines      | 82.01% | 96.04% |
+| Statements | 80.4%  | 95.4%  |
+| Branches   | 75.29% | 87.75% |
+| Functions  | 65.6%  | 90.78% |
+| Lines      | 82.01% | 96.25% |
 
-Two reinforcement passes were applied:
+Three reinforcement passes were applied:
 
 **Pass 1 — collection browsers** (insights/dashboard, visual/collection,
 content/collection, items/collection): statement coverage 80.4% → 91.62%.
@@ -25,15 +25,19 @@ content/collection, items/collection): statement coverage 80.4% → 91.62%.
 **Pass 2 — detail views** (content/detail, items/detail) and
 **insights/panel-configuration**: statement coverage 91.62% → 95.12%.
 
+**Pass 3 — visual detail** (visual/routes/detail.vue): added error-retry,
+route-params watch, and the field-formatting branches (date, position,
+array, empty-value).
+
 | File                                    | Stmts | Branch | Funcs |
 | --------------------------------------- | ----- | ------ | ----- |
 | content/routes/detail.vue               | 98.2% | 83.3%  | 100%  |
 | items/routes/detail.vue                 | 97.8% | 93.8%  | 100%  |
 | insights/routes/panel-configuration.vue | 98.0% | 90.5%  | 100%  |
+| visual/routes/detail.vue                | 96.7% | 96.7%  | 100%  |
 
-Remaining low-coverage spots: `visual/routes/detail.vue` (86.7% stmts, 80%
-funcs) and `insights/routes/overview.vue` (93.8% stmts). Branch coverage
-overall (87.64%) now tracks statement coverage closely.
+Remaining low-coverage spot: `insights/routes/overview.vue` (93.8% stmts).
+Branch coverage overall (87.75%) now tracks statement coverage closely.
 
 ## Coverage
 
