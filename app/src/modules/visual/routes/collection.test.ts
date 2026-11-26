@@ -29,6 +29,14 @@ vi.mock('vue-router', () => ({
 	useRouter: () => ({ push: routerPushSpy }),
 }));
 
+vi.mock('@directus/composables', async () => {
+	const actual = await vi.importActual<object>('@directus/composables');
+	return {
+		...actual,
+		resolveApiBaseUrl: () => 'http://test-api.example.com',
+	};
+});
+
 const mockFlatCollections = ref<{ collection: string; label: string; meta?: { group?: string } }[]>([]);
 const mockLoading = ref(false);
 const mockFetchCollections = vi.fn();

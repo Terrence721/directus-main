@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { resolveApiBaseUrl } from '@directus/composables';
 import { useCollectionsManager } from '../composables/use-collections-manager.js';
 import { useNavigation } from '../composables/use-navigation.js';
 
@@ -59,7 +60,7 @@ watch(activeCollection, async (coll) => {
 
 async function fetchFields(collection: string) {
 	try {
-		const baseUrl = new URL(window.location.href).origin;
+		const baseUrl = resolveApiBaseUrl();
 		const resp = await fetch(`${baseUrl}/collections/${encodeURIComponent(collection)}`);
 		if (!resp.ok) throw new Error(`Failed to load collection ${collection}`);
 		const json = await resp.json();
@@ -76,7 +77,6 @@ async function fetchItems() {
 	itemError.value = null;
 
 	try {
-		const baseUrl = window.location.protocol + '//' + window.location.host;
 		const params = new URLSearchParams({
 			page: String(page.value),
 			limit: String(pageSize.value),
@@ -90,7 +90,7 @@ async function fetchItems() {
 			params.set('_sort', `${sortOrder.value === 'desc' ? '-' : ''}${sortField.value}`);
 		}
 
-		const url = `${baseUrl}/items/${encodeURIComponent(activeCollection.value)}?${params}`;
+		const url = `${resolveApiBaseUrl()}/items/${encodeURIComponent(activeCollection.value)}?${params}`;
 		const resp = await fetch(url);
 
 		if (!resp.ok) throw new Error(`Failed to fetch items (${resp.status})`);

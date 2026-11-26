@@ -27,6 +27,7 @@ vi.mock('@directus/composables', async () => {
 		useAuth: () => ({
 			session: mockSession,
 		}),
+		resolveApiBaseUrl: () => 'http://test-api.example.com',
 	};
 });
 

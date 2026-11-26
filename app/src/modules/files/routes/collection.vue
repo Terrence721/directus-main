@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useAuth, useFileUpload } from '@directus/composables';
+import { useAuth, useFileUpload, resolveApiBaseUrl } from '@directus/composables';
 
 const { session } = useAuth();
 const { upload, progress, isUploading, uploadedFile, error } = useFileUpload();
@@ -33,7 +33,7 @@ async function refreshList() {
 	listError.value = null;
 	try {
 		if (!session.value?.accessToken) return;
-		const response = await fetch('/files', {
+		const response = await fetch(`${resolveApiBaseUrl()}/files`, {
 			headers: {
 				Authorization: `Bearer ${session.value.accessToken}`,
 			},

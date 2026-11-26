@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAuth, useRouter, login, type LoginCredentials } from '@directus/composables';
 import LoginForm from '../components/LoginForm.vue';
+import { hydrate } from '../hydrate.js';
 
 defineProps<{
 	logoutReason?: string | null;
@@ -12,6 +13,7 @@ const { push } = useRouter();
 async function handleLogin(credentials: LoginCredentials) {
 	const session = await login(credentials);
 	setSession(session.accessToken, session.expiresAt);
+	await hydrate();
 	await push('/');
 }
 
