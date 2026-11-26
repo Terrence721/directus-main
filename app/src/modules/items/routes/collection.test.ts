@@ -28,7 +28,17 @@ vi.mock('@directus/composables', async () => {
 			page: ref(1),
 		}),
 		useCollections: () => ({
-			data: ref([{ collection: 'items', label: 'Items', fields: [{ name: 'id', type: 'string' }, { name: 'title', type: 'string' }, { name: 'status', type: 'string' }] }]),
+			data: ref([
+				{
+					collection: 'items',
+					label: 'Items',
+					fields: [
+						{ name: 'id', type: 'string' },
+						{ name: 'title', type: 'string' },
+						{ name: 'status', type: 'string' },
+					],
+				},
+			]),
 			loading: ref(false),
 			error: ref(null),
 			fetchCollections: vi.fn(),
@@ -161,9 +171,9 @@ describe('ItemsCollection', () => {
 
 		const editBtn = wrapper.find('.items-action-btn');
 		expect(editBtn.exists()).toBe(true);
-		await editBtn.element.click();
+		await editBtn.trigger('click');
 
-		const wrapperVm = wrapper.vm as { editingItemId: string | null };
+		const wrapperVm = wrapper.vm as unknown as { editingItemId: string | null };
 		expect(wrapperVm.editingItemId).toBe('1');
 	});
 });
