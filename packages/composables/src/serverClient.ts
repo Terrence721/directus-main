@@ -1,14 +1,14 @@
 import type { ServerInfo } from '@directus/stores';
 
-const API_URL = 'http://localhost:8055';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8055';
 
 /**
  * Fetches server configuration from api/. In local dev (`MODE === 'development'`) this hits
- * the real Express server; on GitHub Pages there's no backend, so a simulated response is
- * returned instead so the deployed app remains navigable.
+ * the real Express server; when `VITE_API_BASE_URL` is set (e.g. a production deploy) it hits
+ * that backend; otherwise a simulated response is returned so the deployed app stays navigable.
  */
 export async function fetchServerInfo(): Promise<ServerInfo> {
-	if (import.meta.env.MODE === 'development') {
+	if (import.meta.env.MODE === 'development' || import.meta.env.VITE_API_BASE_URL) {
 		return fetchServerInfoReal();
 	}
 

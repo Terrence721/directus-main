@@ -26,6 +26,34 @@ if (import.meta.env.MODE !== 'development') {
 				headers: { 'Content-Type': 'application/json' },
 			});
 		}
+
+		// For any other URL (including production API endpoints), use real fetch
+		return originalFetch(input, init);
+	};
+} else if (import.meta.env.VITE_API_BASE_URL) {
+	// In non-development environments with VITE_API_BASE_URL configured,
+	// use real fetch against the specified base URL (for production deployments
+	// where api/ is hosted publicly).
+	const originalFetch = window.fetch.bind(window);
+	window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+		const urlStr = input instanceof Request ? input.url : String(input);
+		// If the URL already includes the base, pass through to real fetch
+		return originalFetch(input, init);
+	};
+} else {
+	// Development mode with simulated API (default behavior)
+	const originalFetch = window.fetch.bind(window);
+	window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+		const urlStr = input instanceof Request ? input.url : String(input);
+		if (urlStr.includes('localhost:8055')) {
+			const path = urlStr.replace('http://localhost:8055', '');
+			const simulated = handleSimulatedRequest(path, init);
+			return new Response(JSON.stringify(await simulated.json()), {
+				status: simulated.status,
+				statusText: simulated.ok ? 'OK' : 'Error',
+				headers: { 'Content-Type': 'application/json' },
+			});
+		}
 		return originalFetch(input, init);
 	};
 }

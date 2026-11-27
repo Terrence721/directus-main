@@ -18,6 +18,8 @@ import { onMounted, ref } from 'vue';
  *   sort: '-date_published'
  * });
  */
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8055';
+
 export function useItems(
 	collection: string,
 	options: {
@@ -69,7 +71,7 @@ export function useItems(
 			}
 
 			const serverInfo = server.info.value;
-			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const baseUrl = serverInfo.projectLogoUrl || BASE_URL;
 			const response = await fetch(`${baseUrl}/items/${collection}?${params.toString()}`);
 
 			if (!response.ok) {
@@ -142,7 +144,7 @@ export function useItems(
 
 		try {
 			const serverInfo = server.info.value;
-			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const baseUrl = serverInfo.projectLogoUrl || BASE_URL;
 			const response = await fetch(`${baseUrl}/items/${collection}`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
@@ -176,7 +178,7 @@ export function useItems(
 
 		try {
 			const serverInfo = server.info.value;
-			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const baseUrl = serverInfo.projectLogoUrl || BASE_URL;
 			const response = await fetch(`${baseUrl}/items/${collection}/${itemId}`, {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json' },
@@ -209,7 +211,7 @@ export function useItems(
 
 		try {
 			const serverInfo = server.info.value;
-			const baseUrl = serverInfo.projectLogoUrl || 'http://localhost:8055';
+			const baseUrl = serverInfo.projectLogoUrl || BASE_URL;
 			const response = await fetch(`${baseUrl}/items/${collection}/${itemId}`, {
 				method: 'DELETE',
 			});
