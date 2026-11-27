@@ -8,7 +8,7 @@ export interface LoginCredentials {
 
 const DEMO_EMAIL = 'demo@directus-main.dev';
 const DEMO_PASSWORD = 'demo1234';
-const API_URL = 'http://localhost:8055';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8055';
 
 /**
  * Calls the real api/ server in local dev only (checked via MODE, not DEV - Vitest's test runs
@@ -17,6 +17,9 @@ const API_URL = 'http://localhost:8055';
  */
 export async function login(credentials: LoginCredentials): Promise<Session> {
 	if (import.meta.env.MODE === 'development') {
+		return loginReal(credentials);
+	}
+	if (import.meta.env.VITE_API_BASE_URL) {
 		return loginReal(credentials);
 	}
 	return loginSimulated(credentials);
