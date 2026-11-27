@@ -1,9 +1,9 @@
 import { useServerStore } from '@directus/stores';
 import { storeToRefs } from 'pinia';
 
-const DEFAULT_API_URL = 'http://localhost:8055';
+const DEFAULT_API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8055';
 
-/** Derives the API base URL from server info, falling back to the local dev default. */
+/** Derives the API base URL from server info, falling back to the env-configured or local dev default. */
 export function resolveApiBaseUrl(): string {
 	const store = useServerStore();
 	const info = store.info;

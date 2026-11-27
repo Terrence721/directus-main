@@ -36,7 +36,6 @@ if (import.meta.env.MODE !== 'development') {
 	// where api/ is hosted publicly).
 	const originalFetch = window.fetch.bind(window);
 	window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-		const urlStr = input instanceof Request ? input.url : String(input);
 		// If the URL already includes the base, pass through to real fetch
 		return originalFetch(input, init);
 	};

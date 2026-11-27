@@ -14,13 +14,14 @@ interface RegisterResponse {
 	user: CurrentUser;
 }
 
-const API_URL = 'http://localhost:8055';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8055';
 
 /**
- * Registers a new account via api/ in dev mode, or simulates registration on GitHub Pages.
+ * Registers a new account via api/ in dev mode, or simulates registration on GitHub Pages. When
+ * VITE_API_BASE_URL is configured, the real registration endpoint is used against that backend.
  */
 export async function register(data: RegisterData): Promise<{ session: Session; user: CurrentUser }> {
-	if (import.meta.env.MODE === 'development') {
+	if (import.meta.env.MODE === 'development' || import.meta.env.VITE_API_BASE_URL) {
 		return registerReal(data);
 	}
 	return registerSimulated(data);
