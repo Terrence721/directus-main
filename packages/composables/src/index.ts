@@ -10,7 +10,7 @@ export { resolveApiBaseUrl } from './useServer.js';
 export type { CollectionInfo, CollectionField } from './useCollections.js';
 export { initSessionSync } from './useSessionSync.js';
 export { fetchServerInfo } from './serverClient.js';
-export { login } from './authClient.js';
+export { login, getStoredSession, storeSession, clearStoredSession, refreshSession } from './authClient.js';
 export { register } from './registerClient.js';
 export { handleSimulatedRequest, resetSimulatedApi } from './simulatedApi.js';
 export type { LoginCredentials } from './authClient.js';
