@@ -29,7 +29,7 @@ if (import.meta.env.MODE !== 'development') {
 
 		// For any other URL (including production API endpoints), use real fetch
 		return originalFetch(input, init);
-	}
+	};
 } else if (import.meta.env.VITE_API_BASE_URL) {
 	// In non-development environments with VITE_API_BASE_URL configured,
 	// use real fetch against the specified base URL (for production deployments
@@ -39,7 +39,7 @@ if (import.meta.env.MODE !== 'development') {
 		const urlStr = input instanceof Request ? input.url : String(input);
 		// If the URL already includes the base, pass through to real fetch
 		return originalFetch(input, init);
-	}
+	};
 } else {
 	// Development mode with simulated API (default behavior)
 	const originalFetch = window.fetch.bind(window);
@@ -55,7 +55,7 @@ if (import.meta.env.MODE !== 'development') {
 			});
 		}
 		return originalFetch(input, init);
-	}
+	};
 }
 
 app.mount('#app');
