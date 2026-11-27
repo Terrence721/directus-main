@@ -25,10 +25,12 @@
 		"alllowercase",
 		"ALLUPPERCASE",
 		"casetest",
+		"computeds",
 		"directus",
 		"icontains",
 		"longenough",
 		"newpass",
+		"Signups",
 		"slugified",
 		"unstub",
 		"wrongpass"
