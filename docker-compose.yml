@@ -1,0 +1,36 @@
+# Local Directus v11 instance for the directus-main app.
+#
+# - Runs on port 8056 to avoid clashing with the demo Express API on 8055.
+# - Uses SQLite stored in a named volume (no Postgres container needed).
+# - Reads KEY/SECRET from the gitignored .env file (see .env.example).
+#
+# Usage:
+#   1. cp .env.example .env  (then edit KEY/SECRET or keep the generated ones)
+#   2. docker compose up -d
+#   3. curl http://localhost:8056/server/info
+#
+# The app points at this instance via VITE_API_BASE_URL=http://localhost:8056
+services:
+  directus:
+    image: directus/directus:11
+    container_name: directus-main
+    restart: unless-stopped
+    ports:
+      - '8056:8055'
+    environment:
+      KEY: ${KEY:?KEY missing - copy .env.example to .env}
+      SECRET: ${SECRET:?SECRET missing - copy .env.example to .env}
+      MODE: production
+      DATABASE_CLIENT: sqlite3
+      DATABASE_FILENAME: /directus-main/data/directus.db
+      ADMIN_EMAIL: admin@directus-main.dev
+      ADMIN_PASSWORD: admin1234
+      CORS_ENABLED: 'true'
+      CORS_ORIGIN: http://localhost:5173,http://localhost:8055,http://localhost:4173
+      CACHE_AUTOLOAD: 'false'
+      DEFAULT_CACHE_TTL: 1
+    volumes:
+      - directus-data:/directus-main/data
+
+volumes:
+  directus-data:
