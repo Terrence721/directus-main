@@ -34,6 +34,10 @@ if (import.meta.env.MODE !== 'development') {
 	// In non-development environments with VITE_API_BASE_URL configured,
 	// use real fetch against the specified base URL (for production deployments
 	// where api/ is hosted publicly).
+	// ⚠️ NOTE: The api/ server is intentionally demo-only (mirrors
+	// api/src/routes/* from api/src/routes/demo-data.ts). Pointing
+	// VITE_API_BASE_URL at a non-Directus backend will cause route
+	// mismatches — use only with a Directus-compatible production API.
 	const originalFetch = window.fetch.bind(window);
 	window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
 		// If the URL already includes the base, pass through to real fetch
